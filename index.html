@@ -2,41 +2,20 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <link rel="stylesheet" href="css/flipclock.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" href="https://raw.githubusercontent.com/iTaoPu/iTaoPu.GitHub.io/refs/heads/List/Jing.png"/>
-    <style>
-        /* 移动端优化样式 */
-        @media (max-width: 600px) {
-            .clock ul {
-                width: 22px !important;
-            }
-            .clock .flip-clock-label {
-                font-size: 50% !important;
-            }
-            h1.header {
-                font-size: 2.5rem !important;
-                line-height: 1.2;
-            }
-            .section {
-                padding: 0;
-            }
-            .footer-copyright .container {
-                text-align: center;
-            }
-        }
-        .clock {
-            transform: scale(0.8);
-            transform-origin: top center;
-        }
-    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="js/flipclock.js"></script>
+    <script src="js/sidenav.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>“閒”是生活的標點</title>
 </head>
 <body style="display: flex;min-height: 100vh;flex-direction: column;">
-    <nav class="grey darken-3">
-        <div class="nav-wrapper container">
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    <nav class="grey darken-3" role="navigation">
+        <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"></a>
             <ul class="right hide-on-med-and-down">
                 <li class="active"><a href="/">Home</a></li>
                 <li><a href="https://adrules.5iclub.cloudns.biz" target="_blank">AdRules</a></li>
@@ -49,19 +28,68 @@
                 <li><a href="https://status.5iclub.cloudns.biz" target="_blank">服务监控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
             </ul>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
     </nav>
     
+    <div class="section no-pad-bot" id="index-banner">
+        <div class="container">
+            <br><br>
+            <h1 class="header center red-text">“閒”是生活的標點</h1>
+            <br><br>
+        </div>
+    </div>
+
     <main style="flex: 1 0 auto;">
         <div class="container">
-            <div class="section" style="padding: 1rem;">
-                <h1 class="header center red-text" style="font-size: 3rem; margin: 1rem 0;">“閒”是生活的標點</h1>
-                <div class="row">
-                    <div class="col s12" style="overflow-x: auto; padding: 0 10px;">
-                        <div class="clock card-panel hoverable" style="margin: 0 auto; max-width: 95%;"></div>
-                    </div>
-                </div>
-                <div class="message center-align" style="margin: 1rem 0;"></div>
+            <div class="section" style="text-align: center;">
+                <div class="clock card-panel hoverable" style="display: inline-block; width: auto;"></div>
+                <div class="message"></div>
+                <script type="text/javascript">
+                    var clock;
+                    $(document).ready(function() {
+                        // 设置固定目标时间（北京时间2026年1月1日）
+                        const futureDate = new Date('2026-01-01T00:00:00+08:00');
+
+                        function updateClock() {
+                            const now = new Date();
+                            const diff = Math.floor((futureDate - now) / 1000);
+
+                            if (diff <= 0) {
+                                if(clock) {
+                                    clock.stop();
+                                    $('.message').html('<h5 class="red-text">倒计时已结束！</h5>');
+                                }
+                                return;
+                            }
+
+                            if (!clock) {
+                                // 初始化时钟
+                                clock = $('.clock').FlipClock(diff, {
+                                    clockFace: 'DailyCounter',
+                                    countdown: true,
+                                    autoStart: false,
+                                    callbacks: {
+                                        stop: function() {
+                                            $('.message').html('<h5 class="green-text">活动进行中！</h5>');
+                                        }
+                                    }
+                                }).start();
+                            } else {
+                                // 动态更新时间
+                                clock.setTime(diff);
+                                clock.start(); // 确保计时器运行
+                            }
+                        }
+
+                        // 初始化侧边栏
+                        $('.sidenav').sidenav();
+
+                        // 每秒更新
+                        setInterval(updateClock, 1000);
+                        updateClock(); // 立即初始化
+                    });
+                </script>
             </div>
         </div>
     </main>
@@ -69,83 +97,30 @@
     <footer class="page-footer grey darken-2">
         <div class="container">
             <div class="row">
-                <div class="col s12 m6">
-                    <h5><a class="white-text" href="https://t.me/Centre996" target="_blank">i叚娤倖鍢</a></h5>
+                <div class="col l6 s12">
+                    <h5><li><a class="white-text" href="https://t.me/Centre996" target="_blank">i叚娤倖鍢</a></li></h5>
                     <p class="grey-text text-lighten-4">人的白嫖，就如同高山滚石一般，一旦开始，就再也停不下了 —— 「鲁迅」</p>
                 </div>
-                <div class="col s12 m6">
+                <div class="col l3 s12">
+                    <h5 class="white-text"></h5>
+                    <ul>
+                    </ul>
+                </div>
+                <div class="col l3 s12">
                     <h6 class="white-text">公益服務</h6>
                     <ul>
-                        <li><a class="white-text truncate" href="https://docker.5iclub.cloudns.biz">Docker·镜像搜索</a></li>
-                        <li><a class="white-text truncate" href="https://github.5iclub.cloudns.biz">GitHub·文件加速</a></li>
-                        <li><a class="white-text truncate" href="https://url.5iclub.cloudns.biz">简约·链接缩短服务</a></li>
+                        <li><a class="white-text" href="https://docker.5iclub.cloudns.biz">5i計劃通行.Docker·镜像搜索</a></li>
+                        <li><a class="white-text" href="https://github.5iclub.cloudns.biz">5i計劃通行.GitHub·文件加速</a></li>
+                        <li><a class="white-text" href="https://url.5iclub.cloudns.biz">5i計劃通行.简约·链接缩短服务</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="footer-copyright">
-            <div class="container center-align">
+            <div class="container" style="position:relative;">
                 &copy; 2022-2025 i叚娤倖鍢
             </div>
         </div>
     </footer>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-    <script src="js/flipclock.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const futureDate = new Date('2026-01-01T00:00:00+08:00');
-            let clock;
-
-            function initClock(diff) {
-                clock = new FlipClock($('.clock'), diff, {
-                    clockFace: 'DailyCounter',
-                    countdown: true,
-                    autoStart: false,
-                    showSeconds: window.innerWidth > 600,
-                    callbacks: {
-                        stop: () => {
-                            $('.message').html('<h5 class="green-text">活动进行中！</h5>');
-                        }
-                    }
-                }).start();
-            }
-
-            function updateClock() {
-                const now = new Date();
-                const diff = Math.floor((futureDate - now) / 1000);
-
-                if (diff <= 0) {
-                    clock?.stop();
-                    $('.message').html('<h5 class="red-text">倒计时已结束！</h5>');
-                    return;
-                }
-
-                if (!clock) {
-                    initClock(diff);
-                } else {
-                    clock.setTime(diff);
-                    clock.start();
-                }
-            }
-
-            M.AutoInit();
-            updateClock();
-            setInterval(updateClock, 1000);
-
-            // 窗口大小变化处理
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    clock?.stop();
-                    $('.clock').empty();
-                    clock = null;
-                    updateClock();
-                }, 500);
-            });
-        });
-    </script>
 </body>
 </html>
