@@ -34,7 +34,7 @@
             padding: 40px 0;
         }
 
-        /* --- 文字比例 --- */
+        /* --- 仿 Time.is 文字比例 --- */
         .header-title {
             font-size: 1.2rem !important;
             font-weight: 300;
@@ -50,7 +50,7 @@
             margin-bottom: 5px;
         }
 
-        /* --- 時鐘巨大化與標籤注入 --- */
+        /* --- 時鐘巨大化核心 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
@@ -67,26 +67,11 @@
             display: flex !important;
             justify-content: center;
             width: auto !important;
-            padding-bottom: 30px !important; /* 為標籤留空間 */
         }
 
-        /* 使用 CSS 偽元素在不改動 HTML 下增加「時分秒」標籤 */
-        .flip-clock-divider { position: relative; }
-        .flip-clock-divider:before {
-            position: absolute;
-            bottom: -35px;
-            font-size: 10px;
-            font-weight: 300;
-            color: #ff5252;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            opacity: 0.8;
+        .flip-clock-divider .flip-clock-label {
+            display: none !important;
         }
-        .flip-clock-divider.hours:before { content: "時 HOUR"; left: 48px; }
-        .flip-clock-divider.minutes:before { content: "分 MIN"; left: 48px; }
-        .flip-clock-divider.seconds:before { content: "秒 SEC"; left: 48px; }
-
-        .flip-clock-divider .flip-clock-label { display: none !important; }
 
         /* 顏色自定義：深灰底紅字 */
         .flip-clock-wrapper ul li a div div.inn {
@@ -97,29 +82,98 @@
         }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 導航欄與連結 --- */
+        /* --- 導航欄增強：滑鼠劃過變色與動態下劃線 --- */
         .nav-wrapper ul li a {
             transition: color 0.3s ease, background-color 0.3s ease;
             position: relative;
         }
-        .nav-wrapper ul li a:hover { color: #ff5252 !important; background-color: rgba(255, 255, 255, 0.05) !important; }
-        .footer-links li { margin-bottom: 5px; }
+
+        .nav-wrapper ul li a:hover {
+            color: #ff5252 !important; /* 懸停時變為紅色 */
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .nav-wrapper ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: #ff5252;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-wrapper ul li a:hover::after {
+            width: 70%;
+        }
 
         /* --- 移動端適配 --- */
         @media only screen and (max-width: 768px) {
-            .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
+            .clock-wrapper {
+                transform: scale(0.85); 
+                margin: 40px 0;
+            }
         }
         @media only screen and (max-width: 480px) {
-            .clock-wrapper { transform: scale(0.75); margin: 20px 0; }
+            .clock-wrapper {
+                transform: scale(0.75);
+                margin: 20px 0;
+            }
             .header-title { font-size: 1rem !important; }
-            .flip-clock-divider:before { font-size: 8px; bottom: -25px; }
         }
 
-        /* --- 淺色模式 --- */
-        body.light-mode { background-color: #f5f5f5 !important; color: #212121 !important; }
+        /* 頁腳修正 */
+        .page-footer {
+            padding-top: 20px;
+            background-color: #121212 !important;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 右下角切換按鈕 */
+        #theme-toggle-fab {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 1000;
+        }
+        #theme-toggle-fab a {
+            width: 45px;
+            height: 45px;
+            line-height: 45px;
+        }
+        #theme-toggle-fab a i {
+            line-height: 45px;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        #theme-toggle-fab a:hover i {
+            transform: rotate(30deg);
+        }
+
+        .sidenav { background-color: #212121 !important; }
+        .sidenav li a { color: #ffffff !important; }
+        .sidenav li a i { color: #ffffff !important; }
+
+        /* --- 淺色模式樣式定義 --- */
+        body.light-mode {
+            background-color: #f5f5f5 !important;
+            color: #212121 !important;
+        }
         body.light-mode nav { background-color: #ffffff !important; }
         body.light-mode nav ul a, body.light-mode nav i { color: #424242 !important; }
-        body.light-mode .flip-clock-divider:before { color: #616161 !important; }
+        
+        body.light-mode .nav-wrapper ul li a:hover {
+            color: #ff5252 !important;
+            background-color: rgba(0, 0, 0, 0.05) !important;
+        }
+
+        body.light-mode .sub-text { color: #9e9e9e !important; }
+        body.light-mode .sidenav { background-color: #ffffff !important; }
+        body.light-mode .sidenav li a { color: #424242 !important; }
+        body.light-mode .sidenav li a i { color: #424242 !important; }
+
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
             color: #000000 !important; 
@@ -128,11 +182,8 @@
         }
         body.light-mode .flip-clock-dot { background: #000000 !important; }
         body.light-mode .page-footer { background-color: #eeeeee !important; }
-        body.light-mode .page-footer h5, body.light-mode .page-footer h6, body.light-mode .page-footer p, body.light-mode .footer-copyright { color: #616161 !important; }
+        body.light-mode .page-footer h5, body.light-mode .page-footer p, body.light-mode .footer-copyright { color: #616161 !important; }
         body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
-
-        .page-footer { padding-top: 20px; background-color: #121212 !important; }
-        #theme-toggle-fab { position: fixed; right: 20px; bottom: 20px; z-index: 1000; }
     </style>
 </head>
 
@@ -152,6 +203,7 @@
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
                 <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
             </ul>
         </div>
     </nav>
@@ -161,6 +213,9 @@
         <li><a href="/">Home</a></li>
         <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
         <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
     <main>
@@ -183,14 +238,6 @@
                     <h5 class="white-text">蜂巢·隱曜</h5>
                     <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
                 </div>
-                <div class="col l4 s12">
-                    <h6 class="white-text">公益服務</h6>
-                    <ul class="footer-links">
-                        <li><a class="grey-text text-lighten-3" href="https://docker.5iclub.dpdns.org" target="_blank">樂玩公社.Docker·鏡像搜索</a></li>
-                        <li><a class="grey-text text-lighten-3" href="https://github.5iclub.dpdns.org" target="_blank">樂玩公社.GitHub·文件加速</a></li>
-                        <li><a class="grey-text text-lighten-3" href="https://url.5iclub.dpdns.org" target="_blank">樂玩公社.簡約·連結縮短服務</a></li>
-                    </ul>
-                </div>
             </div>
         </div>
         <div class="footer-copyright black">
@@ -206,16 +253,23 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
+            // 1. 初始化 Materialize
             $('.sidenav').sidenav();
 
+            // 2. 主題持久化讀取
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') { $('body').addClass('light-mode'); }
+            if (savedTheme === 'light') {
+                $('body').addClass('light-mode');
+            }
 
+            // 3. 右下角按鈕切換邏輯
             $('#theme-toggle-fab').on('click', function() {
                 $('body').toggleClass('light-mode');
-                localStorage.setItem('theme', $('body').hasClass('light-mode') ? 'light' : 'dark');
+                const isLight = $('body').hasClass('light-mode');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
             });
 
+            // 4. 精確時間獲取
             function getBeijingTime() {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -228,6 +282,7 @@
                 $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
             }
 
+            // 5. 初始化 FlipClock
             const bjNow = getBeijingTime();
             const clock = $('.clock').FlipClock(bjNow, {
                 clockFace: 'TwentyFourHourClock',
@@ -237,6 +292,7 @@
             updateDate();
             $('#timer-container').css('opacity', '1');
 
+            // 6. 授時儀式感動畫
             setTimeout(function() {
                 $('#sync-status').fadeOut(800, function() {
                     $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">check_circle</i> 蜂巢時間已同步 (UTC+8)')
@@ -250,3 +306,4 @@
     </script>
 </body>
 </html>
+
