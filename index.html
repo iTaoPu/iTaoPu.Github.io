@@ -123,7 +123,7 @@
             font-size: 1.5rem;
         }
 
-        /* --- 深色模式下的移動端導航欄樣式 (預設) --- */
+        /* --- 深色模式下的移動端導航欄樣式 --- */
         .sidenav {
             background-color: #212121 !important;
         }
@@ -160,10 +160,18 @@
             color: #212121 !important; 
         }
 
+        /* 修正：淺色模式下時間卡片背景改為白色，去除陰影 */
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
+            color: #ff5252 !important;
+            text-shadow: none !important;
             border: 1px solid #ddd;
         }
+        /* 淺色模式下摺疊卡片的顏色同步 */
+        body.light-mode .flip-clock-wrapper ul li a div.up:after {
+            background-color: rgba(0,0,0,0.1) !important;
+        }
+
         body.light-mode .page-footer { background-color: #eeeeee !important; }
         body.light-mode .page-footer h5, body.light-mode .page-footer p, body.light-mode .footer-copyright { color: #616161 !important; }
         body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
