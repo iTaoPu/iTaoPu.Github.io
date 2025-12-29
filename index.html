@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" href="https://iTaoPu.GitHub.io/Jing.png"/>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>“閒”是生活的標點</title>
 
     <style>
@@ -16,11 +16,9 @@
             min-height: 100vh;
             flex-direction: column;
             background-color: #f5f5f5;
-            margin: 0;
-            overflow-x: hidden; /* 防止寬度增加後產生左右捲軸 */
         }
 
-        /* --- 核心：時鐘水平居中修復 --- */
+        /* --- PC 端居中與基礎樣式 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
@@ -30,14 +28,15 @@
             transition: opacity 1s;
         }
         
-        /* 讓 FlipClock 在 PC 端置中並移除預設浮動 */
+        /* 修正 FlipClock 預設浮動問題 */
         .flip-clock-wrapper {
             margin: 0 auto !important;
             display: table !important;
             width: auto !important;
+            clear: both;
         }
 
-        /* --- FlipClock 視覺美化 --- */
+        /* FlipClock 顏色美化 */
         .flip-clock-wrapper ul li a div div.inn {
             background-color: #333333 !important;
             color: #ff5252 !important;
@@ -46,31 +45,40 @@
         .flip-clock-dot { background: #ff5252 !important; }
         .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
 
-        /* --- 響應式：手機端寬度與顯示優化 --- */
+        /* --- 手機端兩行顯示核心 CSS --- */
         @media only screen and (max-width: 600px) {
-            h1.header { font-size: 2rem !important; margin-top: 1.5rem; }
+            h1.header { font-size: 2.2rem !important; }
 
             .clock-wrapper {
                 padding: 10px 0;
-                min-height: 180px; 
+                min-height: 250px; /* 增加高度以容納兩行 */
             }
 
             .flip-clock-wrapper {
-                /* 增加縮放比例，讓寬度看起來更大 */
-                transform: scale(0.8); 
+                transform: scale(0.8); /* 稍微縮小以適應寬度 */
                 transform-origin: center center;
-                /* 縮放後寬度會超出，這裡微調負邊距確保置中 */
-                margin-left: auto !important;
-                margin-right: auto !important;
+                display: block !important;
             }
+
+            /* 強制在「小時」後斷行 */
+            /* DailyCounter 的順序是：Days, Hours, Minutes, Seconds */
+            /* 我們在第二個 divider (小時之後) 強制換行 */
+            .flip-clock-divider.hours + .flip-clock-divider {
+                clear: both;
+                display: block;
+                height: 50px; /* 兩行之間的垂直間距 */
+                visibility: hidden;
+            }
+
+            /* 修正斷行後的間距與對齊 */
+            .flip-clock-wrapper ul { margin: 5px !important; }
+            .flip-clock-divider { height: 100px !important; }
             
-            /* 手機端標記強制顯示 */
+            /* 手機端導航按鈕 */
             .sidenav-trigger { display: block !important; }
         }
 
         main { flex: 1 0 auto; }
-
-        /* Footer 恢復左對齊 */
         .footer-left { text-align: left !important; }
     </style>
 </head>
@@ -79,7 +87,6 @@
     <nav class="grey darken-4" role="navigation">
         <div class="nav-wrapper container">
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-            
             <ul class="right hide-on-med-and-down">
                 <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
@@ -100,7 +107,7 @@
     
     <main>
         <div class="container center-align">
-            <br>
+            <br><br>
             <h1 class="header red-text text-accent-2">“閒”是生活的標點</h1>
             <p class="grey-text">距離 2027 年還有</p>
             
@@ -133,16 +140,14 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 1. 初始化 Materialize 側邊欄元件
+            // 初始化側邊欄
             $('.sidenav').sidenav();
 
-            // 2. 計算剩餘時間
             const futureDate = new Date('2027-01-01T00:00:00+08:00');
             const now = new Date();
             const diff = Math.floor((futureDate.getTime() - now.getTime()) / 1000);
 
             if (diff > 0) {
-                // 3. 延遲啟動以確保寬度渲染
                 setTimeout(function() {
                     const clock = $('.clock').FlipClock(diff, {
                         clockFace: 'DailyCounter',
