@@ -160,13 +160,16 @@
             color: #212121 !important; 
         }
 
-        /* 修正：淺色模式下時間卡片背景改為白色，去除陰影 */
+        /* 修正：淺色模式下時間卡片背景為白色，數字改為黑色 */
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
-            color: #ff5252 !important;
+            color: #000000 !important; /* 數字改為黑色 */
             text-shadow: none !important;
             border: 1px solid #ddd;
         }
+        /* 淺色模式下分隔點也改為黑色 (或維持紅色，目前設為黑色以符合您的要求) */
+        body.light-mode .flip-clock-dot { background: #000000 !important; }
+
         /* 淺色模式下摺疊卡片的顏色同步 */
         body.light-mode .flip-clock-wrapper ul li a div.up:after {
             background-color: rgba(0,0,0,0.1) !important;
