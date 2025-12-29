@@ -208,7 +208,7 @@
             function syncTime() {
                 // 使用中国科学院（国家授时中心参与维护）的官方云授时接口
                 $.ajax({
-                    url: 'https://cgi.beijing-time.org.cn/get_time', // 该接口直接获取国家授时中心标准时间戳
+                    url: 'http://cgi.beijing-time.org.cn/get_time', // 该接口直接获取国家授时中心标准时间戳
                     dataType: 'jsonp',
                     timeout: 3500,
                     success: function(data) {
@@ -225,7 +225,7 @@
                     },
                     error: function() {
                         // 備用方案：阿里雲授時接口 (JSON 格式)
-                        $.get('https://ntp1.aliyun.com/m/api/getTime', function(data) {
+                        $.get('http://ntp1.aliyun.com/m/api/getTime', function(data) {
                             if(data && data.result) {
                                 timeOffset = data.result - new Date().getTime();
                                 $status.text('已同步阿里雲授時');
@@ -259,4 +259,5 @@
     </script>
 </body>
 </html>
+
 
