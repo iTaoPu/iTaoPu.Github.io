@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>“閒”是生活的標點</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -16,23 +16,25 @@
             min-height: 100vh;
             flex-direction: column;
             background-color: #f5f5f5;
-            font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
         }
 
         main { flex: 1 0 auto; }
 
-        /* --- 時鐘基礎樣式 --- */
+        /* --- 核心：單行自適應縮放容器 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
             justify-content: center;
+            align-items: center;
             padding: 40px 0;
+            overflow: visible; /* 確保縮放後的內容不被剪裁 */
             opacity: 0;
-            transition: opacity 1s ease-in-out;
+            transition: opacity 1s;
         }
         
+        /* 修正 FlipClock 預設樣式 */
         .flip-clock-wrapper {
-            margin: 0 auto !important;
+            margin: 0 !important;
             display: inline-block !important;
             width: auto !important;
         }
@@ -44,31 +46,30 @@
             text-shadow: 0 1px 2px #000;
         }
         .flip-clock-dot { background: #ff5252 !important; }
-        .flip-clock-divider .flip-clock-label { 
-            color: #757575 !important; 
-            font-weight: bold; 
-        }
+        .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
 
-        /* --- 修正：手機端保持單行不隔行 --- */
-        @media only screen and (max-width: 600px) {
-            h1.header { font-size: 2.2rem !important; }
-            
+        /* --- 手機端單行自適應邏輯 --- */
+        @media only screen and (max-width: 650px) {
             .clock-wrapper {
-                padding: 20px 0;
-                overflow-x: hidden; /* 防止橫向滾動 */
+                padding: 10px 0;
+                /* 預留足夠的高度給縮放後的時鐘 */
+                min-height: 120px; 
             }
 
             .flip-clock-wrapper {
-                /* 為了讓 8 位數字在一行顯示，縮放比例需要較小 */
-                transform: scale(0.5); 
+                /* 核心原理：
+                   FlipClock 總寬約 620px。
+                   在 375px 的手機上，比例大約是 0.55 - 0.6 
+                */
+                transform: scale(0.55); 
                 transform-origin: center center;
-                white-space: nowrap; /* 強制不換行 */
-                display: table !important; /* 保持原插件的 table 佈局特性 */
             }
-
-            /* 移除原本可能導致隔行的任何限制 */
-            .flip-clock-wrapper ul {
-                margin: 3px !important;
+            
+            /* 極小螢幕 (如 iPhone SE) 進一步縮小 */
+            @media (max-width: 360px) {
+                .flip-clock-wrapper {
+                    transform: scale(0.48);
+                }
             }
         }
 
@@ -77,14 +78,13 @@
 </head>
 
 <body>
-    <nav class="grey darken-4" role="navigation">
+    <nav class="grey darken-4">
         <div class="nav-wrapper container">
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a href="/">首頁</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
                 <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
             </ul>
         </div>
@@ -94,15 +94,13 @@
         <li><a href="/">Home</a></li>
         <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
         <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
         <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
     <main>
         <div class="container center-align">
             <br><br>
-            <h1 class="header red-text text-accent-2">“閒”是生活的標點</h1>
+            <h1 class="header red-text text-accent-2" style="font-weight: 300;">“閒”是生活的標點</h1>
             <p class="grey-text">距離 2027 年還有</p>
             
             <div class="clock-wrapper" id="timer-container">
@@ -136,18 +134,20 @@
         $(document).ready(function() {
             $('.sidenav').sidenav();
 
-            const futureDate = new Date('2027-01-01T00:00:00+08:00');
+            // 目標時間：2027年1月1日
+            const targetDate = new Date('2027-01-01T00:00:00+08:00');
             const now = new Date();
-            const diff = Math.floor((futureDate.getTime() - now.getTime()) / 1000);
+            const diff = Math.floor((targetDate - now) / 1000);
 
             if (diff > 0) {
                 const clock = $('.clock').FlipClock(diff, {
                     clockFace: 'DailyCounter',
-                    countdown: true
+                    countdown: true,
+                    showSeconds: true
                 });
                 $('#timer-container').css('opacity', '1');
             } else {
-                $('#message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
+                $('#message').html('<h5 class="red-text">2027 旅程已開啟</h5>');
             }
         });
     </script>
