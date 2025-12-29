@@ -2,13 +2,13 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>“閒”是生活的標點</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <link rel="stylesheet" href="https://iTaoPu.Github.io/css/flipclock.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>“閒”是生活的標點</title>
 
     <style>
         body {
@@ -18,96 +18,91 @@
             background-color: #f5f5f5;
         }
 
-        /* --- PC 端居中與基礎樣式 --- */
+        main { flex: 1 0 auto; }
+
+        /* --- 核心自適應容器 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
             justify-content: center;
+            align-items: center;
             padding: 40px 0;
             opacity: 0;
             transition: opacity 1s;
+            min-height: 200px;
         }
         
-        /* 修正 FlipClock 預設浮動問題 */
+        /* 覆蓋 FlipClock 默認樣式以支持自適應 */
         .flip-clock-wrapper {
             margin: 0 auto !important;
-            display: table !important;
+            display: flex !important;
+            flex-wrap: wrap;
+            justify-content: center;
             width: auto !important;
-            clear: both;
         }
 
-        /* FlipClock 顏色美化 */
+        /* 顏色美化 */
         .flip-clock-wrapper ul li a div div.inn {
             background-color: #333333 !important;
             color: #ff5252 !important;
             text-shadow: 0 1px 2px #000;
         }
         .flip-clock-dot { background: #ff5252 !important; }
-        .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
-
-    /* --- 手機端兩行顯示核心 CSS --- */
-    @media only screen and (max-width: 800px) {
-        h1.header { font-size: 2.2rem !important; }
-
-        .clock-wrapper {
-            padding: 20px 0;
-            min-height: 320px; /* 為兩行留出空間 */
+        .flip-clock-divider .flip-clock-label { 
+            color: #757575 !important; 
+            font-weight: bold; 
+            font-size: 16px;
         }
 
-        .flip-clock-wrapper {
-            display: flex !important;
-            flex-wrap: wrap; 
-            justify-content: center;
-            transform: scale(0.75); /* 根據屏幕寬度縮放 */
-            transform-origin: center top;
-            max-width: 100%;
+        /* --- 移動端自適應配置 --- */
+        @media only screen and (max-width: 800px) {
+            h1.header { font-size: 2.2rem !important; }
+            
+            .clock-wrapper {
+                padding: 20px 0;
+                min-height: 350px; /* 為兩行佈局預留高度 */
+            }
+
+            .flip-clock-wrapper {
+                transform: scale(0.75); /* 初始縮放 */
+                transform-origin: center top;
+            }
+
+            /* 【佈局核心】第一行天，第二行其餘 */
+            .flip-clock-wrapper ul.days + ul {
+                margin-right: 100% !important; /* 強制斷行 */
+                margin-bottom: 70px !important; /* 行間距 */
+            }
+
+            /* 隱藏第二行開頭的小時冒號 */
+            .flip-clock-divider.hours { display: none !important; }
+
+            /* 標籤位置優化：移至數字下方以防重疊 */
+            .flip-clock-divider .flip-clock-label {
+                right: auto !important;
+                left: 50% !important;
+                transform: translateX(-50%);
+                top: auto !important;
+                bottom: -45px !important;
+                white-space: nowrap;
+            }
+            /* 修正標籤相對於雙位數數字的居中偏移 */
+            .flip-clock-divider.days .flip-clock-label,
+            .flip-clock-divider.minutes .flip-clock-label,
+            .flip-clock-divider.seconds .flip-clock-label {
+                margin-left: 65px;
+            }
         }
 
-        /* --- 第一行：天 --- */
-        /* 在 Days 的第二個數字後設置 100% 的 margin，強制後方元素換行 */
-        .flip-clock-wrapper ul.days + ul {
-            margin-right: 100% !important; 
-            margin-bottom: 70px !important; /* 第一行與第二行的間距 */
+        /* 小屏幕手機進一步縮放 */
+        @media only screen and (max-width: 400px) {
+            .flip-clock-wrapper {
+                transform: scale(0.6);
+            }
         }
 
-        /* --- 第二行：時、分、秒 --- */
-        /* 隱藏小時前的冒號（因為它是第二行的開頭） */
-        .flip-clock-divider.hours {
-            display: none !important;
-        }
-
-        /* 確保第二行的冒號正常顯示 */
-        .flip-clock-divider {
-            float: none !important;
-            width: 20px !important;
-        }
-
-        /* --- 標籤位置修正 --- */
-        .flip-clock-divider .flip-clock-label {
-            right: auto !important;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            top: auto !important;
-            bottom: -45px !important; /* 標籤放在數字正下方 */
-            font-size: 18px !important;
-            color: #757575 !important;
-        }
-
-        /* 修正標籤相對於數字組的中心點偏移 */
-        .flip-clock-divider.days .flip-clock-label { margin-left: 65px; }
-        .flip-clock-divider.minutes .flip-clock-label { margin-left: 65px; }
-        .flip-clock-divider.seconds .flip-clock-label { 
-            display: block !important; 
-            visibility: visible; 
-            margin-left: 65px; 
-        }
-
-        .flip-clock-wrapper ul {
-            margin: 5px !important;
-        }
-    }
-</style>
+        .footer-left { text-align: left !important; }
+    </style>
 </head>
 
 <body>
@@ -117,10 +112,7 @@
             <ul class="right hide-on-med-and-down">
                 <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
             </ul>
         </div>
     </nav>
@@ -128,10 +120,6 @@
     <ul class="sidenav" id="nav-mobile">
         <li><a href="/">Home</a></li>
         <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
     <main>
@@ -169,7 +157,6 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化側邊欄
             $('.sidenav').sidenav();
 
             const futureDate = new Date('2027-01-01T00:00:00+08:00');
@@ -180,7 +167,12 @@
                 setTimeout(function() {
                     const clock = $('.clock').FlipClock(diff, {
                         clockFace: 'DailyCounter',
-                        countdown: true
+                        countdown: true,
+                        callbacks: {
+                            stop: function() {
+                                $('#message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
+                            }
+                        }
                     });
                     $('#timer-container').css('opacity', '1');
                 }, 300);
@@ -191,8 +183,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
