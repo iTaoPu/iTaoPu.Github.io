@@ -15,7 +15,8 @@
         html, body {
             height: 100%;
             margin: 0;
-            background-color: #f5f5f5; /* 保持原有的淺灰背景，或改為 #000 模擬 Time.is */
+            background-color: #1a1a1a; /* 改為深色背景，更有質感 */
+            color: #eee;
         }
 
         body {
@@ -27,73 +28,75 @@
             flex: 1 0 auto;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 垂直居中核心 */
-            align-items: center;    /* 水平居中核心 */
-            padding: 20px 0;
+            justify-content: center; 
+            align-items: center;    
+            padding: 40px 0;
+            overflow: hidden; /* 防止縮放導致的滾動條 */
         }
 
-        /* --- 仿 Time.is 文字比例 --- */
+        /* --- 文字比例與字體 --- */
         .header-title {
-            font-size: 1.2rem !important; /* 標題縮小 */
+            font-size: 1.4rem !important;
             font-weight: 300;
             margin: 0 !important;
             color: #ff5252;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
         }
 
         .sub-text {
             font-size: 0.9rem;
-            color: #9e9e9e;
+            color: #757575;
             margin-bottom: 5px;
+            letter-spacing: 1px;
         }
 
-        /* --- 時鐘巨大化核心 --- */
+        #bj-date {
+            font-family: "Monaco", "Consolas", monospace; /* 等寬字體防止抖動 */
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            color: #9e9e9e;
+        }
+
+        /* --- 時鐘巨大化與佈局修正 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 1s;
-            /* PC 端超大縮放 */
-            transform: scale(2.0); 
-            margin: 80px 0; /* 補償放大後的佔位 */
+            transition: opacity 0.8s ease-in-out;
+            
+            /* 使用 transform 縮放，並透過 margin 補償空間 */
+            transform: scale(1.8); 
+            margin: 110px 0; 
         }
         
         .flip-clock-wrapper {
             margin: 0 !important;
-            display: flex !important;
-            justify-content: center;
             width: auto !important;
         }
 
-        /* 隱藏 天、時、分、秒 標籤文字 */
-        .flip-clock-divider .flip-clock-label {
-            display: none !important;
-        }
+        /* 隱藏標籤 */
+        .flip-clock-divider .flip-clock-label { display: none !important; }
 
-        /* 顏色自定義：深灰底紅字 */
+        /* 顏色：深灰底紅字 */
         .flip-clock-wrapper ul li a div div.inn {
             background-color: #333333 !important;
             color: #ff5252 !important;
             text-shadow: 0 1px 2px #000;
-            border-radius: 4px;
         }
         .flip-clock-dot { background: #ff5252 !important; }
 
         /* --- 移動端適配 --- */
-        @media only screen and (max-width: 600px) {
-            .clock-wrapper {
-                transform: scale(0.75); /* 手機端縮放，避免數字跑出螢幕 */
-                margin: 30px 0;
-            }
+        @media only screen and (max-width: 768px) {
+            .clock-wrapper { transform: scale(1.2); margin: 60px 0; }
+        }
+        @media only screen and (max-width: 480px) {
+            .clock-wrapper { transform: scale(0.7); margin: 20px 0; }
             .header-title { font-size: 1.1rem !important; }
         }
 
-        /* 頁腳樣式修正 */
-        .page-footer {
-            padding-top: 20px;
-        }
+        .page-footer { padding-top: 20px; }
     </style>
 </head>
 
@@ -106,26 +109,20 @@
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
             </ul>
         </div>
     </nav>
 
     <ul class="sidenav" id="nav-mobile">
         <li><a href="/">Home</a></li>
-                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
+        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
     </ul>
     
     <main>
         <div class="container center-align">
             <h1 class="header-title">“閒”是生活的標點</h1>
-            <p class="sub-text">北京時間</p>
-            <div id="bj-date" class="grey-text" style="font-size: 0.8rem; margin-bottom: 20px;"></div>
+            <p class="sub-text">BEIJING TIME</p>
+            <div id="bj-date">載入中...</div>
             
             <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
@@ -133,17 +130,17 @@
         </div>
     </main>
 
-    <footer class="page-footer grey darken-3">
+    <footer class="page-footer grey darken-4">
         <div class="container">
             <div class="row">
-                <div class="col l8 s12 footer-left">
+                <div class="col l8 s12">
                     <h5 class="white-text">蜂巢·隱曜</h5>
                     <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
                 </div>
             </div>
         </div>
-        <div class="footer-copyright grey darken-4">
-            <div class="container footer-left">
+        <div class="footer-copyright black">
+            <div class="container">
                 &copy; 2022-2026 菜鳥驛站·樂玩公社
             </div>
         </div>
@@ -157,36 +154,52 @@
         $(document).ready(function() {
             $('.sidenav').sidenav();
 
-            // 精確獲取北京時間 (UTC+8)
-            function getBeijingTime() {
-                const now = new Date();
+            let timeOffset = 0; // 與標準時間的偏差（毫秒）
+
+            // 獲取精確北京時間並校準
+            async function syncTime() {
+                try {
+                    const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Shanghai');
+                    const data = await response.json();
+                    const serverTime = new Date(data.datetime).getTime();
+                    const localTime = Date.now();
+                    timeOffset = serverTime - localTime; // 計算本地與服務器的偏差
+                    console.log("校時成功，偏差量(ms):", timeOffset);
+                } catch (err) {
+                    console.warn("校時服務不可用，切換為本地時區換算模式");
+                    timeOffset = 0;
+                }
+                updateDate();
+            }
+
+            function getCalibratedTime() {
+                const now = new Date(Date.now() + timeOffset);
+                // 強制轉換為 UTC+8 (北京)
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 return new Date(utc + (3600000 * 8));
             }
 
-            // 更新日期顯示
             function updateDate() {
-                const bjNow = getBeijingTime();
+                const bjNow = getCalibratedTime();
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 $('#bj-date').text(bjNow.toLocaleDateString('zh-CN', options));
             }
 
-            // 初始化時鐘為 24 小時模式
+            // 初始化時鐘
             const clock = $('.clock').FlipClock({
                 clockFace: 'TwentyFourHourClock',
                 showSeconds: true
             });
 
-            // 設定初始北京時間
-            const bjNow = getBeijingTime();
-            clock.setTime(bjNow);
-            updateDate();
+            // 執行同步
+            syncTime().then(() => {
+                clock.setTime(getCalibratedTime());
+                $('#timer-container').css('opacity', '1');
+            });
 
-            // 顯示時鐘容器
-            $('#timer-container').css('opacity', '1');
-
-            // 每小時更新一次日期文字
-            setInterval(updateDate, 3600000);
+            // 每隔 60 秒檢查一次日期更新，每 10 分鐘重新校準一次 API
+            setInterval(updateDate, 60000);
+            setInterval(syncTime, 600000);
         });
     </script>
 </body>
