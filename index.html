@@ -1,296 +1,46 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>“閒”是生活的標點 - 北京時間</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" href="https://iTaoPu.Github.io/css/flipclock.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
-    
-    <style>
-        /* --- 頁面結構優化 --- */
-        html, body {
-            height: 100%;
-            margin: 0;
-            background-color: #1a1a1a; /* 改為深色背景，更能襯托紅色時鐘 */
-            color: #ffffff;
-            transition: background-color 0.3s ease;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        main {
-            flex: 1 0 auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center;    
-            padding: 40px 0;
-        }
-
-        /* --- 仿 Time.is 文字比例 --- */
-        .header-title {
-            font-size: 1.2rem !important;
-            font-weight: 300;
-            margin: 0 !important;
-            color: #ff5252;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-
-        .sub-text {
-            font-size: 0.9rem;
-            color: #757575;
-            margin-bottom: 5px;
-        }
-
-        /* --- 時鐘巨大化核心 --- */
-        .clock-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 1.5s ease-in;
-            /* PC 端超大縮放 */
-            transform: scale(1.8); 
-            margin: 100px 0; 
-        }
-        
-        .flip-clock-wrapper {
-            margin: 0 !important;
-            display: flex !important;
-            justify-content: center;
-            width: auto !important;
-        }
-
-        /* 隱藏標籤文字 */
-        .flip-clock-divider .flip-clock-label {
-            display: none !important;
-        }
-
-        /* 顏色自定義：深灰底紅字 */
-        .flip-clock-wrapper ul li a div div.inn {
-            background-color: #333333 !important;
-            color: #ff5252 !important;
-            text-shadow: 0 1px 2px #000;
-            border-radius: 6px;
-        }
-        .flip-clock-dot { background: #ff5252 !important; }
-
-        /* --- 移動端適配 --- */
-        @media only screen and (max-width: 768px) {
-            .clock-wrapper {
-                transform: scale(0.85); 
-                margin: 40px 0;
-            }
-        }
-        @media only screen and (max-width: 480px) {
-            .clock-wrapper {
-                transform: scale(0.75);
-                margin: 20px 0;
-            }
-            .header-title { font-size: 1rem !important; }
-        }
-
-        /* 頁腳修正 */
-        .page-footer {
-            padding-top: 20px;
-            background-color: #121212 !important;
-            transition: background-color 0.3s ease;
-        }
-
-        /* --- 新增：右下角切換按鈕樣式 (縮小版) --- */
-        #theme-toggle-fab {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 1000;
-        }
-        #theme-toggle-fab a {
-            width: 45px;
-            height: 45px;
-            line-height: 45px;
-        }
-        #theme-toggle-fab a i {
-            line-height: 45px;
-            font-size: 1.5rem;
-        }
-
-        /* --- 深色模式下的移動端導航欄樣式 --- */
-        .sidenav {
-            background-color: #212121 !important;
-        }
-        .sidenav li a {
-            color: #ffffff !important;
-        }
-        .sidenav li a i {
-            color: #ffffff !important;
-        }
-
-        /* --- 淺色模式樣式定義 --- */
-        body.light-mode {
-            background-color: #f5f5f5 !important;
-            color: #212121 !important;
-        }
-        body.light-mode nav { background-color: #ffffff !important; }
-        body.light-mode nav ul a, body.light-mode nav i { color: #424242 !important; }
-        body.light-mode .sub-text { color: #9e9e9e !important; }
-        
-        /* 淺色模式下的移動端導航欄 */
-        body.light-mode .sidenav { 
-            background-color: #ffffff !important; 
-        }
-        body.light-mode .sidenav li a { 
-            color: #424242 !important; 
-        }
-        body.light-mode .sidenav li a i {
-            color: #424242 !important;
-        }
-        body.light-mode .sidenav .user-view .background { 
-            background-color: #eeeeee !important; 
-        }
-        body.light-mode .sidenav .user-view .name { 
-            color: #212121 !important; 
-        }
-
-        /* 修正：淺色模式下時間卡片背景為白色，數字改為黑色 */
-        body.light-mode .flip-clock-wrapper ul li a div div.inn {
-            background-color: #ffffff !important;
-            color: #000000 !important; /* 數字改為黑色 */
-            text-shadow: none !important;
-            border: 1px solid #ddd;
-        }
-        /* 淺色模式下分隔點也改為黑色 (或維持紅色，目前設為黑色以符合您的要求) */
-        body.light-mode .flip-clock-dot { background: #000000 !important; }
-
-        /* 淺色模式下摺疊卡片的顏色同步 */
-        body.light-mode .flip-clock-wrapper ul li a div.up:after {
-            background-color: rgba(0,0,0,0.1) !important;
-        }
-
-        body.light-mode .page-footer { background-color: #eeeeee !important; }
-        body.light-mode .page-footer h5, body.light-mode .page-footer p, body.light-mode .footer-copyright { color: #616161 !important; }
-        body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
-    </style>
-</head>
-
-<body>
-    <div id="theme-toggle-fab">
-        <a class="btn-floating waves-effect waves-light red">
-            <i class="material-icons">brightness_medium</i>
-        </a>
+<footer class="page-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col l8 s12">
+                <h5 class="white-text" style="font-size: 1.1rem; font-weight: 400;">蜂巢·隱曜</h5>
+                <p class="grey-text text-lighten-1" style="font-size: 0.85rem; line-height: 1.6;">
+                    「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅
+                </p>
+            </div>
+            <div class="col l4 s12 right-align-on-large">
+                <h6 class="white-text" style="font-size: 0.9rem; margin-bottom: 15px;">公益服務</h6>
+                <ul>
+                    <li style="margin-bottom: 5px;">
+                        <a class="grey-text text-lighten-1" href="https://docker.ifanr.pp.ua" target="_blank" style="font-size: 0.8rem;">Docker·離線映像下載器</a>
+                    </li>
+                    <li style="margin-bottom: 5px;">
+                        <a class="grey-text text-lighten-1" href="https://github.ifanr.pp.ua" target="_blank" style="font-size: 0.8rem;">GitHub 文件加速·公益服務</a>
+                    </li>
+                    <li style="margin-bottom: 5px;">
+                        <a class="grey-text text-lighten-1" href="https://url.ifanr.pp.ua" target="_blank" style="font-size: 0.8rem;">簡約·鏈結縮短服務</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-
-    <nav class="black">
-        <div class="nav-wrapper container">
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="/">Home</a></li>
-                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://vlink.cc/CNiao" target="_blank">萬象聚合</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
-            </ul>
+    <div class="footer-copyright black">
+        <div class="container grey-text text-darken-1" style="font-size: 0.75rem;">
+            &copy; 2022-2026 菜鳥驛站·樂玩公社
         </div>
-    </nav>
+    </div>
+</footer>
 
-    <ul class="sidenav" id="nav-mobile">
-        <li><div class="user-view"><div class="background black"></div><span class="white-text name">蜂巢·隱曜</span></div></li>
-        <li><a href="/">Home</a></li>
-        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-        <li><a href="https://vlink.cc/CNiao" target="_blank">萬象聚合</a></li>
-        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
-    </ul>
+<style>
+    /* 額外補充：確保在手機上文字靠左，在大螢幕靠右 */
+    @media only screen and (min-width: 993px) {
+        .right-align-on-large {
+            text-align: right;
+        }
+    }
     
-    <main>
-        <div class="container center-align">
-            <h1 class="header-title">“閒”是生活的標點</h1>
-            <p class="sub-text">BEIJING TIME</p>
-            <div id="bj-date" class="grey-text text-lighten-1" style="font-size: 0.9rem; margin-bottom: 20px; font-weight: 300;"></div>
-            
-            <div class="clock-wrapper" id="timer-container">
-                <div class="clock"></div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="page-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col l8 s12">
-                    <h5 class="white-text">蜂巢·隱曜</h5>
-                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
-                </div>
-            </div>
-        </div>
-                <div class="col l3 s12">
-                    <h6 class="white-text">公益服務</h6>
-                    <ul>
-                        <li><a class="white-text" href="https://docker.ifanr.pp.ua">Docker·離線映像下載器</a></li>
-                        <li><a class="white-text" href="https://github.ifanr.pp.ua">GitHub 文件加速·公益服務</a></li>
-                        <li><a class="white-text" href="https://url.ifanr.pp.ua">簡約·鏈結縮短服務</a></li>
-                    </ul>
-                </div>
-        </div>
-        <div class="footer-copyright black">
-            <div class="container grey-text text-darken-1">
-                &copy; 2022-2026 菜鳥驛站·樂玩公社
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="https://iTaoPu.Github.io/js/flipclock.js"></script>
-    
-    <script type="text/javascript">
-        $(document).ready(function() {
-            // 初始化 Materialize 元件
-            $('.sidenav').sidenav();
-
-            // --- 右下角按鈕切換邏輯 ---
-            $('#theme-toggle-fab').on('click', function() {
-                $('body').toggleClass('light-mode');
-            });
-
-            // 精確獲取北京時間 (UTC+8)
-            function getBeijingTime() {
-                const now = new Date();
-                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-                return new Date(utc + (3600000 * 8));
-            }
-
-            // 更新日期顯示
-            function updateDate() {
-                const bjNow = getBeijingTime();
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
-            }
-
-            // 初始化 FlipClock
-            const clock = $('.clock').FlipClock({
-                clockFace: 'TwentyFourHourClock',
-                showSeconds: true
-            });
-
-            const bjNow = getBeijingTime();
-            clock.setTime(bjNow);
-            updateDate();
-
-            $('#timer-container').css('opacity', '1');
-            setInterval(updateDate, 3600000);
-        });
-    </script>
-</body>
-</html>
-
+    /* 讓頁腳連結有懸停效果 */
+    .page-footer ul li a:hover {
+        color: #ff5252 !important;
+        text-decoration: underline;
+    }
+</style>
