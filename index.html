@@ -15,7 +15,7 @@
         html, body {
             height: 100%;
             margin: 0;
-            background-color: #1a1a1a; /* 改為深色背景，更能襯托紅色時鐘 */
+            background-color: #1a1a1a;
             color: #ffffff;
             transition: background-color 0.3s ease;
         }
@@ -34,7 +34,6 @@
             padding: 40px 0;
         }
 
-        /* --- 仿 Time.is 文字比例 --- */
         .header-title {
             font-size: 1.2rem !important;
             font-weight: 300;
@@ -50,7 +49,16 @@
             margin-bottom: 5px;
         }
 
-        /* --- 時鐘巨大化核心 --- */
+        /* 授時狀態提示樣式 */
+        #sync-status {
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            height: 1rem;
+            transition: opacity 0.5s;
+        }
+
         .clock-wrapper {
             width: 100%;
             display: flex;
@@ -58,7 +66,6 @@
             align-items: center;
             opacity: 0;
             transition: opacity 1.5s ease-in;
-            /* PC 端超大縮放 */
             transform: scale(1.8); 
             margin: 100px 0; 
         }
@@ -70,12 +77,10 @@
             width: auto !important;
         }
 
-        /* 隱藏標籤文字 */
         .flip-clock-divider .flip-clock-label {
             display: none !important;
         }
 
-        /* 顏色自定義：深灰底紅字 */
         .flip-clock-wrapper ul li a div div.inn {
             background-color: #333333 !important;
             color: #ff5252 !important;
@@ -84,83 +89,39 @@
         }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 移動端適配 --- */
         @media only screen and (max-width: 768px) {
-            .clock-wrapper {
-                transform: scale(0.85); 
-                margin: 40px 0;
-            }
+            .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
         }
         @media only screen and (max-width: 480px) {
-            .clock-wrapper {
-                transform: scale(0.75);
-                margin: 20px 0;
-            }
+            .clock-wrapper { transform: scale(0.75); margin: 20px 0; }
             .header-title { font-size: 1rem !important; }
         }
 
-        /* 頁腳修正 */
         .page-footer {
             padding-top: 20px;
             background-color: #121212 !important;
             transition: background-color 0.3s ease;
         }
 
-        /* --- 新增：右下角切換按鈕樣式 (縮小版) --- */
         #theme-toggle-fab {
             position: fixed;
             right: 20px;
             bottom: 20px;
             z-index: 1000;
         }
-        #theme-toggle-fab a {
-            width: 45px;
-            height: 45px;
-            line-height: 45px;
-        }
-        #theme-toggle-fab a i {
-            line-height: 45px;
-            font-size: 1.5rem;
-        }
+        #theme-toggle-fab a { width: 45px; height: 45px; line-height: 45px; }
+        #theme-toggle-fab a i { line-height: 45px; font-size: 1.5rem; }
 
-        /* --- 深色模式下的移動端導航欄樣式 --- */
-        .sidenav {
-            background-color: #212121 !important;
-        }
-        .sidenav li a {
-            color: #ffffff !important;
-        }
-        .sidenav li a i {
-            color: #ffffff !important;
-        }
+        .sidenav { background-color: #212121 !important; }
+        .sidenav li a, .sidenav li a i { color: #ffffff !important; }
 
-        /* --- 淺色模式樣式定義 --- */
-        body.light-mode {
-            background-color: #f5f5f5 !important;
-            color: #212121 !important;
-        }
+        /* 淺色模式 */
+        body.light-mode { background-color: #f5f5f5 !important; color: #212121 !important; }
         body.light-mode nav { background-color: #ffffff !important; }
         body.light-mode nav ul a, body.light-mode nav i { color: #424242 !important; }
-        body.light-mode .sub-text { color: #9e9e9e !important; }
-        
-        /* 淺色模式下的移動端導航欄 */
-        body.light-mode .sidenav { 
-            background-color: #ffffff !important; 
-        }
-        body.light-mode .sidenav li a { 
-            color: #424242 !important; 
-        }
-        body.light-mode .sidenav li a i {
-            color: #424242 !important;
-        }
-        body.light-mode .sidenav .user-view .background { 
-            background-color: #eeeeee !important; 
-        }
-        body.light-mode .sidenav .user-view .name { 
-            color: #212121 !important; 
-        }
-
-        /* 淺色模式下時間卡片背景為白色，數字改為黑色 */
+        body.light-mode #sync-status { color: #bbb; }
+        body.light-mode .sidenav { background-color: #ffffff !important; }
+        body.light-mode .sidenav li a, body.light-mode .sidenav li a i { color: #424242 !important; }
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
             color: #000000 !important;
@@ -168,11 +129,6 @@
             border: 1px solid #ddd;
         }
         body.light-mode .flip-clock-dot { background: #000000 !important; }
-
-        body.light-mode .flip-clock-wrapper ul li a div.up:after {
-            background-color: rgba(0,0,0,0.1) !important;
-        }
-
         body.light-mode .page-footer { background-color: #eeeeee !important; }
         body.light-mode .page-footer h5, body.light-mode .page-footer p, body.light-mode .footer-copyright { color: #616161 !important; }
         body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
@@ -215,6 +171,7 @@
             <h1 class="header-title">“閒”是生活的標點</h1>
             <p class="sub-text">BEIJING TIME</p>
             <div id="bj-date" class="grey-text text-lighten-1" style="font-size: 0.9rem; margin-bottom: 20px; font-weight: 300;"></div>
+            <div id="sync-status">正在校準官方授時...</div>
             
             <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
@@ -224,18 +181,9 @@
 
     <footer class="page-footer">
         <div class="container">
-            <div class="row">
-                <div class="col l8 s12">
-                    <h5 class="white-text">蜂巢·隱曜</h5>
-                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
-                </div>
-            </div>
+            <div class="row"><div class="col l8 s12"><h5 class="white-text">蜂巢·隱曜</h5><p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p></div></div>
         </div>
-        <div class="footer-copyright black">
-            <div class="container grey-text text-darken-1">
-                &copy; 2022-2026 菜鳥驛站·樂玩公社
-            </div>
-        </div>
+        <div class="footer-copyright black"><div class="container grey-text text-darken-1">&copy; 2022-2026 菜鳥驛站·樂玩公社</div></div>
     </footer>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -245,43 +193,48 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('.sidenav').sidenav();
+            @@MATH_BLOCK_0@@('body').toggleClass('light-mode'); });
 
-            $('#theme-toggle-fab').on('click', function() {
-                $('body').toggleClass('light-mode');
-            });
-
-            // --- 修改核心：時間同步與回退邏輯 ---
-            let timeOffset = 0; // 用於儲存網絡時間與本地時間的差值
+            let timeOffset = 0;
+            const @@MATH_BLOCK_1@@('#sync-status');
 
             function getBeijingTime() {
                 const now = new Date();
-                // 加上偏移量後的精確時間
                 const syncedNow = new Date(now.getTime() + timeOffset);
                 const utc = syncedNow.getTime() + (syncedNow.getTimezoneOffset() * 60000);
                 return new Date(utc + (3600000 * 8));
             }
 
             function syncTime() {
-                // 使用 time.is 獲取高精度 UTC 時間
+                // 使用中国科学院（国家授时中心参与维护）的官方云授时接口
                 $.ajax({
-                    url: 'https://time.is/Beijing',
-                    method: 'GET',
-                    timeout: 3000,
+                    url: 'https://cgi.beijing-time.org.cn/get_time', // 该接口直接获取国家授时中心标准时间戳
+                    dataType: 'jsonp',
+                    timeout: 3500,
                     success: function(data) {
-                        const networkTime = new Date(data.datetime).getTime();
+                        const networkTime = data.st * 1000;
                         const localTime = new Date().getTime();
-                        // 計算本地時間與標準時間的誤差
                         timeOffset = networkTime - localTime;
-                        console.log("時間校準成功，誤差值(ms): " + timeOffset);
                         
-                        // 同步後重新設定 FlipClock 時間
                         const bjNow = getBeijingTime();
                         clock.setTime(bjNow);
                         updateDate();
+                        
+                        $status.text('已同步国家授时中心（NTSC）时间');
+                        setTimeout(() => { $status.css('opacity', '0'); }, 3000);
                     },
                     error: function() {
-                        console.log("網絡校準失敗，使用本地時間。");
-                        timeOffset = 0; // 獲取不到則使用本地時間 (偏移為0)
+                        // 備用方案：阿里雲授時接口 (JSON 格式)
+                        $.get('https://ntp1.aliyun.com/m/api/getTime', function(data) {
+                            if(data && data.result) {
+                                timeOffset = data.result - new Date().getTime();
+                                $status.text('已同步阿里雲授時');
+                            }
+                        }).fail(function() {
+                            $status.text('校準失敗，使用本地時間');
+                        }).always(() => {
+                            setTimeout(() => { $status.css('opacity', '0'); }, 3000);
+                        });
                     }
                 });
             }
@@ -289,26 +242,18 @@
             function updateDate() {
                 const bjNow = getBeijingTime();
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
+                $('#bj-date').text(bjNow.toLocaleDateString('zh-CN', options));
             }
 
-            // 初始化 FlipClock
-            const clock = $('.clock').FlipClock({
-                clockFace: 'TwentyFourHourClock',
-                showSeconds: true
-            });
-
-            // 預設先用本地時間啟動
+            const clock = $('.clock').FlipClock({ clockFace: 'TwentyFourHourClock', showSeconds: true });
+            
+            // 初始顯示
             clock.setTime(getBeijingTime());
             updateDate();
-
-            // 執行網絡校準
             syncTime();
-
+            
             $('#timer-container').css('opacity', '1');
-
-            // 每小時重新校準一次
-            setInterval(syncTime, 3600000);
+            setInterval(syncTime, 600000); 
             setInterval(updateDate, 3600000);
         });
     </script>
