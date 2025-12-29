@@ -53,14 +53,17 @@
         /* --- 時鐘巨大化核心 --- */
         .clock-wrapper {
             width: 100%;
+            max-width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
             transition: opacity 1.5s ease-in;
-         /* 動態縮放：最小0.7倍，隨寬度變化，PC端最大鎖定在1.3倍避免過大 */
-            transform: scale(clamp(0.65, 12vw, 2)); 
-            margin: clamp(50px, 12vh, 120px) 0; 
+            /* 修正縮放：上限設為 2.0，確保不溢出螢幕 */
+            transform: scale(clamp(0.6, 10vw, 2.0)); 
+            transform-origin: center center;
+            margin: 100px 0; /* 給予足夠的垂直空間 */
+            white-space: nowrap; 
         }
         
         .flip-clock-wrapper {
@@ -307,6 +310,7 @@
     </script>
 </body>
 </html>
+
 
 
 
