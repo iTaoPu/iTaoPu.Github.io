@@ -11,11 +11,11 @@
     <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
     
     <style>
-        /* --- 頁面結構優化 --- */
         html, body {
             height: 100%;
             margin: 0;
-            background-color: #f5f5f5; /* 保持原有的淺灰背景，或改為 #000 模擬 Time.is */
+            background-color: #f5f5f5;
+            overflow-x: hidden; /* 防止縮放時出現水平捲軸 */
         }
 
         body {
@@ -27,73 +27,49 @@
             flex: 1 0 auto;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 垂直居中核心 */
-            align-items: center;    /* 水平居中核心 */
-            padding: 20px 0;
+            justify-content: center; 
+            align-items: center;    
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        /* --- 仿 Time.is 文字比例 --- */
         .header-title {
-            font-size: 1.2rem !important; /* 標題縮小 */
+            font-size: 1.2rem !important;
             font-weight: 300;
             margin: 0 !important;
             color: #ff5252;
             letter-spacing: 2px;
         }
 
-        .sub-text {
-            font-size: 0.9rem;
-            color: #9e9e9e;
-            margin-bottom: 5px;
-        }
-
-        /* --- 時鐘巨大化核心 --- */
+        /* --- 寬度自適應核心容器 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 1s;
-            /* PC 端超大縮放 */
-            transform: scale(2.0); 
-            margin: 80px 0; /* 補償放大後的佔位 */
+            transition: opacity 0.5s;
+            transform-origin: center center; /* 以中心為縮放原點 */
+            margin: 40px 0; 
         }
         
         .flip-clock-wrapper {
             margin: 0 !important;
-            display: flex !important;
-            justify-content: center;
+            display: inline-block !important; /* 確保寬度由內容撐開 */
             width: auto !important;
         }
 
-        /* 隱藏 天、時、分、秒 標籤文字 */
-        .flip-clock-divider .flip-clock-label {
-            display: none !important;
-        }
-
-        /* 顏色自定義：深灰底紅字 */
+        /* 樣式美化：隱藏標籤與顏色自定義 */
+        .flip-clock-divider .flip-clock-label { display: none !important; }
         .flip-clock-wrapper ul li a div div.inn {
             background-color: #333333 !important;
             color: #ff5252 !important;
-            text-shadow: 0 1px 2px #000;
             border-radius: 4px;
         }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 移動端適配 --- */
-        @media only screen and (max-width: 600px) {
-            .clock-wrapper {
-                transform: scale(0.75); /* 手機端縮放，避免數字跑出螢幕 */
-                margin: 30px 0;
-            }
-            .header-title { font-size: 1.1rem !important; }
-        }
-
-        /* 頁腳樣式修正 */
-        .page-footer {
-            padding-top: 20px;
-        }
+        .page-footer { padding-top: 20px; }
     </style>
 </head>
 
@@ -114,16 +90,17 @@
 
     <ul class="sidenav" id="nav-mobile">
         <li><a href="/">Home</a></li>
-                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
+        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
     <main>
         <div class="container center-align">
             <h1 class="header-title">“閒”是生活的標點</h1>
+            <p class="sub-text">北京時間</p>
             <div id="bj-date" class="grey-text" style="font-size: 0.8rem; margin-bottom: 20px;"></div>
             
             <div class="clock-wrapper" id="timer-container">
@@ -156,38 +133,59 @@
         $(document).ready(function() {
             $('.sidenav').sidenav();
 
-            // 精確獲取北京時間 (UTC+8)
+            // 1. 動態縮放邏輯
+            function handleResize() {
+                const @@MATH_BLOCK_0@@('#timer-container');
+                const @@MATH_BLOCK_1@@('main');
+                const containerWidth = $main.width();
+                const clockOriginalWidth = 620; // FlipClock 24h 模式的原始像素寬度
+                
+                // 計算縮放比例：視窗寬度的 90% 除以時鐘原始寬度
+                let scale = (containerWidth * 0.9) / clockOriginalWidth;
+                
+                // 限制最大縮放值，避免在超大螢幕上過於模糊
+                if (scale > 2.5) scale = 2.5; 
+                
+                @@MATH_BLOCK_2@@{scale})`);
+                
+                // 動態調整容器高度，補償 scale 縮放後遺留的空白
+                const scaledHeight = 160 * scale; 
+                $wrapper.css('height', scaledHeight + 'px');
+            }
+
+            // 2. 時間獲取與更新
             function getBeijingTime() {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 return new Date(utc + (3600000 * 8));
             }
 
-            // 更新日期顯示
             function updateDate() {
                 const bjNow = getBeijingTime();
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 $('#bj-date').text(bjNow.toLocaleDateString('zh-CN', options));
             }
 
-            // 初始化時鐘為 24 小時模式
+            // 3. 初始化時鐘
             const clock = $('.clock').FlipClock({
                 clockFace: 'TwentyFourHourClock',
                 showSeconds: true
             });
 
-            // 設定初始北京時間
             const bjNow = getBeijingTime();
             clock.setTime(bjNow);
             updateDate();
 
-            // 顯示時鐘容器
+            // 執行一次縮放並顯示
+            handleResize();
             $('#timer-container').css('opacity', '1');
 
-            // 每小時更新一次日期文字
+            // 監聽視窗大小改變事件
+            $(window).on('resize', handleResize);
+
+            // 每小時更新一次日期
             setInterval(updateDate, 3600000);
         });
     </script>
 </body>
 </html>
-
