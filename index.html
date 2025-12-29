@@ -47,6 +47,33 @@
         }
         .flip-clock-dot { background: #ff5252 !important; }
         .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
+
+/* 當螢幕寬度小於 600px 時執行 */
+@media only screen and (max-width: 600px) {
+    /* 隱藏所有時間標籤（天、時、分、秒文字） */
+    .flip-clock-divider .flip-clock-label {
+        display: none !important;
+    }
+
+    /* 調整間距，讓數字更緊湊 */
+    .flip-clock-divider {
+        width: 15px !important;
+    }
+    
+    .flip-clock-divider.days,
+    .flip-clock-divider.hours,
+    .flip-clock-divider.minutes,
+    .flip-clock-divider.seconds {
+        width: 15px !important;
+    }
+
+    /* 修正縮放中心點，防止左移 */
+    .clock-wrapper {
+        transform: scale(0.6);
+        transform-origin: center center;
+        padding: 20px 0;
+    }
+}
     </style>
 </head>
 
@@ -58,16 +85,20 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
                 <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
             </ul>
         </div>
     </nav>
 
     <ul class="sidenav" id="nav-mobile">
         <li><a href="/">Home</a></li>
-        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
     <main>
@@ -126,4 +157,5 @@
     </script>
 </body>
 </html>
+
 
