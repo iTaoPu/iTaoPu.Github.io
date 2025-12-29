@@ -206,35 +206,20 @@
             }
 
             function syncTime() {
-                // 使用中国科学院（国家授时中心参与维护）的官方云授时接口
                 $.ajax({
-                    url: 'http://cgi.beijing-time.org.cn/get_time', // 该接口直接获取国家授时中心标准时间戳
-                    dataType: 'jsonp',
-                    timeout: 3500,
+                    url: 'https://time.is/Beijing',
+                    method: 'GET',
+                    timeout: 5000,
                     success: function(data) {
-                        const networkTime = data.st * 1000;
-                        const localTime = new Date().getTime();
-                        timeOffset = networkTime - localTime;
-                        
-                        const bjNow = getBeijingTime();
-                        clock.setTime(bjNow);
+                        timeOffset = new Date(data.datetime).getTime() - new Date().getTime();
+                        clock.setTime(getBeijingTime());
                         updateDate();
-                        
-                        $status.text('已同步国家授时中心（NTSC）时间');
+                        $status.text('已同步 Time.is 時間');
                         setTimeout(() => { $status.css('opacity', '0'); }, 3000);
                     },
                     error: function() {
-                        // 備用方案：阿里雲授時接口 (JSON 格式)
-                        $.get('http://ntp1.aliyun.com/m/api/getTime', function(data) {
-                            if(data && data.result) {
-                                timeOffset = data.result - new Date().getTime();
-                                $status.text('已同步阿里雲授時');
-                            }
-                        }).fail(function() {
-                            $status.text('校準失敗，使用本地時間');
-                        }).always(() => {
-                            setTimeout(() => { $status.css('opacity', '0'); }, 3000);
-                        });
+                        $status.text('同步失敗，使用本地時間');
+                        setTimeout(() => { $status.css('opacity', '0'); }, 3000);
                     }
                 });
             }
@@ -259,5 +244,6 @@
     </script>
 </body>
 </html>
+
 
 
