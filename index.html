@@ -53,7 +53,14 @@
             font-weight: bold; 
             font-size: 16px;
         }
-
+      /* 移动端 */   
+    @media only screen and (max-width: 600px) {
+    .flip-clock-wrapper {
+        transform: scale(0.6);
+        -ms-transform: scale(0.6);
+        -webkit-transform: scale(0.6);
+    }
+}
         .footer-left { text-align: left !important; }
     </style>
 </head>
@@ -143,6 +150,7 @@
     </script>
 </body>
 </html>
+
 
 
 
