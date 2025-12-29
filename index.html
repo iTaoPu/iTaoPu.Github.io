@@ -47,37 +47,28 @@
         .flip-clock-divider .flip-clock-label { 
             color: #757575 !important; 
             font-weight: bold; 
-            text-transform: uppercase;
         }
 
-        /* --- 手機端響應式核心 (斷行邏輯) --- */
+        /* --- 修正：手機端保持單行不隔行 --- */
         @media only screen and (max-width: 600px) {
-            h1.header { font-size: 2.5rem !important; margin-top: 20px; }
+            h1.header { font-size: 2.2rem !important; }
             
             .clock-wrapper {
                 padding: 20px 0;
-                min-height: 320px;
+                overflow-x: hidden; /* 防止橫向滾動 */
             }
 
             .flip-clock-wrapper {
-                transform: scale(0.65); /* 縮小以適應手機寬度 */
-                transform-origin: center top;
-                display: flex !important;
-                flex-wrap: wrap;
-                justify-content: center;
+                /* 為了讓 8 位數字在一行顯示，縮放比例需要較小 */
+                transform: scale(0.5); 
+                transform-origin: center center;
+                white-space: nowrap; /* 強制不換行 */
+                display: table !important; /* 保持原插件的 table 佈局特性 */
             }
 
-            /* 強制在「小時」後斷行：DailyCounter 結構中，第 4 個 ul 後面是小時的結束 */
-            .flip-clock-wrapper ul:nth-child(4) {
-                margin-right: 100% !important; /* 強制後方元素換到下一行 */
-                margin-bottom: 80px !important; /* 增加上下兩行的間距 */
-            }
-
-            /* 修正手機端標籤位置 */
-            .flip-clock-divider { height: 5px !important; }
-            .flip-clock-divider.minutes .flip-clock-label,
-            .flip-clock-divider.seconds .flip-clock-label {
-                top: 10px !important;
+            /* 移除原本可能導致隔行的任何限制 */
+            .flip-clock-wrapper ul {
+                margin: 3px !important;
             }
         }
 
@@ -93,7 +84,7 @@
                 <li><a href="/">首頁</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">部落格</a></li>
+                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
                 <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
             </ul>
         </div>
@@ -101,7 +92,6 @@
 
     <ul class="sidenav" id="nav-mobile">
         <li><a href="/">Home</a></li>
-        <li class="divider"></li>
         <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
         <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
         <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
@@ -113,12 +103,11 @@
         <div class="container center-align">
             <br><br>
             <h1 class="header red-text text-accent-2">“閒”是生活的標點</h1>
-            <p class="grey-text text-darken-1 flow-text">距離 2027 年還有</p>
+            <p class="grey-text">距離 2027 年還有</p>
             
             <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
             </div>
-            
             <div id="message"></div>
         </div>
     </main>
@@ -145,29 +134,22 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化 Materialize 元件
             $('.sidenav').sidenav();
 
-            // 設定目標時間 (2027年1月1日 台北/北京時區)
             const futureDate = new Date('2027-01-01T00:00:00+08:00');
             const now = new Date();
             const diff = Math.floor((futureDate.getTime() - now.getTime()) / 1000);
 
             if (diff > 0) {
-                // 初始化時鐘
                 const clock = $('.clock').FlipClock(diff, {
                     clockFace: 'DailyCounter',
-                    countdown: true,
-                    language: 'zh-tw'
+                    countdown: true
                 });
-                
-                // 漸顯效果
                 $('#timer-container').css('opacity', '1');
             } else {
-                $('#message').html('<h4 class="red-text pulse">新的旅程已經開始！</h4>');
+                $('#message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
             }
         });
     </script>
 </body>
 </html>
-
