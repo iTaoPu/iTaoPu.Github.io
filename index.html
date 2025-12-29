@@ -1,38 +1,148 @@
-/* 確保容器全螢幕高度並居中內容 */
-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* 垂直居中 */
-    align-items: center;    /* 水平居中 */
-    flex: 1 0 auto;
-}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>“閒”是生活的標點</title>
 
-.clock-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center; /* 時鐘水平居中 */
-    align-items: center;
-    padding: 20px 0;
-    opacity: 0;
-    transition: opacity 1s;
-}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://iTaoPu.Github.io/css/flipclock.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
+    
+    <style>
+        /* 1. 頁面佈局：確保內容全螢幕垂直居中 */
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
 
-/* 移除 FlipClock 默認的外邊距，防止偏移 */
-.flip-clock-wrapper {
-    margin: 0 !important;
-    display: flex !important;
-    justify-content: center;
-}
+        body {
+            display: flex;
+            flex-direction: column;
+        }
 
-/* 隱藏所有標籤 */
-.flip-clock-divider .flip-clock-label {
-    display: none !important;
-}
+        main {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 垂直居中核心 */
+            align-items: center;    /* 水平居中核心 */
+        }
 
-/* 移動端縮放並保持居中 */
-@media only screen and (max-width: 600px) {
-    .clock-wrapper {
-        transform: scale(0.8);
-        transform-origin: center center;
-    }
-}
+        /* 2. 時鐘容器樣式 */
+        .clock-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        
+        /* 強制 FlipClock 內部居中並移除標籤 */
+        .flip-clock-wrapper {
+            margin: 0 !important;
+            display: flex !important;
+            justify-content: center;
+            width: auto !important;
+        }
+
+        /* 隱藏 天、時、分、秒 標籤 */
+        .flip-clock-divider .flip-clock-label {
+            display: none !important;
+        }
+
+        /* 3. 顏色與細節自定義 */
+        .flip-clock-wrapper ul li a div div.inn {
+            background-color: #333333 !important;
+            color: #ff5252 !important;
+            text-shadow: 0 1px 2px #000;
+        }
+        .flip-clock-dot { background: #ff5252 !important; }
+
+        /* 4. 移動端縮放：防止 8 位數字溢出屏幕 */
+        @media only screen and (max-width: 600px) {
+            .clock-wrapper {
+                transform: scale(0.75);
+                transform-origin: center center;
+            }
+            h1 { font-size: 2rem !important; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="grey darken-4">
+        <div class="nav-wrapper container">
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/">Home</a></li>
+                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <ul class="sidenav" id="nav-mobile">
+        <li><a href="/">Home</a></li>
+        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+    </ul>
+    
+    <main>
+        <div class="container center-align">
+            <h1 class="header red-text text-accent-2" style="font-weight: 300; margin: 0 0 10px 0;">“閒”是生活的標點</h1>
+            
+            <div class="clock-wrapper" id="timer-container">
+                <div class="clock"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="page-footer grey darken-3">
+        <div class="footer-copyright grey darken-4">
+            <div class="container">
+                &copy; 2022-2026 菜鳥驛站·樂玩公社
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://iTaoPu.Github.io/js/flipclock.js"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.sidenav').sidenav();
+
+            // 獲取北京時間 (UTC+8) 的邏輯
+            function getBeijingTime() {
+                const now = new Date();
+                // 獲取當前設備相對於 UTC 的偏移並轉換為毫秒，再加 8 小時
+                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                const bjTime = new Date(utc + (3600000 * 8));
+                return bjTime;
+            }
+
+            // 初始化 24 小時制時鐘
+            const clock = $('.clock').FlipClock({
+                clockFace: 'TwentyFourHourClock',
+                showSeconds: true
+            });
+
+            // 強制設定為北京時間
+            const bjNow = getBeijingTime();
+            clock.setTime(bjNow);
+
+            // 顯示時鐘容器
+            $('#timer-container').css('opacity', '1');
+        });
+    </script>
+</body>
+</html>
