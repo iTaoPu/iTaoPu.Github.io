@@ -11,76 +11,81 @@
     <title>“閒”是生活的標點</title>
 
     <style>
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-            background-color: #f5f5f5;
-        }
+    body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+        background-color: #f5f5f5;
+    }
 
-        /* --- PC 端居中與基礎樣式 --- */
-        .clock-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            padding: 40px 0;
-            opacity: 0;
-            transition: opacity 1s;
-        }
-        
-        /* 修正 FlipClock 預設浮動問題 */
+    /* --- PC 端基礎樣式 --- */
+    .clock-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 40px 0;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    
+    .flip-clock-wrapper {
+        margin: 0 auto !important;
+        display: flex !important; /* 使用 Flex 佈局 */
+        justify-content: center;
+        width: auto !important;
+    }
+
+    /* FlipClock 顏色美化 */
+    .flip-clock-wrapper ul li a div div.inn {
+        background-color: #333333 !important;
+        color: #ff5252 !important;
+        text-shadow: 0 1px 2px #000;
+    }
+    .flip-clock-dot { background: #ff5252 !important; }
+    .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
+
+    /* --- 手機端兩行顯示核心解決方案 --- */
+    @media only screen and (max-width: 800px) {
+        h1.header { font-size: 2.2rem !important; }
+
         .flip-clock-wrapper {
-            margin: 0 auto !important;
-            display: table !important;
-            width: auto !important;
+            flex-wrap: wrap; /* 允許換行 */
+            transform: scale(0.7); /* 縮小比例以適應窄屏 */
+            transform-origin: center top;
+            max-width: 320px; /* 限制寬度強制其換行 */
+        }
+
+        /* 標籤位置修正：在兩行模式下，標籤若太靠右會被遮擋 */
+        .flip-clock-divider .flip-clock-label {
+            right: -75px !important; 
+        }
+
+        /* 強制斷行邏輯：
+           DailyCounter 的結構是：Days (divider+ul+ul), Hours (divider+ul+ul), Minutes...
+           我們讓「分鐘」前面的 divider 佔據 100% 寬度，從而實現強制換行 */
+        .flip-clock-divider.minutes {
+            width: 100% !important;
+            height: 40px !important; /* 第一行與第二行的垂直間距 */
+            float: none !important;
             clear: both;
+            visibility: hidden; /* 隱藏這個用來斷行的 divider */
         }
 
-        /* FlipClock 顏色美化 */
-        .flip-clock-wrapper ul li a div div.inn {
-            background-color: #333333 !important;
-            color: #ff5252 !important;
-            text-shadow: 0 1px 2px #000;
-        }
-        .flip-clock-dot { background: #ff5252 !important; }
-        .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
-
-        /* --- 手機端兩行顯示核心 CSS --- */
-        @media only screen and (max-width: 800px) {
-            h1.header { font-size: 2.2rem !important; }
-
-            .clock-wrapper {
-                padding: 10px 0;
-                min-height: 250px; /* 增加高度以容納兩行 */
-            }
-
-            .flip-clock-wrapper {
-                transform: scale(0.8); /* 稍微縮小以適應寬度 */
-                transform-origin: center center;
-                display: block !important;
-            }
-
-            /* 強制在「小時」後斷行 */
-            /* DailyCounter 的順序是：Days, Hours, Minutes, Seconds */
-            /* 我們在第二個 divider (小時之後) 強制換行 */
-            .flip-clock-divider.hours + .flip-clock-divider {
-                clear: both;
-                display: block;
-                height: 50px; /* 兩行之間的垂直間距 */
-                visibility: hidden;
-            }
-
-            /* 修正斷行後的間距與對齊 */
-            .flip-clock-wrapper ul { margin: 5px !important; }
-            .flip-clock-divider { height: 100px !important; }
-            
-            /* 手機端導航按鈕 */
-            .sidenav-trigger { display: block !important; }
+        /* 調整換行後第二行（分鐘和秒）的對齊 */
+        .flip-clock-divider.minutes + ul,
+        .flip-clock-divider.seconds {
+            margin-top: 10px;
         }
 
-        main { flex: 1 0 auto; }
-        .footer-left { text-align: left !important; }
-    </style>
+        .clock-wrapper {
+            padding: 20px 0;
+            min-height: 280px; /* 給兩行留出足夠空間 */
+        }
+    }
+
+    main { flex: 1 0 auto; }
+    .footer-left { text-align: left !important; }
+</style>
 </head>
 
 <body>
@@ -164,9 +169,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
