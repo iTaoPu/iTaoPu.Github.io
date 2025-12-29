@@ -47,33 +47,6 @@
         }
         .flip-clock-dot { background: #ff5252 !important; }
         .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
-
-        /* --- 手機端單行自適應邏輯 --- */
-        @media only screen and (max-width: 650px) {
-            .clock-wrapper {
-                padding: 10px 0;
-                /* 預留足夠的高度給縮放後的時鐘 */
-                min-height: 120px; 
-            }
-
-            .flip-clock-wrapper {
-                /* 核心原理：
-                   FlipClock 總寬約 620px。
-                   在 375px 的手機上，比例大約是 0.55 - 0.6 
-                */
-                transform: scale(0.55); 
-                transform-origin: center center;
-            }
-            
-            /* 極小螢幕 (如 iPhone SE) 進一步縮小 */
-            @media (max-width: 360px) {
-                .flip-clock-wrapper {
-                    transform: scale(0.48);
-                }
-            }
-        }
-
-        .footer-left { text-align: left !important; }
     </style>
 </head>
 
@@ -153,3 +126,4 @@
     </script>
 </body>
 </html>
+
