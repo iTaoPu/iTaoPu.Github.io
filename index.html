@@ -1,56 +1,205 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="“閒”是生活的標點">
+    <meta name="theme-color" content="#e53935">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/css/flipclock.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" href="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/Jing.png"/>
+    <link rel="icon" href="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/Jing.png" type="image/png">
+    
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+            margin-bottom: 50px; /* 为iOS设备底部栏留出空间 */
+        }
+        
+        /* 导航栏优化 */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar .brand-logo {
+            height: 50px;
+            width: auto;
+        }
+        
+        @media only screen and (max-width: 768px) {
+            .navbar {
+                background-color: rgba(53, 53, 53, 0.95);
+                padding: 2px 0; /* 减少内边距以节省空间 */
+            }
+            
+            .nav-wrapper {
+                padding: 10px 0;
+            }
+            
+            /* 响应式菜单项 */
+            .right .hide-on-med-and-down {
+                display: none;
+                width: 100%;
+            }
+            
+            .mobile-only {
+                display: block !important;
+            }
+            
+            /* 增强触控区域 */
+            .sidenav {
+                touch-action: pan-y;
+            }
+            
+            /* 链接样式 */
+            .sidenav li a, .nav-wrapper a {
+                color: #fff;
+                font-size: 1rem;
+                line-height: 1.2;
+                white-space: nowrap;
+                padding: 8px 15px;
+                text-transform: none;
+            }
+            
+            /* 内容区域调整 */
+            .container {
+                max-width: 90px;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+
+        /* 头部大标题优化 */
+        .header {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 15px 0 10px;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        @media only screen and (max-width: 480px) {
+            .header {
+                font-size: 1.6rem;
+            }
+        }
+        
+        /* 时钟组件优化 */
+        .clock-container {
+            margin: 15px 0;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .clock {
+            font-size: 2rem !important;
+            min-width: auto !important;
+        }
+        
+        @media only screen and (max-width: 480px) {
+            .clock {
+                font-size: 1.7rem !important;
+            }
+            
+            .message {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* 内容区域调整 */
+        .main-content {
+            min-height: calc(100vh - 180px); /* 为navbar和footer预留空间 */
+            padding: 15px;
+        }
+        
+        /* 底部页脚优化 */
+        footer {
+            background-color: rgba(46, 46, 46, 0.95);
+            padding: 15px 0;
+            margin-top: auto; /* 将页脚推到最底部 */
+        }
+        
+        .footer-copyright {
+            color: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+        
+        /* 更好的移动设备显示 */
+        @media screen and (max-width: 480px) {
+            /* 链接样式 */
+            .footer a {
+                color: #ccc {
+                text-decoration: underline;
+            }
+            }
+            
+            /* 隐藏某些可能过小的链接 */
+            .col l3.push.s12 {
+                display: none;
+            }
+        }
+        
+        /* 使时钟在iPad mini等设备上更小 */
+        @media (max-width: 768px) and (min-width: 600px) {
+            .clock {
+                font-size: 1.5rem !important;
+            }
+        }
+    </style>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/js/flipclock.js"></script>
     <script src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/js/sidenav.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>“閒”是生活的標點</title>
 </head>
 <body style="display: flex;min-height: 100vh;flex-direction: column;">
-    <nav class="grey darken-3" role="navigation">
-        <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"></a>
-            <ul class="right hide-on-med-and-down">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服务监控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電·動力源泉</a></li>
-            </ul>
-            <ul id="nav-mobile" class="sidenav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服务监控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電·動力源泉</a></li>
-            </ul>
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-        </div>
-    </nav>
-    
+    <!-- 网站标题 -->
+    <div class="navbar white" role="banner">
+        <nav class="grey darken-3" role="navigation">
+            <div class="nav-wrapper container">
+                <a id="logo-container" href="#" class="brand-logo"></a>
+                <ul id="nav-mobile" class="sidenav mobile-only">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+                    <li><a href="https://status.ifanr.pp.ua" target="_blank">服务监控</a></li>
+                    <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+                    <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電·動力源泉</a></li>
+                </ul>
+                <a href="#" class="waves-effect waves-light btn red lighten-1" data-target="nav-mobile"><i class="material-icons">menu</i></a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- 标题区域 -->
     <div class="section no-pad-bot" id="index-banner">
         <div class="container">
             <br><br>
-            <h1 class="header center red-text">“閒”是生活的標點</h1>
+            <h1 class="header center red-text">"閒"是生活的標點</h1>
             <br><br>
         </div>
     </div>
 
-    <main style="flex: 1 0 auto;">
+    <!-- 主要内容区域 -->
+    <main style="flex: 1 0 auto;" class="main-content">
         <div class="container">
             <div class="section" style="text-align: center;">
-                <div class="clock card-panel hoverable" style="display: inline-block; width: auto;"></div>
+                <div class="clock-container">
+                    <div class="clock card-panel hoverable" style="display: inline-block;"></div>
+                </div>
                 <div class="message"></div>
                 <script type="text/javascript">
-                    var clock;
                     $(document).ready(function() {
-                        // 设置固定目标时间（北京时间2026年1月1日）
+                        // 设置固定目标时间（北京时间2027年1月1日）
                         const futureDate = new Date('2027-01-01T00:00:00+08:00');
 
                         function updateClock() {
@@ -58,34 +207,59 @@
                             const diff = Math.floor((futureDate - now) / 1000);
 
                             if (diff <= 0) {
-                                if(clock) {
-                                    clock.stop();
-                                    $('.message').html('<h5 class="red-text">倒计时已结束！</h5>');
-                                }
+                                $('.message').html('<h5 class="red-text">倒计时已结束！</h5>');
                                 return;
                             }
 
-                            if (!clock) {
-                                // 初始化时钟
-                                clock = $('.clock').FlipClock(diff, {
+                            if ($.fn.FlipClock === undefined) {
+                                // 如果FlipClock尚未加载
+                                $('.clock').FlipClock(diff, {
                                     clockFace: 'DailyCounter',
                                     countdown: true,
                                     autoStart: false,
                                     callbacks: {
                                         stop: function() {
-                                            $('.message').html('<h5 class="green-text">活动进行中！</h5>');
+                                            $('.message').html('<h5 class="green-text" style="margin:15px 0;">活动进行中！</h5>');
                                         }
+                                    },
+                                    lang: {
+                                        minutes: '分',
+                                        hours: '小時',
+                                        days: '天',
+                                        weeks: '週',
+                                        months: '個月',
+                                        years: '年'
                                     }
                                 }).start();
                             } else {
-                                // 动态更新时间
-                                clock.setTime(diff);
-                                clock.start(); // 确保计时器运行
+                                // 动态更新FlipClock
+                                $('.clock').each(function() {
+                                    if ($(this).data('FlipClock')) {
+                                        $(this).data('FlipClock').getTime().then(function(time) {
+                                            if (time.hours !== undefined) 
+                                                $(this).data('FlipClock').setTime(diff);
+                                        });
+                                    } else {
+                                        $(this).FlipClock(diff, {
+                                            clockFace: 'DailyCounter',
+                                            countdown: true,
+                                            callbacks: {
+                                                stop: function() {
+                                                    $('.message').html('<h5 class="green-text" style="margin:15px 0;">活動進行中！</h5>');
+                                                }
+                                            }
+                                        }).start();
+                                    }
+                                });
                             }
                         }
 
                         // 初始化侧边栏
-                        $('.sidenav').sidenav();
+                        $('.sidenav').sidenav({
+                            preventDefaultClick: true,
+                            closingAuto: false,
+                            menuWidth: 300
+                        });
 
                         // 每秒更新
                         setInterval(updateClock, 1000);
@@ -96,20 +270,15 @@
         </div>
     </main>
 
+    <!-- 底部页脚 -->
     <footer class="page-footer grey darken-2">
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
-                    <h5><li><a class="white-text" href="https://t.me/CNiao_P" target="_blank">蜂巢·隱曜</a></li></h5>
+                    <h5 class="white-text"><li><a class="white-text" href="https://t.me/CNiao_P" target="_blank">蜂巢·隱曜</a></li></h5>
                     <p class="grey-text text-lighten-4">人的白嫖，就如同高山滚石一般，一旦开始，就再也停不下了 —— 「鲁迅」</p>
                 </div>
-                <div class="col l3 s12">
-                    <h5 class="white-text"></h5>
-                    <ul>
-                    </ul>
-                </div>
-                <div class="col l3 s12">
-                    <h6 class="white-text">公益服務</h6>
+                <div class="col l3 push-s1 s12">
                     <ul>
                         <li><a class="white-text" href="https://docker.ifanr.pp.ua">樂玩公社.Docker·镜像搜索</a></li>
                         <li><a class="white-text" href="https://github.ifanr.pp.ua">樂玩公社.GitHub·文件加速</a></li>
@@ -124,5 +293,24 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        $(document).ready(function() {
+            // 监听导航菜单显示/隐藏事件，优化移动设备体验
+            $('.sidenav').on('show.sidenav', function() {
+                // 添加菜单显示时的动画效果
+                $('.sidenav-overlay').css('opacity', '0').css('pointer-events', 'none');
+            });
+            
+            // 添加额外优化，确保翻转时钟随着屏幕大小变化而调整
+            $(window).resize(function() {
+                if ($(window).width() <= 480) {
+                    $('.clock').css('font-size', '1.5rem');
+                } else {
+                    $('.clock').css('font-size', '2.5rem');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
