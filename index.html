@@ -54,12 +54,13 @@
         .clock-wrapper {
             width: 100%;
             display: flex;
+            flex-direction: column; /* 改為垂直排列以放入標籤 */
             justify-content: center;
             align-items: center;
             opacity: 0;
             transition: opacity 1.5s ease-in;
             transform: scale(1.8); 
-            margin: 100px 0; 
+            margin: 120px 0; 
         }
         
         .flip-clock-wrapper {
@@ -67,6 +68,25 @@
             display: flex !important;
             justify-content: center;
             width: auto !important;
+        }
+
+        /* 標籤容器樣式 */
+        .clock-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 460px; /* 根據時鐘寬度微調 */
+            margin-top: 15px;
+            padding-left: 5px;
+        }
+
+        .clock-labels span {
+            font-size: 12px;
+            color: #ff5252;
+            letter-spacing: 2px;
+            font-weight: 300;
+            text-transform: uppercase;
+            width: 100px;
+            text-align: center;
         }
 
         .flip-clock-divider .flip-clock-label {
@@ -82,49 +102,30 @@
         }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 導航欄與連結 --- */
-        .nav-wrapper ul li a {
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-wrapper ul li a:hover {
-            color: #ff5252 !important;
-            background-color: rgba(255, 255, 255, 0.05) !important;
-        }
-
-        .footer-links li { margin-bottom: 8px; }
-        .footer-links a { transition: color 0.2s; }
-        .footer-links a:hover { color: #ff5252 !important; }
-
         /* --- 響應式適配 --- */
         @media only screen and (max-width: 768px) {
-            .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
+            .clock-wrapper { transform: scale(0.85); margin: 60px 0; }
         }
         @media only screen and (max-width: 480px) {
-            .clock-wrapper { transform: scale(0.75); margin: 20px 0; }
+            .clock-wrapper { transform: scale(0.65); margin: 40px 0; }
             .header-title { font-size: 1rem !important; }
         }
 
-        /* --- 功能性組件 --- */
+        /* --- 功能組件 --- */
         #theme-toggle-fab {
             position: fixed;
             right: 20px;
             bottom: 20px;
             z-index: 1000;
         }
-        
         #theme-toggle-fab i { transition: transform 0.4s ease; }
 
-        /* --- 淺色模式樣式覆蓋 --- */
-        body.light-mode {
-            background-color: #f5f5f5 !important;
-            color: #212121 !important;
-        }
+        /* --- 淺色模式 --- */
+        body.light-mode { background-color: #f5f5f5 !important; color: #212121 !important; }
         body.light-mode nav { background-color: #ffffff !important; }
         body.light-mode nav ul a, body.light-mode nav i { color: #424242 !important; }
+        body.light-mode .clock-labels span { color: #616161 !important; }
         body.light-mode #theme-toggle-fab i { transform: rotate(180deg); }
-
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
             color: #000000 !important; 
@@ -165,7 +166,6 @@
         <li><a href="/">首頁</a></li>
         <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
         <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
     </ul>
     
     <main>
@@ -177,6 +177,11 @@
             
             <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
+                <div class="clock-labels">
+                    <span>時 HOUR</span>
+                    <span>分 MIN</span>
+                    <span>秒 SEC</span>
+                </div>
             </div>
         </div>
     </main>
@@ -191,9 +196,9 @@
                 <div class="col l4 s12">
                     <h6 class="white-text">公益服務</h6>
                     <ul class="footer-links">
-                        <li><a class="grey-text text-lighten-3" href="https://docker.5iclub.dpdns.org" target="_blank">Docker·離線映像下載器</a></li>
-                        <li><a class="grey-text text-lighten-3" href="https://github.5iclub.dpdns.org" target="_blank">GitHub 文件加速·公益服務</a></li>
-                        <li><a class="grey-text text-lighten-3" href="https://url.5iclub.dpdns.org" target="_blank">簡約·連結縮短服務</a></li>
+                        <li><a class="grey-text text-lighten-3" href="https://docker.5iclub.dpdns.org" target="_blank">樂玩公社.Docker · 鏡像搜索</a></li>
+                        <li><a class="grey-text text-lighten-3" href="https://github.5iclub.dpdns.org" target="_blank">樂玩公社.GitHub · 文件加速</a></li>
+                        <li><a class="grey-text text-lighten-3" href="https://url.5iclub.dpdns.org" target="_blank">樂玩公社.簡約 · 連結縮短服務</a></li>
                     </ul>
                 </div>
             </div>
@@ -211,10 +216,8 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化 Materialize 組件
             $('.sidenav').sidenav();
 
-            // 主題持久化邏輯
             if (localStorage.getItem('theme') === 'light') {
                 $('body').addClass('light-mode');
             }
@@ -224,7 +227,6 @@
                 localStorage.setItem('theme', $('body').hasClass('light-mode') ? 'light' : 'dark');
             });
 
-            // 北京時間計算函數 (修正跨時區偏差)
             function getBeijingTime() {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -237,7 +239,6 @@
                 $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
             }
 
-            // 初始化時鐘
             const bjNow = getBeijingTime();
             const clock = $('.clock').FlipClock(bjNow, {
                 clockFace: 'TwentyFourHourClock',
@@ -247,7 +248,6 @@
             updateDate();
             $('#timer-container').css('opacity', '1');
 
-            // 模擬同步動畫
             setTimeout(function() {
                 $('#sync-status').fadeOut(800, function() {
                     $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">check_circle</i> 蜂巢時間已同步 (UTC+8)')
@@ -256,7 +256,6 @@
                 });
             }, 1800);
 
-            // 每小時刷新一次日期
             setInterval(updateDate, 3600000);
         });
     </script>
