@@ -11,41 +11,51 @@
     <title>“閒”是生活的標點</title>
 
     <style>
-        /* 頁面基礎布局 */
         body {
             display: flex;
             min-height: 100vh;
             flex-direction: column;
             background-color: #f5f5f5;
+            margin: 0;
+        }
+
+        /* 強制全局水平居中 */
+        .center-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
         }
 
         /* --- FlipClock 視覺美化 --- */
         .flip-clock-wrapper ul li a div div.inn {
-            background-color: #333333 !important; /* 深色卡片 */
-            color: #ff5252 !important;           /* 珊瑚紅數字 */
+            background-color: #333333 !important;
+            color: #ff5252 !important;
             text-shadow: 0 1px 2px #000;
             border-radius: 6px;
         }
         
         .flip-clock-dot {
-            background: #ff5252 !important;      /* 紅色間隔點 */
+            background: #ff5252 !important;
             box-shadow: none !important;
         }
 
         .flip-clock-divider .flip-clock-label {
-            color: #757575 !important;           /* 標籤文字顏色 */
+            color: #757575 !important;
             font-weight: bold;
         }
 
-        /* 時鐘容器與動畫 */
+        /* 時鐘容器：確保寬度自適應內容並置中 */
         .clock-wrapper {
-            display: flex;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            padding: 40px 0;
+            padding: 20px 0;
             opacity: 0;
             transition: opacity 1s ease-in-out;
+            overflow: visible;
         }
         
         .clock-wrapper.loaded {
@@ -56,31 +66,27 @@
         @media only screen and (max-width: 600px) {
             h1.header {
                 font-size: 2.2rem !important;
-                margin-top: 2rem;
-                letter-spacing: 2px;
+                margin-top: 1.5rem;
+                letter-spacing: 1px;
             }
 
+            /* 手機端縮放：FlipClock 是固定寬度，必須縮放 */
             .clock {
-                /* 手機端縮放，並修正 transform 產生的偏移 */
-                transform: scale(0.65);
+                transform: scale(0.6);
                 transform-origin: center center;
-                margin: -40px 0 !important; 
+                margin: -30px 0 !important; /* 減少縮放後的上下留白 */
             }
             
-            .clock-wrapper {
-                padding: 20px 0;
-                overflow: hidden;
-            }
-        }
-
-        @media only screen and (min-width: 601px) and (max-width: 992px) {
-            .clock {
-                transform: scale(0.85);
+            /* 讓手機端導航欄按鈕更明顯 */
+            .sidenav-trigger {
+                display: block !important;
             }
         }
 
         main {
             flex: 1 0 auto;
+            display: flex;
+            align-items: center; /* 垂直居中內容（可選） */
         }
     </style>
 </head>
@@ -88,17 +94,15 @@
 <body>
     <nav class="grey darken-4" role="navigation">
         <div class="nav-wrapper container">
-            <a id="logo-container" href="#" class="brand-logo">閑</a>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             
             <ul class="right hide-on-med-and-down">
-                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
                 <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
             </ul>
-
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
     </nav>
 
@@ -110,17 +114,12 @@
         <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
-    <div class="section no-pad-bot">
-        <div class="container">
-            <br><br>
-            <h1 class="header center red-text text-accent-2">“閒”是生活的標點</h1>
-            <p class="center grey-text">距離 2027 年還有</p>
-        </div>
-    </div>
-
     <main>
-        <div class="container">
-            <div class="section center-align">
+        <div class="container center-container">
+            <div class="section">
+                <h1 class="header red-text text-accent-2">“閒”是生活的標點</h1>
+                <p class="grey-text">距離 2027 年還有</p>
+                
                 <div class="clock-wrapper">
                     <div class="clock"></div>
                 </div>
@@ -132,22 +131,14 @@
     <footer class="page-footer grey darken-3">
         <div class="container">
             <div class="row">
-                <div class="col l6 s12">
+                <div class="col s12 center-align">
                     <h5 class="white-text">蜂巢·隱曜</h5>
                     <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
-                </div>
-                <div class="col l6 s12">
-                    <h6 class="white-text">公益服務</h6>
-                    <div class="collection" style="border:none;">
-                        <a href="https://docker.ifanr.pp.ua" class="collection-item grey darken-3 white-text" style="border:none; padding-left:0;">樂玩公社.Docker·鏡像搜索</a>
-                        <a href="https://github.ifanr.pp.ua" class="collection-item grey darken-3 white-text" style="border:none; padding-left:0;">樂玩公社.GitHub·文件加速</a>
-                        <a href="https://url.ifanr.pp.ua" class="collection-item grey darken-3 white-text" style="border:none; padding-left:0;">樂玩公社.簡約·短鏈服務</a>
-                    </div>
                 </div>
             </div>
         </div>
         <div class="footer-copyright grey darken-4">
-            <div class="container">
+            <div class="container center-align">
                 &copy; 2022-2026 菜鳥驛站·樂玩公社
             </div>
         </div>
@@ -159,22 +150,19 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化側邊欄
-            $('.sidenav').sidenav();
+            // 核心：初始化側邊欄元件
+            var elems = document.querySelectorAll('.sidenav');
+            M.Sidenav.init(elems);
 
-            // 設定目標時間
             const futureDate = new Date('2027-01-01T00:00:00+08:00');
             const now = new Date();
             const diff = Math.floor((futureDate - now) / 1000);
 
             if (diff > 0) {
-                // 初始化 FlipClock
                 const clock = $('.clock').FlipClock(diff, {
                     clockFace: 'DailyCounter',
                     countdown: true
                 });
-                
-                // 漸現顯示時鐘
                 $('.clock-wrapper').addClass('loaded');
             } else {
                 $('.message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
