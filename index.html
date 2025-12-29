@@ -11,31 +11,20 @@
     <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
     
     <style>
-        /* --- 頁面結構 --- */
+        /* --- 頁面基礎結構 --- */
         html, body {
             height: 100%;
             margin: 0;
             background-color: #1a1a1a;
             color: #ffffff;
             transition: background-color 0.3s ease;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
-        }
+        body { display: flex; flex-direction: column; }
+        main { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 0; }
 
-        main {
-            flex: 1 0 auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center;    
-            padding: 40px 0;
-        }
-
-        /* --- 文字比例 --- */
+        /* --- 時鐘文字 --- */
         .header-title {
             font-size: 1.2rem !important;
             font-weight: 300;
@@ -44,101 +33,64 @@
             letter-spacing: 4px;
             text-transform: uppercase;
         }
+        .sub-text { font-size: 0.9rem; color: #757575; margin-bottom: 5px; }
+        #bj-date { font-size: 0.95rem; margin-bottom: 20px; font-weight: 300; }
 
-        .sub-text {
-            font-size: 0.8rem; /* 縮小 */
-            color: #757575;
-            margin-bottom: 5px;
-        }
-
-        #bj-date {
-            font-size: 0.85rem !important; /* 縮小 */
-            margin-bottom: 20px;
-            font-weight: 300;
-        }
-
-        /* --- 時鐘核心 --- */
+        /* --- 時鐘縮放 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
             justify-content: center;
-            align-items: center;
             opacity: 0;
             transition: opacity 1.5s ease-in;
             transform: scale(1.8); 
             margin: 100px 0; 
         }
-        
-        .flip-clock-wrapper {
-            margin: 0 !important;
-            display: flex !important;
-            justify-content: center;
-            width: auto !important;
-        }
-
+        .flip-clock-wrapper { margin: 0 !important; display: flex !important; justify-content: center; }
         .flip-clock-divider .flip-clock-label { display: none !important; }
-
-        .flip-clock-wrapper ul li a div div.inn {
-            background-color: #333333 !important;
-            color: #ff5252 !important;
-            text-shadow: 0 1px 2px #000;
-            border-radius: 6px;
-        }
+        .flip-clock-wrapper ul li a div div.inn { background-color: #333333 !important; color: #ff5252 !important; border-radius: 6px; }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 移動端適配 --- */
-        @media only screen and (max-width: 768px) {
-            .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
-        }
-        @media only screen and (max-width: 480px) {
-            .clock-wrapper { transform: scale(0.7); margin: 20px 0; }
-            .header-title { font-size: 1rem !important; }
-        }
+        @media only screen and (max-width: 768px) { .clock-wrapper { transform: scale(0.85); margin: 40px 0; } }
+        @media only screen and (max-width: 480px) { .clock-wrapper { transform: scale(0.7); } }
 
-        /* --- 頁腳樣式 --- */
-        .page-footer {
-            padding-top: 20px;
-            background-color: #121212 !important;
-            transition: background-color 0.3s ease;
+        /* --- 頁腳大字版樣式 --- */
+        .page-footer { padding: 40px 0 0 0; background-color: #121212 !important; }
+        
+        .footer-brand { font-size: 1.5rem !important; font-weight: 600; margin-bottom: 15px; }
+        .footer-quote { font-size: 1.15rem; line-height: 1.8; color: #bdbdbd; font-style: italic; }
+        .footer-quote-author { font-style: normal; font-size: 1rem; color: #757575; display: block; margin-top: 5px; }
+        
+        .footer-service-title { font-size: 1.25rem !important; font-weight: 600; margin-bottom: 20px; letter-spacing: 1px; }
+        .footer-links li { margin-bottom: 15px; }
+        .footer-links li a { 
+            font-size: 1.1rem !important; 
+            color: #e0e0e0 !important; 
+            display: flex; 
+            align-items: center; 
+            transition: all 0.3s; 
         }
-        .page-footer h5 { font-size: 1.1rem; margin-bottom: 10px; }
-        .page-footer h6 { font-size: 0.9rem; margin-bottom: 15px; }
-        .page-footer p { font-size: 0.8rem; line-height: 1.6; }
-        .page-footer ul li { margin-bottom: 4px; }
-        .page-footer ul li a { font-size: 0.8rem; transition: color 0.2s; }
-        .page-footer ul li a:hover { color: #ff5252 !important; }
+        .footer-links li a:hover { color: #ff5252 !important; padding-left: 5px; }
 
         @media only screen and (min-width: 993px) {
             .footer-right-col { text-align: right; }
+            .footer-links li a { justify-content: flex-end; }
+            .footer-links li a:hover { padding-left: 0; padding-right: 10px; }
         }
 
-        /* --- 主題切換按鈕 --- */
-        #theme-toggle-fab {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 1000;
-        }
-        #theme-toggle-fab a { width: 45px; height: 45px; line-height: 45px; }
-        #theme-toggle-fab a i { line-height: 45px; font-size: 1.5rem; }
+        .footer-copyright { padding: 20px 0; margin-top: 30px; font-size: 0.9rem; }
+
+        /* --- 切換按鈕 --- */
+        #theme-toggle-fab { position: fixed; right: 20px; bottom: 20px; z-index: 1000; }
+        #theme-toggle-fab a { width: 50px; height: 50px; line-height: 50px; }
 
         /* --- 淺色模式 --- */
         body.light-mode { background-color: #f5f5f5 !important; color: #212121 !important; }
-        body.light-mode nav { background-color: #ffffff !important; }
-        body.light-mode nav ul a, body.light-mode nav i { color: #424242 !important; }
-        body.light-mode .sub-text { color: #9e9e9e !important; }
-        body.light-mode .sidenav { background-color: #ffffff !important; }
-        body.light-mode .sidenav li a { color: #424242 !important; }
-        body.light-mode .flip-clock-wrapper ul li a div div.inn {
-            background-color: #ffffff !important;
-            color: #000000 !important;
-            border: 1px solid #ddd;
-            text-shadow: none !important;
-        }
+        body.light-mode .flip-clock-wrapper ul li a div div.inn { background-color: #ffffff !important; color: #000000 !important; border: 1px solid #ddd; }
         body.light-mode .flip-clock-dot { background: #000000 !important; }
-        body.light-mode .page-footer { background-color: #eeeeee !important; }
-        body.light-mode .page-footer h5, body.light-mode .page-footer h6, body.light-mode .page-footer p, body.light-mode .footer-copyright { color: #616161 !important; }
-        body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
+        body.light-mode .page-footer { background-color: #e0e0e0 !important; }
+        body.light-mode .footer-brand, body.light-mode .footer-service-title { color: #212121 !important; }
+        body.light-mode .footer-quote, body.light-mode .footer-links li a { color: #424242 !important; }
     </style>
 </head>
 
@@ -188,22 +140,25 @@
     <footer class="page-footer">
         <div class="container">
             <div class="row">
-                <div class="col l8 s12">
-                    <h5 class="white-text">蜂巢·隱曜</h5>
-                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
+                <div class="col l7 s12">
+                    <h5 class="white-text footer-brand">蜂巢·隱曜</h5>
+                    <p class="footer-quote">
+                        「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」
+                        <span class="footer-quote-author">—— 魯迅</span>
+                    </p>
                 </div>
-                <div class="col l4 s12 footer-right-col">
-                    <h6 class="white-text">公益服務</h6>
-                    <ul>
-                        <li><a class="grey-text text-lighten-2" href="https://docker.ifanr.pp.ua">Docker·離線映像下載器</a></li>
-                        <li><a class="grey-text text-lighten-2" href="https://github.ifanr.pp.ua">GitHub 文件加速·公益服務</a></li>
-                        <li><a class="grey-text text-lighten-2" href="https://url.ifanr.pp.ua">簡約·鏈結縮短服務</a></li>
+                <div class="col l5 s12 footer-right-col">
+                    <h6 class="white-text footer-service-title">公益服務</h6>
+                    <ul class="footer-links">
+                        <li><a href="https://docker.ifanr.pp.ua" target="_blank">Docker·離線映像下載器</a></li>
+                        <li><a href="https://github.ifanr.pp.ua" target="_blank">GitHub 文件加速·公益服務</a></li>
+                        <li><a href="https://url.ifanr.pp.ua" target="_blank">簡約·鏈結縮短服務</a></li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="footer-copyright black">
-            <div class="container grey-text text-darken-1" style="font-size: 0.75rem;">
+        <div class="footer-copyright black center-align">
+            <div class="container grey-text text-darken-1">
                 &copy; 2022-2026 菜鳥驛站·樂玩公社
             </div>
         </div>
@@ -216,10 +171,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('.sidenav').sidenav();
-
-            $('#theme-toggle-fab').on('click', function() {
-                $('body').toggleClass('light-mode');
-            });
+            @@MATH_BLOCK_0@@('body').toggleClass('light-mode'); });
 
             function getBeijingTime() {
                 const now = new Date();
@@ -238,10 +190,8 @@
                 showSeconds: true
             });
 
-            const bjNow = getBeijingTime();
-            clock.setTime(bjNow);
+            clock.setTime(getBeijingTime());
             updateDate();
-
             $('#timer-container').css('opacity', '1');
             setInterval(updateDate, 3600000);
         });
