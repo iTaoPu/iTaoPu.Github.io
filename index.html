@@ -30,24 +30,9 @@
             transition: opacity 1s;
         }
         
-        .flip-clock-wrapper {
-            margin: 0 !important;
-            display: inline-block !important;
-            width: auto !important;
-        }
-
-        /* --- 核心修改：隱藏標籤 --- */
-        /* 同時在 PC 和移動端隱藏天、時、分、秒文字 */
+        /* 核心修改：隱藏標籤（天、時、分、秒文字） */
         .flip-clock-divider .flip-clock-label {
             display: none !important;
-        }
-
-        /* 移動端額外縮放優化 */
-        @media only screen and (max-width: 600px) {
-            .clock-wrapper {
-                transform: scale(0.65);
-                transform-origin: center center;
-            }
         }
 
         /* 顏色自定義 */
@@ -57,6 +42,14 @@
             text-shadow: 0 1px 2px #000;
         }
         .flip-clock-dot { background: #ff5252 !important; }
+
+        /* 移動端自適應縮放 */
+        @media only screen and (max-width: 600px) {
+            .clock-wrapper {
+                transform: scale(0.8);
+                transform-origin: center center;
+            }
+        }
     </style>
 </head>
 
@@ -68,48 +61,25 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
             </ul>
         </div>
     </nav>
 
-    <ul class="sidenav" id="nav-mobile">
-        <li><a href="/">Home</a></li>
-        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
-    </ul>
-    
     <main>
         <div class="container center-align">
             <br><br>
             <h1 class="header red-text text-accent-2" style="font-weight: 300;">“閒”是生活的標點</h1>
-            <p class="grey-text">距離 2027 年還有</p>
+            <p class="grey-text">北京實時時間</p>
             
             <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
             </div>
-            <div id="message"></div>
         </div>
     </main>
 
     <footer class="page-footer grey darken-3">
-        <div class="container">
-            <div class="row">
-                <div class="col l8 s12 footer-left">
-                    <h5 class="white-text">蜂巢·隱曜</h5>
-                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
-                </div>
-            </div>
-        </div>
         <div class="footer-copyright grey darken-4">
-            <div class="container footer-left">
-                &copy; 2022-2026 菜鳥驛站·樂玩公社
-            </div>
+            <div class="container">&copy; 2022-2026 菜鳥驛站·樂玩公社</div>
         </div>
     </footer>
 
@@ -121,21 +91,26 @@
         $(document).ready(function() {
             $('.sidenav').sidenav();
 
-            // 設定目標時間為北京時間 2027年1月1日
-            const targetDate = new Date('2027-01-01T00:00:00+08:00').getTime();
-            const now = new Date().getTime();
-            const diff = Math.floor((targetDate - now) / 1000);
-
-            if (diff > 0) {
-                const clock = $('.clock').FlipClock(diff, {
-                    clockFace: 'DailyCounter',
-                    countdown: true,
-                    showSeconds: true
-                });
-                $('#timer-container').css('opacity', '1');
-            } else {
-                $('#message').html('<h5 class="red-text">2027 旅程已開啟</h5>');
+            // 獲取當前的北京時間 (UTC+8)
+            function getBeijingTime() {
+                const now = new Date();
+                // 獲取 UTC 時間並加上 8 小時偏移量
+                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                const bjTime = new Date(utc + (3600000 * 8));
+                return bjTime;
             }
+
+            // 初始化時鐘為 24 小時模式
+            const clock = $('.clock').FlipClock({
+                clockFace: 'TwentyFourHourClock',
+                showSeconds: true
+            });
+
+            // 強制校準時鐘為北京時間
+            const bjNow = getBeijingTime();
+            clock.setTime(bjNow);
+
+            $('#timer-container').css('opacity', '1');
         });
     </script>
 </body>
