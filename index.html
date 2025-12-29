@@ -15,7 +15,7 @@
         html, body {
             height: 100%;
             margin: 0;
-            background-color: #1a1a1a; /* 改為深色背景，更能襯托紅色時鐘 */
+            background-color: #1a1a1a; 
             color: #ffffff;
             transition: background-color 0.3s ease;
         }
@@ -58,7 +58,6 @@
             align-items: center;
             opacity: 0;
             transition: opacity 1.5s ease-in;
-            /* PC 端超大縮放 */
             transform: scale(1.8); 
             margin: 100px 0; 
         }
@@ -70,7 +69,6 @@
             width: auto !important;
         }
 
-        /* 隱藏標籤文字 */
         .flip-clock-divider .flip-clock-label {
             display: none !important;
         }
@@ -83,6 +81,33 @@
             border-radius: 6px;
         }
         .flip-clock-dot { background: #ff5252 !important; }
+
+        /* --- 導航欄增強：滑鼠劃過變色與動態下劃線 --- */
+        .nav-wrapper ul li a {
+            transition: color 0.3s ease, background-color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-wrapper ul li a:hover {
+            color: #ff5252 !important; /* 懸停時變為紅色 */
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .nav-wrapper ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: #ff5252;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-wrapper ul li a:hover::after {
+            width: 70%;
+        }
 
         /* --- 移動端適配 --- */
         @media only screen and (max-width: 768px) {
@@ -106,7 +131,7 @@
             transition: background-color 0.3s ease;
         }
 
-        /* --- 新增：右下角切換按鈕樣式 (縮小版) --- */
+        /* 右下角切換按鈕 */
         #theme-toggle-fab {
             position: fixed;
             right: 20px;
@@ -121,18 +146,15 @@
         #theme-toggle-fab a i {
             line-height: 45px;
             font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        #theme-toggle-fab a:hover i {
+            transform: rotate(30deg);
         }
 
-        /* --- 深色模式下的移動端導航欄樣式 --- */
-        .sidenav {
-            background-color: #212121 !important;
-        }
-        .sidenav li a {
-            color: #ffffff !important;
-        }
-        .sidenav li a i {
-            color: #ffffff !important;
-        }
+        .sidenav { background-color: #212121 !important; }
+        .sidenav li a { color: #ffffff !important; }
+        .sidenav li a i { color: #ffffff !important; }
 
         /* --- 淺色模式樣式定義 --- */
         body.light-mode {
@@ -141,40 +163,24 @@
         }
         body.light-mode nav { background-color: #ffffff !important; }
         body.light-mode nav ul a, body.light-mode nav i { color: #424242 !important; }
-        body.light-mode .sub-text { color: #9e9e9e !important; }
         
-        /* 淺色模式下的移動端導航欄 */
-        body.light-mode .sidenav { 
-            background-color: #ffffff !important; 
-        }
-        body.light-mode .sidenav li a { 
-            color: #424242 !important; 
-        }
-        body.light-mode .sidenav li a i {
-            color: #424242 !important;
-        }
-        body.light-mode .sidenav .user-view .background { 
-            background-color: #eeeeee !important; 
-        }
-        body.light-mode .sidenav .user-view .name { 
-            color: #212121 !important; 
+        body.light-mode .nav-wrapper ul li a:hover {
+            color: #ff5252 !important;
+            background-color: rgba(0, 0, 0, 0.05) !important;
         }
 
-        /* 修正：淺色模式下時間卡片背景為白色，數字改為黑色 */
+        body.light-mode .sub-text { color: #9e9e9e !important; }
+        body.light-mode .sidenav { background-color: #ffffff !important; }
+        body.light-mode .sidenav li a { color: #424242 !important; }
+        body.light-mode .sidenav li a i { color: #424242 !important; }
+
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
-            color: #000000 !important; /* 數字改為黑色 */
+            color: #000000 !important; 
             text-shadow: none !important;
             border: 1px solid #ddd;
         }
-        /* 淺色模式下分隔點也改為黑色 (或維持紅色，目前設為黑色以符合您的要求) */
         body.light-mode .flip-clock-dot { background: #000000 !important; }
-
-        /* 淺色模式下摺疊卡片的顏色同步 */
-        body.light-mode .flip-clock-wrapper ul li a div.up:after {
-            background-color: rgba(0,0,0,0.1) !important;
-        }
-
         body.light-mode .page-footer { background-color: #eeeeee !important; }
         body.light-mode .page-footer h5, body.light-mode .page-footer p, body.light-mode .footer-copyright { color: #616161 !important; }
         body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
@@ -217,7 +223,7 @@
             <h1 class="header-title">“閒”是生活的標點</h1>
             <p class="sub-text">BEIJING TIME</p>
             <div id="bj-date" class="grey-text text-lighten-1" style="font-size: 0.9rem; margin-bottom: 20px; font-weight: 300;"></div>
-            <div id="sync-status">正在校準授時...</div>
+            <div id="sync-status" style="font-size: 0.85rem; transition: all 0.5s ease;">校準授時中...</div>
             
             <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
@@ -247,39 +253,54 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化 Materialize 元件
+            // 1. 初始化 Materialize
             $('.sidenav').sidenav();
 
-            // --- 右下角按鈕切換邏輯 ---
+            // 2. 主題持久化讀取
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                $('body').addClass('light-mode');
+            }
+
+            // 3. 右下角按鈕切換邏輯
             $('#theme-toggle-fab').on('click', function() {
                 $('body').toggleClass('light-mode');
+                const isLight = $('body').hasClass('light-mode');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
             });
 
-            // 精確獲取北京時間 (UTC+8)
+            // 4. 精確時間獲取
             function getBeijingTime() {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 return new Date(utc + (3600000 * 8));
             }
 
-            // 更新日期顯示
             function updateDate() {
                 const bjNow = getBeijingTime();
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
             }
 
-            // 初始化 FlipClock
-            const clock = $('.clock').FlipClock({
+            // 5. 初始化 FlipClock
+            const bjNow = getBeijingTime();
+            const clock = $('.clock').FlipClock(bjNow, {
                 clockFace: 'TwentyFourHourClock',
                 showSeconds: true
             });
 
-            const bjNow = getBeijingTime();
-            clock.setTime(bjNow);
             updateDate();
-
             $('#timer-container').css('opacity', '1');
+
+            // 6. 授時儀式感動畫
+            setTimeout(function() {
+                $('#sync-status').fadeOut(800, function() {
+                    $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">check_circle</i> 原子時間已同步 (UTC+8)')
+                           .css('color', '#4caf50') 
+                           .fadeIn();
+                });
+            }, 1800);
+
             setInterval(updateDate, 3600000);
         });
     </script>
