@@ -68,15 +68,6 @@
                 transform-origin: center top;
             }
 
-            /* 標籤位置優化：移至數字下方以防重疊 */
-            .flip-clock-divider .flip-clock-label {
-                right: auto !important;
-                left: 50% !important;
-                transform: translateX(-50%);
-                top: auto !important;
-                bottom: -45px !important;
-                white-space: nowrap;
-            }
             /* 修正標籤相對於雙位數數字的居中偏移 */
             .flip-clock-divider.days .flip-clock-label,
             .flip-clock-divider.minutes .flip-clock-label,
@@ -86,9 +77,9 @@
         }
 
         /* 小屏幕手機進一步縮放 */
-        @media only screen and (max-width: 400px) {
+        @media only screen and (max-width: 600px) {
             .flip-clock-wrapper {
-                transform: scale(0.6);
+                transform: scale(0.8);
             }
         }
 
@@ -181,5 +172,6 @@
     </script>
 </body>
 </html>
+
 
 
