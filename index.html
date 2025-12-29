@@ -11,19 +11,16 @@
     <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
     
     <style>
-        /* --- 頁面結構優化 --- */
         html, body {
             height: 100%;
             margin: 0;
             background-color: #1a1a1a; 
             color: #ffffff;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.8s ease;
+            overflow-x: hidden; /* 防止縮放導致左右捲軸 */
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
-        }
+        body { display: flex; flex-direction: column; }
 
         main {
             flex: 1 0 auto;
@@ -31,26 +28,21 @@
             flex-direction: column;
             justify-content: center; 
             align-items: center;    
-            padding: 40px 0;
+            padding: 20px 0;
+            cursor: pointer;
         }
 
-        /* --- 仿 Time.is 文字比例 --- */
         .header-title {
             font-size: 1.2rem !important;
             font-weight: 300;
             margin: 0 !important;
             color: #ff5252;
             letter-spacing: 4px;
-            text-transform: uppercase;
         }
 
-        .sub-text {
-            font-size: 0.9rem;
-            color: #757575;
-            margin-bottom: 5px;
-        }
+        .sub-text { font-size: 0.9rem; color: #757575; margin-bottom: 5px; }
 
-        /* --- 時鐘巨大化核心 --- */
+        /* --- 修復後的時鐘容器 --- */
         .clock-wrapper {
             width: 100%;
             max-width: 100vw;
@@ -68,16 +60,12 @@
         
         .flip-clock-wrapper {
             margin: 0 !important;
-            display: flex !important;
-            justify-content: center;
+            display: inline-block !important;
             width: auto !important;
         }
 
-        .flip-clock-divider .flip-clock-label {
-            display: none !important;
-        }
+        .flip-clock-divider .flip-clock-label { display: none !important; }
 
-        /* 顏色自定義：深灰底紅字 */
         .flip-clock-wrapper ul li a div div.inn {
             background-color: #333333 !important;
             color: #ff5252 !important;
@@ -86,117 +74,35 @@
         }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 導航欄增強：滑鼠劃過變色與動態下劃線 --- */
-        .nav-wrapper ul li a {
-            transition: color 0.3s ease, background-color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-wrapper ul li a:hover {
-            color: #ff5252 !important; /* 懸停時變為紅色 */
-            background-color: rgba(255, 255, 255, 0.05) !important;
-        }
-
-        .nav-wrapper ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: #ff5252;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-wrapper ul li a:hover::after {
-            width: 70%;
-        }
-
-        /* --- 移動端適配 --- */
+        /* --- 響應式微調 --- */
         @media only screen and (max-width: 768px) {
-            .clock-wrapper {
-                transform: scale(0.85); 
-                margin: 40px 0;
-            }
+            .clock-wrapper { transform: scale(0.8); margin: 60px 0; }
         }
         @media only screen and (max-width: 480px) {
-            .clock-wrapper {
-                transform: scale(0.75);
-                margin: 20px 0;
-            }
-            .header-title { font-size: 1rem !important; }
+            .clock-wrapper { transform: scale(0.65); margin: 40px 0; }
         }
 
-        /* 頁腳修正 */
-        .page-footer {
-            padding-top: 20px;
-            background-color: #121212 !important;
-            transition: background-color 0.3s ease;
-        }
+        .page-footer { padding-top: 20px; background-color: #121212 !important; transition: background-color 0.8s ease; }
+        #theme-toggle-fab { position: fixed; right: 20px; bottom: 20px; z-index: 1000; }
 
-        /* 右下角切換按鈕 */
-        #theme-toggle-fab {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 1000;
-        }
-        #theme-toggle-fab a {
-            width: 45px;
-            height: 45px;
-            line-height: 45px;
-        }
-        #theme-toggle-fab a i {
-            line-height: 45px;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-        #theme-toggle-fab a:hover i {
-            transform: rotate(30deg);
-        }
-
-        .sidenav { background-color: #212121 !important; }
-        .sidenav li a { color: #ffffff !important; }
-        .sidenav li a i { color: #ffffff !important; }
-
-        /* --- 淺色模式樣式定義 --- */
-        body.light-mode {
-            background-color: #f5f5f5 !important;
-            color: #212121 !important;
-        }
+        /* 淺色模式 */
+        body.light-mode { background-color: #f5f5f5 !important; color: #212121 !important; }
         body.light-mode nav { background-color: #ffffff !important; }
         body.light-mode nav ul a, body.light-mode nav i { color: #424242 !important; }
-        
-        body.light-mode .nav-wrapper ul li a:hover {
-            color: #ff5252 !important;
-            background-color: rgba(0, 0, 0, 0.05) !important;
-        }
-
-        body.light-mode .sub-text { color: #9e9e9e !important; }
-        body.light-mode .sidenav { background-color: #ffffff !important; }
-        body.light-mode .sidenav li a { color: #424242 !important; }
-        body.light-mode .sidenav li a i { color: #424242 !important; }
-
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
-            color: #000000 !important; 
+            color: #212121 !important; 
             text-shadow: none !important;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(0,0,0,0.1);
         }
-        body.light-mode .flip-clock-dot { background: #000000 !important; }
+        body.light-mode .flip-clock-dot { background: #212121 !important; }
         body.light-mode .page-footer { background-color: #eeeeee !important; }
-        body.light-mode .page-footer h5, body.light-mode .page-footer p, body.light-mode .footer-copyright { color: #616161 !important; }
         body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
     </style>
 </head>
 
 <body>
-    <div id="theme-toggle-fab">
-        <a class="btn-floating waves-effect waves-light red">
-            <i class="material-icons">brightness_medium</i>
-        </a>
-    </div>
+    <div id="theme-toggle-fab"><a class="btn-floating waves-effect waves-light red"><i class="material-icons">brightness_medium</i></a></div>
 
     <nav class="black">
         <div class="nav-wrapper container">
@@ -222,7 +128,7 @@
         <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
-    <main>
+    <main id="main-content">
         <div class="container center-align">
             <h1 class="header-title">“閒”是生活的標點</h1>
             <p class="sub-text">BEIJING TIME</p>
@@ -239,15 +145,13 @@
         <div class="container">
             <div class="row">
                 <div class="col l8 s12">
-                    <h6</li> <a href="https://t.me/CNiao_P" target="_blank">蜂巢·隱曜</li></h6>
+                    <h6><a href="https://t.me/CNiao_P" target="_blank" class="white-text">蜂巢·隱曜</a></h6>
                     <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
                 </div>
             </div>
         </div>
         <div class="footer-copyright black">
-            <div class="container grey-text text-darken-1">
-                &copy; 2022-2026 菜鳥驛站·樂玩公社
-            </div>
+            <div class="container grey-text text-darken-1">&copy; 2022-2026 菜鳥驛站·樂玩公社</div>
         </div>
     </footer>
 
@@ -257,28 +161,40 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 1. 初始化 Materialize
             $('.sidenav').sidenav();
 
-            // 2. 主題持久化讀取
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                $('body').addClass('light-mode');
-            }
-
-            // 3. 右下角按鈕切換邏輯
-            $('#theme-toggle-fab').on('click', function() {
-                $('body').toggleClass('light-mode');
-                const isLight = $('body').hasClass('light-mode');
-                localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            });
-
-            // 4. 精確時間獲取
             function getBeijingTime() {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 return new Date(utc + (3600000 * 8));
             }
+
+            // 全螢幕切換
+            $('#main-content').on('dblclick', function() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(e => console.log(e));
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+
+            // 自動主題
+            function autoTheme() {
+                if (!localStorage.getItem('theme')) {
+                    const hour = getBeijingTime().getHours();
+                    if (hour >= 6 && hour < 18) { $('body').addClass('light-mode'); } 
+                    else { $('body').removeClass('light-mode'); }
+                }
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') { $('body').addClass('light-mode'); } 
+            else if (!savedTheme) { autoTheme(); }
+
+            $('#theme-toggle-fab').on('click', function() {
+                $('body').toggleClass('light-mode');
+                localStorage.setItem('theme', $('body').hasClass('light-mode') ? 'light' : 'dark');
+            });
 
             function updateDate() {
                 const bjNow = getBeijingTime();
@@ -286,7 +202,7 @@
                 $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
             }
 
-            // 5. 初始化 FlipClock
+            // 啟動時鐘
             const bjNow = getBeijingTime();
             const clock = $('.clock').FlipClock(bjNow, {
                 clockFace: 'TwentyFourHourClock',
@@ -296,23 +212,13 @@
             updateDate();
             $('#timer-container').css('opacity', '1');
 
-            // 6. 授時儀式感動畫
             setTimeout(function() {
                 $('#sync-status').fadeOut(800, function() {
                     $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">check_circle</i> 蜂巢時間已同步 (UTC+8)')
-                           .css('color', '#4caf50') 
-                           .fadeIn();
+                           .css('color', '#4caf50').fadeIn();
                 });
             }, 1800);
-
-            setInterval(updateDate, 3600000);
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-
