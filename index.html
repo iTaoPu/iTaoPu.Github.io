@@ -11,64 +11,91 @@
     <title>“閒”是生活的標點</title>
 
     <style>
-        /* 页面基础布局优化 */
+        /* 頁面基礎布局 */
         body {
             display: flex;
             min-height: 100vh;
             flex-direction: column;
+            background-color: #f5f5f5;
         }
 
-        /* 手机端适配样式 */
-        @media only screen and (max-width: 600px) {
-            /* 调整大标题字号，防止折行过碎 */
-            h1.header {
-                font-size: 2.8rem !important;
-                margin-top: 1rem;
-            }
-
-            /* 【核心修复】FlipClock 手机端缩放 */
-            /* 因为 FlipClock 宽度是固定的，在手机上会溢出，所以通过 scale 缩小 */
-            .clock {
-                transform: scale(0.55); /* 缩小到 55% */
-                transform-origin: center top;
-                margin-bottom: -60px; /* 抵消缩放产生的多余留白 */
-            }
-
-            .section {
-                padding-bottom: 0 !important;
-            }
+        /* --- FlipClock 視覺美化 --- */
+        .flip-clock-wrapper ul li a div div.inn {
+            background-color: #333333 !important; /* 深色卡片 */
+            color: #ff5252 !important;           /* 珊瑚紅數字 */
+            text-shadow: 0 1px 2px #000;
+            border-radius: 6px;
+        }
+        
+        .flip-clock-dot {
+            background: #ff5252 !important;      /* 紅色間隔點 */
+            box-shadow: none !important;
         }
 
-        /* 平板端适配样式 */
-        @media only screen and (min-width: 601px) and (max-width: 992px) {
-            .clock {
-                transform: scale(0.8);
-                transform-origin: center top;
-                margin-bottom: -30px;
-            }
+        .flip-clock-divider .flip-clock-label {
+            color: #757575 !important;           /* 標籤文字顏色 */
+            font-weight: bold;
         }
 
-        /* 修复时钟容器在各端的居中显示 */
+        /* 時鐘容器與動畫 */
         .clock-wrapper {
             display: flex;
             justify-content: center;
-            overflow: visible;
+            align-items: center;
             width: 100%;
+            padding: 40px 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .clock-wrapper.loaded {
+            opacity: 1;
+        }
+
+        /* --- 響應式適配 --- */
+        @media only screen and (max-width: 600px) {
+            h1.header {
+                font-size: 2.2rem !important;
+                margin-top: 2rem;
+                letter-spacing: 2px;
+            }
+
+            .clock {
+                /* 手機端縮放，並修正 transform 產生的偏移 */
+                transform: scale(0.65);
+                transform-origin: center center;
+                margin: -40px 0 !important; 
+            }
+            
+            .clock-wrapper {
+                padding: 20px 0;
+                overflow: hidden;
+            }
+        }
+
+        @media only screen and (min-width: 601px) and (max-width: 992px) {
+            .clock {
+                transform: scale(0.85);
+            }
+        }
+
+        main {
+            flex: 1 0 auto;
         }
     </style>
 </head>
 
 <body>
-    <nav class="grey darken-3" role="navigation">
+    <nav class="grey darken-4" role="navigation">
         <div class="nav-wrapper container">
-            <a id="logo-container" href="#" class="brand-logo"></a>
+            <a id="logo-container" href="#" class="brand-logo">閑</a>
             
             <ul class="right hide-on-med-and-down">
                 <li class="active"><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服务监控</a></li>
+                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">爱发电·动力源泉</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
             </ul>
 
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -78,53 +105,49 @@
     <ul class="sidenav" id="nav-mobile">
         <li class="active"><a href="/">Home</a></li>
         <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-        <li><a href="https://status.ifanr.pp.ua" target="_blank">服务监控</a></li>
+        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
         <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-        <li><a href="https://ifdian.net/a/CNiao" target="_blank">爱发电·动力源泉</a></li>
+        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
-    <div class="section no-pad-bot" id="index-banner">
+    <div class="section no-pad-bot">
         <div class="container">
             <br><br>
-            <h1 class="header center red-text">“閒”是生活的標點</h1>
-            <br><br>
+            <h1 class="header center red-text text-accent-2">“閒”是生活的標點</h1>
+            <p class="center grey-text">距離 2027 年還有</p>
         </div>
     </div>
 
-    <main style="flex: 1 0 auto; overflow-x: hidden;">
+    <main>
         <div class="container">
-            <div class="section" style="text-align: center;">
+            <div class="section center-align">
                 <div class="clock-wrapper">
-                    <div class="clock card-panel hoverable" style="display: inline-block; width: auto;"></div>
+                    <div class="clock"></div>
                 </div>
                 <div class="message"></div>
             </div>
         </div>
     </main>
 
-    <footer class="page-footer grey darken-2">
+    <footer class="page-footer grey darken-3">
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
-                    <h5><li><a class="white-text" href="https://t.me/CNiao_P" target="_blank">蜂巢·隱曜</a></li></h5>
-                    <p class="grey-text text-lighten-4">人的白嫖，就如同高山滚石一般，一旦开始，就再也停不下了 —— 「鲁迅」</p>
+                    <h5 class="white-text">蜂巢·隱曜</h5>
+                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
                 </div>
-                <div class="col l3 s12">
-                    <h5 class="white-text"></h5>
-                    <ul></ul>
-                </div>
-                <div class="col l3 s12">
+                <div class="col l6 s12">
                     <h6 class="white-text">公益服務</h6>
-                    <ul>
-                        <li><a class="white-text" href="https://docker.ifanr.pp.ua">樂玩公社.Docker·镜像搜索</a></li>
-                        <li><a class="white-text" href="https://github.ifanr.pp.ua">樂玩公社.GitHub·文件加速</a></li>
-                        <li><a class="white-text" href="https://url.ifanr.pp.ua">樂玩公社.简约·链接缩短服务</a></li>
-                    </ul>
+                    <div class="collection" style="border:none;">
+                        <a href="https://docker.ifanr.pp.ua" class="collection-item grey darken-3 white-text" style="border:none; padding-left:0;">樂玩公社.Docker·鏡像搜索</a>
+                        <a href="https://github.ifanr.pp.ua" class="collection-item grey darken-3 white-text" style="border:none; padding-left:0;">樂玩公社.GitHub·文件加速</a>
+                        <a href="https://url.ifanr.pp.ua" class="collection-item grey darken-3 white-text" style="border:none; padding-left:0;">樂玩公社.簡約·短鏈服務</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="footer-copyright">
-            <div class="container" style="position:relative;">
+        <div class="footer-copyright grey darken-4">
+            <div class="container">
                 &copy; 2022-2026 菜鳥驛站·樂玩公社
             </div>
         </div>
@@ -133,46 +156,30 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script src="https://iTaoPu.GitHub.io/js/flipclock.js"></script>
+    
     <script type="text/javascript">
-        var clock;
         $(document).ready(function() {
-            // 初始化 Materialize 侧边栏
+            // 初始化側邊欄
             $('.sidenav').sidenav();
 
-            // 设置固定目标时间（北京时间2027年1月1日）
+            // 設定目標時間
             const futureDate = new Date('2027-01-01T00:00:00+08:00');
+            const now = new Date();
+            const diff = Math.floor((futureDate - now) / 1000);
 
-            function updateClock() {
-                const now = new Date();
-                const diff = Math.floor((futureDate - now) / 1000);
-
-                if (diff <= 0) {
-                    if(clock) {
-                        clock.stop();
-                        $('.message').html('<h5 class="red-text">倒计时已结束！</h5>');
-                    }
-                    return;
-                }
-
-                if (!clock) {
-                    clock = $('.clock').FlipClock(diff, {
-                        clockFace: 'DailyCounter',
-                        countdown: true,
-                        autoStart: false,
-                        callbacks: {
-                            stop: function() {
-                                $('.message').html('<h5 class="green-text">活动进行中！</h5>');
-                            }
-                        }
-                    }).start();
-                } else {
-                    clock.setTime(diff);
-                    clock.start();
-                }
+            if (diff > 0) {
+                // 初始化 FlipClock
+                const clock = $('.clock').FlipClock(diff, {
+                    clockFace: 'DailyCounter',
+                    countdown: true
+                });
+                
+                // 漸現顯示時鐘
+                $('.clock-wrapper').addClass('loaded');
+            } else {
+                $('.message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
+                $('.clock-wrapper').hide();
             }
-
-            setInterval(updateClock, 1000);
-            updateClock();
         });
     </script>
 </body>
