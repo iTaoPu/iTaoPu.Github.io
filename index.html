@@ -20,23 +20,34 @@
 
         main { flex: 1 0 auto; }
 
-        /* --- 核心：單行自適應縮放容器 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 40px 0;
-            overflow: visible; /* 確保縮放後的內容不被剪裁 */
             opacity: 0;
             transition: opacity 1s;
         }
         
-        /* 修正 FlipClock 預設樣式 */
         .flip-clock-wrapper {
             margin: 0 !important;
             display: inline-block !important;
             width: auto !important;
+        }
+
+        /* --- 核心修改：隱藏標籤 --- */
+        /* 同時在 PC 和移動端隱藏天、時、分、秒文字 */
+        .flip-clock-divider .flip-clock-label {
+            display: none !important;
+        }
+
+        /* 移動端額外縮放優化 */
+        @media only screen and (max-width: 600px) {
+            .clock-wrapper {
+                transform: scale(0.65);
+                transform-origin: center center;
+            }
         }
 
         /* 顏色自定義 */
@@ -46,15 +57,6 @@
             text-shadow: 0 1px 2px #000;
         }
         .flip-clock-dot { background: #ff5252 !important; }
-        .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
-
-/* 當螢幕寬度小於 600px 時執行 */
-@media only screen and (max-width: 600px) {
-    /* 隱藏所有時間標籤（天、時、分、秒文字） */
-    .flip-clock-divider .flip-clock-label {
-        display: none !important;
-    }
-}
     </style>
 </head>
 
@@ -75,11 +77,11 @@
 
     <ul class="sidenav" id="nav-mobile">
         <li><a href="/">Home</a></li>
-                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
+        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
     <main>
@@ -119,9 +121,9 @@
         $(document).ready(function() {
             $('.sidenav').sidenav();
 
-            // 目標時間：2027年1月1日
-            const targetDate = new Date('2027-01-01T00:00:00+08:00');
-            const now = new Date();
+            // 設定目標時間為北京時間 2027年1月1日
+            const targetDate = new Date('2027-01-01T00:00:00+08:00').getTime();
+            const now = new Date().getTime();
             const diff = Math.floor((targetDate - now) / 1000);
 
             if (diff > 0) {
@@ -138,6 +140,3 @@
     </script>
 </body>
 </html>
-
-
-
