@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" href="https://iTaoPu.GitHub.io/Jing.png"/>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>“閒”是生活的標點</title>
 
     <style>
@@ -16,17 +16,23 @@
             min-height: 100vh;
             flex-direction: column;
             background-color: #f5f5f5;
-            margin: 0;
-            overflow-x: hidden; /* 防止時鐘縮放前撐開寬度 */
         }
 
-        /* 標題與時鐘對齊容器 */
-        .center-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+        /* --- 核心：時鐘水平居中修復 --- */
+        .clock-wrapper {
             width: 100%;
+            display: flex;
+            justify-content: center; /* Flex 居中 */
+            padding: 40px 0;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        
+        /* 覆蓋 FlipClock 內部預設的左浮動，讓它在 PC 端置中 */
+        .flip-clock-wrapper {
+            margin: 0 auto !important;
+            display: table !important;
+            width: auto !important;
         }
 
         /* --- FlipClock 視覺美化 --- */
@@ -35,49 +41,38 @@
             color: #ff5252 !important;
             text-shadow: 0 1px 2px #000;
         }
-        .flip-clock-dot { background: #ff5252 !important; box-shadow: none !important; }
+        .flip-clock-dot { background: #ff5252 !important; }
         .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
 
-        /* 時鐘容器修正：必須給予寬高，否則手機端無法渲染 */
-        .clock-wrapper {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            min-height: 120px; /* 給予基礎高度，防止高度為 0 */
-            margin-top: 30px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        .clock-wrapper.loaded { opacity: 1; }
-
-        /* --- 手機端顯示關鍵：使用 scale 縮小並處理溢出 --- */
+        /* --- 響應式：手機端顯示修復 --- */
         @media only screen and (max-width: 600px) {
-            h1.header { font-size: 2rem !important; margin-top: 1.5rem; }
-            
-            .clock {
-                /* 強制縮放並確保寬度不被限制 */
-                transform: scale(0.55) !important;
-                transform-origin: center center !important;
-                margin: -40px 0 !important; /* 消除縮放後的白邊 */
-                width: auto !important;
-                display: block !important;
+            h1.header { font-size: 2.2rem !important; }
+
+            .clock-wrapper {
+                padding: 20px 0;
+                min-height: 150px; /* 預留高度防止坍塌 */
             }
 
             .flip-clock-wrapper {
-                margin: 0 !important;
-                width: 100% !important;
+                transform: scale(0.6); /* 手機端縮放 */
+                transform-origin: center center;
             }
+            
+            /* 強制顯示三橫槓圖標 */
+            .sidenav-trigger { display: block !important; color: white; }
         }
 
-        main { flex: 1 0 auto; display: flex; align-items: center; }
+        main { flex: 1 0 auto; }
+
+        /* Footer 恢復左對齊 */
+        .footer-left { text-align: left !important; }
     </style>
 </head>
 
 <body>
     <nav class="grey darken-4" role="navigation">
         <div class="nav-wrapper container">
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger" style="display: block;"><i class="material-icons">menu</i></a>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
                 <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
@@ -97,11 +92,12 @@
     </ul>
     
     <main>
-        <div class="container center-container">
+        <div class="container center-align">
+            <br><br>
             <h1 class="header red-text text-accent-2">“閒”是生活的標點</h1>
             <p class="grey-text">距離 2027 年還有</p>
             
-            <div class="clock-wrapper">
+            <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
             </div>
             <div id="message"></div>
@@ -109,12 +105,18 @@
     </main>
 
     <footer class="page-footer grey darken-3">
-        <div class="container center-align">
-            <h5 class="white-text">蜂巢·隱曜</h5>
-            <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」</p>
+        <div class="container">
+            <div class="row">
+                <div class="col l8 s12 footer-left">
+                    <h5 class="white-text">蜂巢·隱曜</h5>
+                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
+                </div>
+            </div>
         </div>
         <div class="footer-copyright grey darken-4">
-            <div class="container center-align">&copy; 2022-2026 菜鳥驛站·樂玩公社</div>
+            <div class="container footer-left">
+                &copy; 2022-2026 菜鳥驛站·樂玩公社
+            </div>
         </div>
     </footer>
 
@@ -124,24 +126,25 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化選單
+            // 1. 初始化側邊欄
             $('.sidenav').sidenav();
 
+            // 2. 設定時間
             const futureDate = new Date('2027-01-01T00:00:00+08:00');
             const now = new Date();
-            const diff = (futureDate.getTime() - now.getTime()) / 1000;
+            const diff = Math.floor((futureDate.getTime() - now.getTime()) / 1000);
 
             if (diff > 0) {
-                // 在手機端 FlipClock 有時需要延遲一點點初始化以確保寬度計算正確
+                // 3. 延遲啟動以確保寬度計算（特別是手機端）
                 setTimeout(function() {
                     const clock = $('.clock').FlipClock(diff, {
                         clockFace: 'DailyCounter',
                         countdown: true
                     });
-                    $('.clock-wrapper').addClass('loaded');
-                }, 100);
+                    $('#timer-container').css('opacity', '1');
+                }, 200);
             } else {
-                $('#message').html('<h5 class="red-text">倒計時已結束！</h5>');
+                $('#message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
             }
         });
     </script>
