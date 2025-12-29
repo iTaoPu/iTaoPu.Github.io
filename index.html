@@ -45,71 +45,66 @@
         .flip-clock-dot { background: #ff5252 !important; }
         .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
 
+    /* --- 手機端兩行顯示核心 CSS --- */
+    <style>
+    /* ... 保持 body 和 PC 端樣式不變 ... */
+
     @media only screen and (max-width: 800px) {
-        h1.header { font-size: 2rem !important; }
+        h1.header { font-size: 2.2rem !important; }
 
         .clock-wrapper {
             padding: 20px 0;
-            min-height: 450px; /* 為三行預留足夠高度 */
+            min-height: 320px; /* 為兩行留出空間 */
         }
 
         .flip-clock-wrapper {
             display: flex !important;
             flex-wrap: wrap; 
             justify-content: center;
-            transform: scale(0.8);
+            transform: scale(0.75); /* 根據屏幕寬度縮放 */
             transform-origin: center top;
             max-width: 100%;
         }
 
-        /* 重置所有 divider 寬度，避免干擾自定義斷行 */
+        /* --- 第一行：天 --- */
+        /* 在 Days 的第二個數字後設置 100% 的 margin，強制後方元素換行 */
+        .flip-clock-wrapper ul.days + ul {
+            margin-right: 100% !important; 
+            margin-bottom: 70px !important; /* 第一行與第二行的間距 */
+        }
+
+        /* --- 第二行：時、分、秒 --- */
+        /* 隱藏小時前的冒號（因為它是第二行的開頭） */
+        .flip-clock-divider.hours {
+            display: none !important;
+        }
+
+        /* 確保第二行的冒號正常顯示 */
         .flip-clock-divider {
             float: none !important;
             width: 20px !important;
         }
 
-        /* --- 第一行：天 --- */
-        /* 強制在 Days 的兩個數字後斷行 */
-        .flip-clock-wrapper ul.days + ul {
-            margin-right: 100% !important; /* 強制後方元素換行 */
-            margin-bottom: 60px !important; /* 與第二行的間距 */
-        }
-
-        /* --- 第二行：小時 + 分鐘 --- */
-        /* 隱藏小時前面的冒號（因為它現在是行首） */
-        .flip-clock-divider.hours {
-            display: none !important;
-        }
-
-        /* 強制在 Minutes 的兩個數字後斷行 */
-        .flip-clock-wrapper ul.minutes + ul {
-            margin-right: 100% !important; /* 強制秒鐘換到第三行 */
-            margin-bottom: 60px !important;
-        }
-
-        /* --- 第三行：秒 --- */
-        /* 隱藏秒鐘前面的冒號 */
-        .flip-clock-divider.seconds {
-            display: none !important;
-        }
-
-        /* --- 標籤優化 (天/時/分/秒 文字) --- */
+        /* --- 標籤位置修正 --- */
         .flip-clock-divider .flip-clock-label {
             right: auto !important;
             left: 50%;
             transform: translateX(-50%);
             white-space: nowrap;
             top: auto !important;
-            bottom: -40px !important; /* 標籤統一放在數字下方 */
+            bottom: -45px !important; /* 標籤放在數字正下方 */
             font-size: 18px !important;
             color: #757575 !important;
         }
 
-        /* 讓每一組的標籤能準確定位到兩位數字的中間 */
+        /* 修正標籤相對於數字組的中心點偏移 */
         .flip-clock-divider.days .flip-clock-label { margin-left: 65px; }
-        .flip-clock-divider.hours .flip-clock-label { display: block !important; visibility: visible; margin-left: 65px; }
         .flip-clock-divider.minutes .flip-clock-label { margin-left: 65px; }
-        .flip-clock-divider.seconds .flip-clock-label { display: block !important; visibility: visible; margin-left: 65px; }
+        .flip-clock-divider.seconds .flip-clock-label { 
+            display: block !important; 
+            visibility: visible; 
+            margin-left: 65px; 
+        }
 
         .flip-clock-wrapper ul {
             margin: 5px !important;
@@ -199,6 +194,7 @@
     </script>
 </body>
 </html>
+
 
 
 
