@@ -11,37 +11,14 @@
     <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
     
     <style>
-        /* --- 基礎佈局 --- */
-        html, body {
-            height: 100%;
-            margin: 0;
-            background-color: #1a1a1a; 
-            color: #ffffff;
-            transition: background-color 0.3s ease;
-            overflow-x: hidden;
-        }
+        html, body { height: 100%; margin: 0; background-color: #1a1a1a; color: #ffffff; transition: background-color 0.3s ease; }
         body { display: flex; flex-direction: column; }
-        main {
-            flex: 1 0 auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center;    
-            padding: 20px 0;
-        }
+        main { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 0; }
 
-        /* --- 標題與文字 --- */
-        .header-title {
-            font-size: 1.5rem !important;
-            font-weight: 300;
-            margin: 0 !important;
-            color: #ff5252;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-        }
+        .header-title { font-size: 1.2rem !important; font-weight: 300; margin: 0 !important; color: #ff5252; letter-spacing: 4px; text-transform: uppercase; }
         .sub-text { font-size: 0.9rem; color: #757575; margin-bottom: 5px; }
 
-        /* --- 時鐘巨大化核心 (優化版) --- */
+        /* --- 時鐘巨大化核心 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
@@ -49,74 +26,45 @@
             align-items: center;
             opacity: 0;
             transition: opacity 1.5s ease-in, transform 0.3s ease;
-            /* 增大縮放比例：PC端最大可達 1.8 倍 */
-            transform: scale(clamp(0.7, 10vw, 1.8)); 
-            margin: 80px 0; /* 增加上下間距確保不擁擠 */
+            /* 顯著增大比例：從 1.3 提升至 1.8 */
+            transform: scale(clamp(0.8, 12vw, 1.8)); 
+            margin: clamp(60px, 12vh, 120px) 0; 
         }
         
-        .flip-clock-wrapper {
-            margin: 0 !important;
-            display: flex !important;
-            justify-content: center;
-            width: auto !important;
-        }
+        .flip-clock-wrapper { margin: 0 !important; display: flex !important; justify-content: center; width: auto !important; }
         .flip-clock-divider .flip-clock-label { display: none !important; }
-        .flip-clock-wrapper ul li a div div.inn {
-            background-color: #333333 !important;
-            color: #ff5252 !important;
-            border-radius: 6px;
-            transition: background-color 0.3s, color 0.3s;
-        }
+        .flip-clock-wrapper ul li a div div.inn { background-color: #333333 !important; color: #ff5252 !important; border-radius: 6px; }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 主題與全螢幕控制 --- */
-        .control-btns {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .control-btns i { font-size: 1.5rem; }
-
-        /* --- 淺色模式 --- */
-        body.light-mode { background-color: #f5f5f5 !important; color: #212121 !important; }
-        body.light-mode .flip-clock-wrapper ul li a div div.inn {
-            background-color: #ffffff !important;
-            color: #000000 !important; 
-            border: 1px solid #ddd;
-        }
-        body.light-mode .flip-clock-dot { background: #000000 !important; }
-
-        /* 全螢幕微調 */
+        /* 全螢幕下的特殊處理 */
+        :fullscreen .clock-wrapper { transform: scale(2.2); }
         :fullscreen nav { display: none; }
-        :fullscreen .clock-wrapper { transform: scale(clamp(1.2, 15vw, 2.5)); }
 
-        @media only screen and (max-width: 600px) {
-            .clock-wrapper { transform: scale(0.65); margin: 40px 0; }
-        }
+        /* 按鈕組 */
+        .control-group { position: fixed; right: 20px; bottom: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+
+        .light-mode { background-color: #f5f5f5 !important; color: #212121 !important; }
+        .light-mode .flip-clock-wrapper ul li a div div.inn { background-color: #ffffff !important; color: #000000 !important; border: 1px solid #ddd; }
+        .light-mode .flip-clock-dot { background: #000000 !important; }
     </style>
 </head>
 
 <body>
-    <div class="control-btns">
-        <a id="fs-toggle" class="btn-floating waves-effect waves-light grey darken-3">
-            <i class="material-icons">fullscreen</i>
-        </a>
-        <a id="theme-toggle" class="btn-floating waves-effect waves-light red">
-            <i class="material-icons">brightness_medium</i>
-        </a>
+    <div class="control-group">
+        <a id="fs-btn" class="btn-floating waves-effect waves-light grey darken-3"><i class="material-icons">fullscreen</i></a>
+        <a id="theme-toggle-fab" class="btn-floating waves-effect waves-light red"><i class="material-icons">brightness_medium</i></a>
     </div>
 
     <nav class="black">
         <div class="nav-wrapper container">
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a href="/">Home</a></li>
+                               <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blog</a></li>
+                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
             </ul>
         </div>
     </nav>
@@ -125,33 +73,30 @@
         <li><div class="user-view"><div class="background black"></div><span class="white-text name">蜂巢·隱曜</span></div></li>
         <li><a href="/">Home</a></li>
         <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
-    
+
     <main>
         <div class="container center-align">
             <h1 class="header-title">“閒”是生活的標點</h1>
             <p class="sub-text">BEIJING TIME</p>
-            <div id="bj-date" class="grey-text text-lighten-1" style="font-size: 0.9rem; margin-bottom: 10px; font-weight: 300;"></div>
-            <div id="sync-status" style="font-size: 0.85rem; height: 20px;">校準授時中...</div>
+            <div id="bj-date" class="grey-text text-lighten-1" style="font-size: 0.9rem; margin-bottom: 20px;"></div>
+            <div id="sync-status" style="font-size: 0.85rem;">校準授時中...</div>
             
-            <div class="clock-wrapper" id="timer-container">
-                <div class="clock"></div>
-            </div>
+            <div class="clock-wrapper" id="timer-container"><div class="clock"></div></div>
         </div>
     </main>
 
-    <footer class="page-footer">
+    <footer class="page-footer" style="background-color: #121212;">
         <div class="container">
             <div class="row">
                 <div class="col l8 s12">
-                    <h6><a href="https://t.me/CNiao_P" target="_blank" class="red-text">蜂巢·隱曜</a></h6>
-                    <p id="quote-display" class="grey-text text-lighten-1" style="transition: opacity 0.5s; min-height: 1.5em;"></p>
+                    <h6><a href="https://t.me/CNiao_P" target="_blank" style="color:#ff5252;">蜂巢·隱曜</a></h6>
+                    <p id="quote-text" class="grey-text text-lighten-1" style="transition: opacity 0.5s;">雲端名言同步中...</p>
                 </div>
-            </div>
-        </div>
-        <div class="footer-copyright black">
-            <div class="container grey-text text-darken-1">
-                &copy; 2022-2026 菜鳥驛站·樂玩公社
             </div>
         </div>
     </footer>
@@ -164,57 +109,41 @@
         $(document).ready(function() {
             $('.sidenav').sidenav();
 
-            // 1. 主題切換
-            if (localStorage.getItem('theme') === 'light') $('body').addClass('light-mode');
-            $('#theme-toggle').on('click', function() {
-                $('body').toggleClass('light-mode');
-                localStorage.setItem('theme', $('body').hasClass('light-mode') ? 'light' : 'dark');
-            });
-
-            // 2. 全螢幕控制
-            $('#fs-toggle').on('click', function() {
+            // 1. 全螢幕功能
+            $('#fs-btn').on('click', function() {
                 if (!document.fullscreenElement) {
                     document.documentElement.requestFullscreen();
                     $(this).find('i').text('fullscreen_exit');
                 } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                        $(this).find('i').text('fullscreen');
-                    }
+                    document.exitFullscreen();
+                    $(this).find('i').text('fullscreen');
                 }
             });
 
-            // 3. 隨機名言系統
-            const quotes = [
-                "「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅",
-                "「閒」是生活的標點，而非句號。",
-                "時間是公平的，它給每個人的一天都是 24 小時。",
-                "在這忙碌的世界，給心靈留一點空白。",
-                "自律的頂端是享受孤獨。",
-                "生活不是為了趕路，而是為了感受路。"
-            ];
+            // 2. 名言系統 (支持本地備份 + 在線更新)
+            let quotes = ["「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅"]; 
+            
             function updateQuote() {
-                const q = $('#quote-display');
-                q.css('opacity', 0);
+                const el = $('#quote-text');
+                el.css('opacity', 0);
                 setTimeout(() => {
-                    q.text(quotes[Math.floor(Math.random() * quotes.length)]);
-                    q.css('opacity', 1);
+                    const pick = quotes[Math.floor(Math.random() * quotes.length)];
+                    el.text(pick).css('opacity', 1);
                 }, 500);
             }
-            updateQuote();
-            setInterval(updateQuote, 600000); // 每 10 分鐘換一次
 
-            // 4. 時間邏輯
+            // 這裡可以換成你的 API 網址
+            // fetch('https://api.myjson.online/v1/records/xxxx') 
+            // .then(r => r.json()).then(data => { quotes = data; updateQuote(); });
+
+            setInterval(updateQuote, 300000); // 每 5 分鐘自動換一句
+            updateQuote();
+
+            // 3. 原有時鐘邏輯 (略...)
             function getBeijingTime() {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
                 return new Date(utc + (3600000 * 8));
-            }
-
-            function updateDate() {
-                const bjNow = getBeijingTime();
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
             }
 
             const clock = $('.clock').FlipClock(getBeijingTime(), {
@@ -222,15 +151,8 @@
                 showSeconds: true
             });
 
-            updateDate();
             $('#timer-container').css('opacity', '1');
-
-            setTimeout(() => {
-                $('#sync-status').fadeOut(800, function() {
-                    $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">check_circle</i> 時間已同步 (UTC+8)')
-                           .css('color', '#4caf50').fadeIn();
-                });
-            }, 1800);
+            @@MATH_BLOCK_0@@('body').toggleClass('light-mode'));
         });
     </script>
 </body>
