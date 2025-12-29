@@ -42,16 +42,16 @@
     .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
 
     /* --- 手機端強制三行顯示方案 --- */
-    @media only screen and (max-width: 800px) {
+    @media only screen and (max-width: 600px) {
         h1.header { font-size: 2.2rem !important; }
 
         .clock-wrapper {
-            padding: 16px 0;
-            min-height: 220px; /* 增加高度以容納三行 */
+            padding: 8px 0;
+            min-height: 222px; /* 增加高度以容納三行 */
         }
 
         .flip-clock-wrapper {
-            transform: scale(0.8); /* 放大一點，因為三行空間較充裕 */
+            transform: scale(0.9); /* 放大一點，因為三行空間較充裕 */
             transform-origin: center top;
             display: block !important;
             text-align: center;
@@ -180,4 +180,5 @@
     </script>
 </body>
 </html>
+
 
