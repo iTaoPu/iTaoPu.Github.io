@@ -18,7 +18,7 @@
             background-color: #f5f5f5;
         }
 
-        /* --- PC 端居中與基礎樣式 --- */
+        /* --- PC 端樣式 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
@@ -28,15 +28,12 @@
             transition: opacity 1s;
         }
         
-        /* 修正 FlipClock 預設浮動問題 */
         .flip-clock-wrapper {
             margin: 0 auto !important;
             display: table !important;
             width: auto !important;
-            clear: both;
         }
 
-        /* FlipClock 顏色美化 */
         .flip-clock-wrapper ul li a div div.inn {
             background-color: #333333 !important;
             color: #ff5252 !important;
@@ -45,36 +42,42 @@
         .flip-clock-dot { background: #ff5252 !important; }
         .flip-clock-divider .flip-clock-label { color: #757575 !important; font-weight: bold; }
 
-        /* --- 手機端兩行顯示核心 CSS --- */
+        /* --- 手機端兩行顯示修正方案 --- */
         @media only screen and (max-width: 800px) {
             h1.header { font-size: 2.2rem !important; }
 
             .clock-wrapper {
                 padding: 10px 0;
-                min-height: 250px; /* 增加高度以容納兩行 */
+                min-height: 220px; 
             }
 
             .flip-clock-wrapper {
-                transform: scale(0.8); /* 稍微縮小以適應寬度 */
-                transform-origin: center center;
+                transform: scale(0.8); /* 縮小比例以容納兩組 */
+                transform-origin: center top;
                 display: block !important;
+                text-align: center;
             }
 
-            /* 強制在「小時」後斷行 */
-            /* DailyCounter 的順序是：Days, Hours, Minutes, Seconds */
-            /* 我們在第二個 divider (小時之後) 強制換行 */
+            /* 移除 FlipClock 默認的 float，改用 inline-block 以便控制 */
+            .flip-clock-wrapper ul { 
+                float: none !important;
+                display: inline-block !important;
+                margin: 2px !important; 
+            }
+            .flip-clock-divider { 
+                float: none !important;
+                display: inline-block !important;
+                width: 15px !important;
+            }
+
+            /* 關鍵：在小時 (hours) 後的那個 divider 強制換行 */
             .flip-clock-divider.hours + .flip-clock-divider {
-                clear: both;
-                display: block;
-                height: 50px; /* 兩行之間的垂直間距 */
+                display: block !important;
+                clear: both !important;
+                height: 50px !important; /* 兩行之間的距離 */
                 visibility: hidden;
             }
-
-            /* 修正斷行後的間距與對齊 */
-            .flip-clock-wrapper ul { margin: 5px !important; }
-            .flip-clock-divider { height: 100px !important; }
             
-            /* 手機端導航按鈕 */
             .sidenav-trigger { display: block !important; }
         }
 
@@ -142,7 +145,6 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化側邊欄
             $('.sidenav').sidenav();
 
             const futureDate = new Date('2027-01-01T00:00:00+08:00');
@@ -164,8 +166,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
