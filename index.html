@@ -11,57 +11,84 @@
     <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
 
     <style>
+        /* --- 基礎佈局 --- */
         body {
             display: flex;
             min-height: 100vh;
             flex-direction: column;
-            background-color: #f5f5f5;
+            background-color: #fcfcfc;
+            color: #333;
         }
-
         main { flex: 1 0 auto; }
 
-        /* --- 核心自適應容器 --- */
+        /* --- 時鐘容器核心 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 0;
+            padding: 60px 0;
             opacity: 0;
-            transition: opacity 1s;
-            min-height: 200px;
+            transition: opacity 1s ease-in-out;
+            min-height: 220px;
         }
         
-        /* 覆蓋 FlipClock 默認樣式以支持自適應 */
+        /* 修正 FlipClock 預設對齊 */
         .flip-clock-wrapper {
             margin: 0 auto !important;
-            display: flex !important;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: inline-block !important;
             width: auto !important;
+            float: none !important;
         }
 
-        /* 顏色美化 */
+        /* 顏色與細節美化 */
         .flip-clock-wrapper ul li a div div.inn {
-            background-color: #333333 !important;
+            background-color: #2d2d2d !important;
             color: #ff5252 !important;
-            text-shadow: 0 1px 2px #000;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            border-radius: 6px;
         }
-        .flip-clock-dot { background: #ff5252 !important; }
+        .flip-clock-dot { background: #ff5252 !important; box-shadow: none !important; }
+        
+        /* 調整標籤位置到數字下方，避免斷行時重疊 */
         .flip-clock-divider .flip-clock-label { 
-            color: #757575 !important; 
-            font-weight: bold; 
-            font-size: 16px;
+            color: #9e9e9e !important; 
+            font-weight: 500;
+            bottom: -2.5em !important;
+            top: auto !important;
+            right: -86px !important;
+            text-transform: uppercase;
+            font-size: 14px;
         }
-      /* 移动端 */   
-    @media only screen and (max-width: 600px) {
-    .flip-clock-wrapper {
-        transform: scale(0.6);
-        -ms-transform: scale(0.6);
-        -webkit-transform: scale(0.6);
-    }
-}
+        .flip-clock-divider.seconds .flip-clock-label { right: -70px !important; }
+
+        /* --- 手機端響應式優化 (核心修改點) --- */
+        @media only screen and (max-width: 768px) {
+            h1.header { font-size: 2.5rem !important; margin-top: 30px; }
+            
+            .clock-wrapper { 
+                padding: 20px 0 80px 0; /* 底部預留空間給標籤 */
+            }
+
+            .flip-clock-wrapper {
+                transform: scale(0.75);
+                transform-origin: center center;
+            }
+
+            /* 在「小時」Divider 之後強制斷行 */
+            .flip-clock-divider.hours + .flip-clock-divider {
+                clear: both;
+                display: block;
+                height: 60px; /* 兩行之間的垂直間距 */
+                visibility: hidden;
+            }
+            
+            /* 修正斷行後的 float 布局 */
+            .flip-clock-wrapper ul { margin: 3px !important; }
+        }
+
         .footer-left { text-align: left !important; }
+        .footer-copyright { border-top: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 
@@ -70,7 +97,7 @@
         <div class="nav-wrapper container">
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a href="/">Home</a></li>
+                <li><a href="/">首頁</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
@@ -81,23 +108,25 @@
     </nav>
 
     <ul class="sidenav" id="nav-mobile">
-        <li><a href="/">Home</a></li>
-                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
-                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
+        <li><div class="user-view"><h5 class="grey-text text-darken-3">菜鳥驛站</h5></div></li>
+        <li><a href="/">首頁</a></li>
+        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
     </ul>
     
     <main>
         <div class="container center-align">
             <br><br>
             <h1 class="header red-text text-accent-2">“閒”是生活的標點</h1>
-            <p class="grey-text">距離 2027 年還有</p>
+            <p class="grey-text text-darken-1">距離 2027 年還有</p>
             
             <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
             </div>
+            
             <div id="message"></div>
         </div>
     </main>
@@ -107,12 +136,12 @@
             <div class="row">
                 <div class="col l8 s12 footer-left">
                     <h5 class="white-text">蜂巢·隱曜</h5>
-                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
+                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅 (偽)</p>
                 </div>
             </div>
         </div>
         <div class="footer-copyright grey darken-4">
-            <div class="container footer-left">
+            <div class="container footer-left grey-text">
                 &copy; 2022-2026 菜鳥驛站·樂玩公社
             </div>
         </div>
@@ -124,11 +153,13 @@
     
     <script type="text/javascript">
         $(document).ready(function() {
+            // 初始化 Materialize 組件
             $('.sidenav').sidenav();
 
-            const futureDate = new Date('2027-01-01T00:00:00+08:00');
+            // 設定目標時間
+            const targetDate = new Date('2027-01-01T00:00:00+08:00');
             const now = new Date();
-            const diff = Math.floor((futureDate.getTime() - now.getTime()) / 1000);
+            const diff = Math.floor((targetDate.getTime() - now.getTime()) / 1000);
 
             if (diff > 0) {
                 setTimeout(function() {
@@ -137,24 +168,16 @@
                         countdown: true,
                         callbacks: {
                             stop: function() {
-                                $('#message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
+                                $('#message').html('<h4 class="red-text pulse">2027 新的旅程已經開始！</h4>');
                             }
                         }
                     });
                     $('#timer-container').css('opacity', '1');
-                }, 300);
+                }, 400);
             } else {
-                $('#message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
+                $('#message').html('<h4 class="red-text">新的旅程已經開始！</h4>');
             }
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
