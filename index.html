@@ -1,111 +1,34 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta charset="utf-8"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-    <link rel="stylesheet" href="css/flipclock.css">
+    <link rel="stylesheet" href="https://iTaoPu.GitHub.io/css/flipclock.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" href="/Jing.png">
-    
+    <link rel="icon" href="https://iTaoPu.GitHub.io/Jing.png"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-    <script src="js/flipclock.js"></script>
-    
+    <script src="https://iTaoPu.GitHub.io/js/flipclock.js"></script>
+    <script src="https://iTaoPu.GitHub.io/js/sidenav.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>“閒”是生活的標點</title>
-    <style>
-        body {
-            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
-        }
-        
-        /* 响应式设计基本样式 */
-        @media only screen and (max-width: 768px) {
-            .navbar {
-                background-color: rgba(53, 53, 53, 0.95) !important;
-                height: auto !important;
-            }
-            
-            .container {
-                max-width: 100% !important;
-                padding-left: 15px !important;
-                padding-right: 15px !important;
-            }
-            
-            .right, .left {
-                float: left !important;
-            }
-            
-            .message {
-                font-size: 14px !important;
-            }
-            
-            footer {
-                background-color: rgba(46, 46, 46, 0.95) !important;
-            }
-        }
-        
-        /* 移动设备专门样式 */
-        .mobile-menu {
-            display: none !important;
-        }
-        
-        .mobile-view .navbar {
-            position: relative;
-            min-height: 60px;
-        }
-        
-        .mobile-view .sidenav {
-            left: 0 !important;
-            right: 0 !important;
-            margin-top: 0 !important;
-            position: absolute !important;
-            opacity: 1 !important;
-            transform: none !important;
-            pointer-events: auto !important;
-            box-shadow: none !important;
-        }
-        
-        .mobile-view .main-content {
-            padding: 15px !important;
-            margin-top: 5px !important;
-        }
-        
-        /* 增加字体大小提高移动设备可读性 */
-        .mobile-view h1 {
-            font-size: 24px !important;
-        }
-        
-        .mobile-view .clock {
-            font-size: 40px !important;
-            min-width: 140px !important;
-        }
-        
-        .mobile-view .Message {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 40px !important;
-        }
-    </style>
 </head>
 <body style="display: flex;min-height: 100vh;flex-direction: column;">
     <nav class="grey darken-3" role="navigation">
-        <div class="nav-wrapper container">
-            <a id="logo-container" href="#" class="brand-logo"></a>
+        <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"></a>
             <ul class="right hide-on-med-and-down">
                 <li class="active"><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服务监控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電·動力源泉</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">爱发电·动力源泉</a></li>
             </ul>
             <ul id="nav-mobile" class="sidenav">
-                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/">Home</a></li>
                 <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
                 <li><a href="https://status.ifanr.pp.ua" target="_blank">服务监控</a></li>
                 <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電·動力源泉</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">爱发电·动力源泉</a></li>
             </ul>
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
@@ -114,93 +37,60 @@
     <div class="section no-pad-bot" id="index-banner">
         <div class="container">
             <br><br>
-            <h1 class="header center red-text">"閒"是生活的標點</h1>
+            <h1 class="header center red-text">“閒”是生活的標點</h1>
             <br><br>
         </div>
     </div>
 
-    <main style="flex: 1 0 auto; display: flex;">
+    <main style="flex: 1 0 auto;">
         <div class="container">
-            <div class="section Message">
-                <div class="clock card-panel hoverable" style="display: inline-block;"></div>
+            <div class="section" style="text-align: center;">
+                <div class="clock card-panel hoverable" style="display: inline-block; width: auto;"></div>
                 <div class="message"></div>
                 <script type="text/javascript">
-                    // 检测设备类型
-                    let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                    
-                    // 添加window.onload事件处理程序
-                    function setupMobileView() {
-                        const clockElement = document.querySelector('.clock');
-                        const messageElement = document.querySelector('.message');
-                        
-                        // 移动设备专用样式
-                        if (isMobile) {
-                            document.body.classList.add('mobile-view');
-                            
-                            // 时钟特殊样式
-                            clockElement.style.fontSize = '40px';
-                            clockElement.style.minWidth = '140px';
-                            
-                            // 消息区域特殊样式
-                            messageElement.style.display = 'flex';
-                            messageElement.style.justifyContent = 'center';
-                            messageElement.style.alignItems = 'center';
-                            messageElement.style.minHeight = '40px';
-                            
-                            // 自定义倒计时功能
-                            const futureDate = new Date('2027-01-01T00:00:00+08:00');
-                            let diff = Math.floor((futureDate - new Date()) / 1000);
-                            let timer;
-                            
-                            // 为时钟添加简化版显示
-                            updateMobileClock();
-                            
-                            function updateMobileClock() {
-                                if (diff <= 0) {
-                                    clearInterval(timer);
-                                    messageElement.innerHTML = '<h5 class="red-text">倒计时结束！</h5>';
-                                    return;
+                    var clock;
+                    $(document).ready(function() {
+                        // 设置固定目标时间（北京时间2027年1月1日）
+                        const futureDate = new Date('2027-01-01T00:00:00+08:00');
+
+                        function updateClock() {
+                            const now = new Date();
+                            const diff = Math.floor((futureDate - now) / 1000);
+
+                            if (diff <= 0) {
+                                if(clock) {
+                                    clock.stop();
+                                    $('.message').html('<h5 class="red-text">倒计时已结束！</h5>');
                                 }
-                                
-                                // 显示简化版倒计时 (天/小时/分钟)
-                                const hours = Math.floor(diff / 3600 / 24) % 24;
-                                const minutes = Math.floor((diff / 60) % 60);
-                                
-                                timer = setTimeout(updateMobileClock, 1000);
+                                return;
                             }
-                            
-                            // 启动简化版时钟
-                            updateMobileClock();
-                            
-                            // 检测屏幕变化
-                            window.addEventListener('resize', function() {
-                                // 如果切换到桌面视图，则恢复原样式
-                                if (!isMobile && !document.body.classList.contains('mobile-view')) {
-                                    document.body.classList.remove('mobile-view');
-                                    
-                                    if (window.FlipClock) {
-                                        const flipClock = clockElement.querySelector('flip-clock');
-                                        if (flipClock) flipClock.remove();
-                                        
-                                        // 初始化FlipClock
-                                        const clock = $('.clock').FlipClock(diff, {
-                                            clockFace: 'DailyCounter',
-                                            countdown: true,
-                                            autoStart: true
-                                        });
-                                        
-                                        messageElement.innerHTML = '<h5 class="green-text" style="margin:15px 0;">活动进行中！</h5>';
+
+                            if (!clock) {
+                                // 初始化时钟
+                                clock = $('.clock').FlipClock(diff, {
+                                    clockFace: 'DailyCounter',
+                                    countdown: true,
+                                    autoStart: false,
+                                    callbacks: {
+                                        stop: function() {
+                                            $('.message').html('<h5 class="green-text">活动进行中！</h5>');
+                                        }
                                     }
-                                }
-                            });
-                        } else {
-                            // 桌面设备处理
-                            // 原HTML中的FlipClock代码在这里，不需要额外添加
+                                }).start();
+                            } else {
+                                // 动态更新时间
+                                clock.setTime(diff);
+                                clock.start(); // 确保计时器运行
+                            }
                         }
-                    }
-                    
-                    // 确保在页面加载完成后运行
-                    window.addEventListener('load', setupMobileView);
+
+                        // 初始化侧边栏
+                        $('.sidenav').sidenav();
+
+                        // 每秒更新
+                        setInterval(updateClock, 1000);
+                        updateClock(); // 立即初始化
+                    });
                 </script>
             </div>
         </div>
@@ -213,7 +103,13 @@
                     <h5><li><a class="white-text" href="https://t.me/CNiao_P" target="_blank">蜂巢·隱曜</a></li></h5>
                     <p class="grey-text text-lighten-4">人的白嫖，就如同高山滚石一般，一旦开始，就再也停不下了 —— 「鲁迅」</p>
                 </div>
-                <div class="col l3 push-s1 s12">
+                <div class="col l3 s12">
+                    <h5 class="white-text"></h5>
+                    <ul>
+                    </ul>
+                </div>
+                <div class="col l3 s12">
+                    <h6 class="white-text">公益服務</h6>
                     <ul>
                         <li><a class="white-text" href="https://docker.ifanr.pp.ua">樂玩公社.Docker·镜像搜索</a></li>
                         <li><a class="white-text" href="https://github.ifanr.pp.ua">樂玩公社.GitHub·文件加速</a></li>
@@ -224,11 +120,9 @@
         </div>
         <div class="footer-copyright">
             <div class="container" style="position:relative;">
-                &copy; 2022-2026 菜鳥驛站·樂玩公社
+                &copy; © 2022-2026 菜鳥驛站·樂玩公社
             </div>
         </div>
     </footer>
 </body>
 </html>
-
-
