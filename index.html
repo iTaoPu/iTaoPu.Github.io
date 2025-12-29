@@ -1,4 +1,16 @@
-<style>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link rel="stylesheet" href="https://iTaoPu.Github.io/css/flipclock.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href="https://iTaoPu.Github.io/Jing.png"/>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>“閒”是生活的標點</title>
+
+    <style>
     body {
         display: flex;
         min-height: 100vh;
@@ -39,7 +51,7 @@
         }
 
         .flip-clock-wrapper {
-            transform: scale(0.8); /* 放大一點，因為三行空間較充裕 */
+            transform: scale(0.7); /* 放大一點，因為三行空間較充裕 */
             transform-origin: center top;
             display: block !important;
             text-align: center;
@@ -86,3 +98,85 @@
     main { flex: 1 0 auto; }
     .footer-left { text-align: left !important; }
 </style>
+</head>
+
+<body>
+    <nav class="grey darken-4" role="navigation">
+        <div class="nav-wrapper container">
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/">Home</a></li>
+                <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+                <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+                <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+                <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <ul class="sidenav" id="nav-mobile">
+        <li><a href="/">Home</a></li>
+        <li><a href="https://adrules.ifanr.pp.ua" target="_blank">AdRules</a></li>
+        <li><a href="https://status.ifanr.pp.ua" target="_blank">服務監控</a></li>
+        <li><a href="https://5iclub.blogspot.com" target="_blank">Blogspot</a></li>
+        <li><a href="https://vlink.cc/CNiao" target="_blank">菜鳥驛站</a></li>
+        <li><a href="https://ifdian.net/a/CNiao" target="_blank">愛發電</a></li>
+    </ul>
+    
+    <main>
+        <div class="container center-align">
+            <br><br>
+            <h1 class="header red-text text-accent-2">“閒”是生活的標點</h1>
+            <p class="grey-text">距離 2027 年還有</p>
+            
+            <div class="clock-wrapper" id="timer-container">
+                <div class="clock"></div>
+            </div>
+            <div id="message"></div>
+        </div>
+    </main>
+
+    <footer class="page-footer grey darken-3">
+        <div class="container">
+            <div class="row">
+                <div class="col l8 s12 footer-left">
+                    <h5 class="white-text">蜂巢·隱曜</h5>
+                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright grey darken-4">
+            <div class="container footer-left">
+                &copy; 2022-2026 菜鳥驛站·樂玩公社
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="https://iTaoPu.Github.io/js/flipclock.js"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.sidenav').sidenav();
+
+            const futureDate = new Date('2027-01-01T00:00:00+08:00');
+            const now = new Date();
+            const diff = Math.floor((futureDate.getTime() - now.getTime()) / 1000);
+
+            if (diff > 0) {
+                setTimeout(function() {
+                    const clock = $('.clock').FlipClock(diff, {
+                        clockFace: 'DailyCounter',
+                        countdown: true
+                    });
+                    $('#timer-container').css('opacity', '1');
+                }, 300);
+            } else {
+                $('#message').html('<h5 class="red-text">新的旅程已經開始！</h5>');
+            }
+        });
+    </script>
+</body>
+</html>
