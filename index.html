@@ -90,12 +90,9 @@
 
         /* --- 導航欄增強與毛玻璃優化 --- */
         nav.black {
-            /* 調整透明度以作為模糊基底 */
             background-color: rgba(0, 0, 0, 0.6) !important;
-            /* 毛玻璃核心代碼 */
             backdrop-filter: blur(15px) saturate(180%);
             -webkit-backdrop-filter: blur(15px) saturate(180%);
-            /* 修復渲染發虛並強制 GPU 加速 */
             transform: translateZ(0);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: none !important;
@@ -105,7 +102,6 @@
             transition: color 0.3s ease, background-color 0.3s ease;
             position: relative;
             font-weight: 500;
-            /* 增加文字投影確保在模糊背景下清晰 */
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
 
@@ -116,19 +112,13 @@
 
         .nav-wrapper ul li a::after {
             content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
+            position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
             background-color: #ff5252;
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
 
-        .nav-wrapper ul li a:hover::after {
-            width: 70%;
-        }
+        .nav-wrapper ul li a:hover::after { width: 70%; }
 
         /* --- 移動端適配 --- */
         @media only screen and (max-width: 768px) {
@@ -146,36 +136,14 @@
             transition: background-color 0.3s ease;
         }
 
-        /* 名句樣式優化 */
-        #hitokoto_text {
-            font-style: italic;
-            transition: opacity 0.5s ease;
-        }
-        #hitokoto_from {
-            font-size: 0.8rem;
-            margin-left: 10px;
-        }
+        #hitokoto_text { font-style: italic; transition: opacity 0.5s ease; }
+        #hitokoto_from { font-size: 0.8rem; margin-left: 10px; }
 
         /* 右下角切換按鈕 */
-        #theme-toggle-fab {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 1000;
-        }
-        #theme-toggle-fab a {
-            width: 45px;
-            height: 45px;
-            line-height: 45px;
-        }
-        #theme-toggle-fab a i {
-            line-height: 45px;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-        #theme-toggle-fab a:hover i {
-            transform: rotate(30deg);
-        }
+        #theme-toggle-fab { position: fixed; right: 20px; bottom: 20px; z-index: 1000; }
+        #theme-toggle-fab a { width: 45px; height: 45px; line-height: 45px; }
+        #theme-toggle-fab a i { line-height: 45px; font-size: 1.5rem; transition: transform 0.3s ease; }
+        #theme-toggle-fab a:hover i { transform: rotate(30deg); }
 
         /* 側邊欄樣式 */
         .sidenav { background-color: #212121 !important; }
@@ -202,9 +170,9 @@
         body.light-mode .sidenav li a { color: #212121 !important; }
         body.light-mode .sidenav li a i { color: #212121 !important; }
         
-        /* 側邊欄頂部 蜂巢 區域隨模式切換 */
-        body.light-mode .sidenav li .user-view .name { color: #212121 !important; }
-        body.light-mode .sidenav li .user-view .background { background-color: #eeeeee !important; }
+        /* 修復側邊欄「蜂巢」背景與文字 Bug */
+        body.light-mode .sidenav li .user-view .background.black { background-color: #eeeeee !important; }
+        body.light-mode .sidenav li .user-view .white-text.name { color: #212121 !important; }
 
         body.light-mode .sub-text { color: #424242 !important; }
         body.light-mode #bj-date { color: #212121 !important; }
