@@ -131,6 +131,16 @@
             transition: background-color 0.3s ease;
         }
 
+        /* 名句樣式優化 */
+        #hitokoto_text {
+            font-style: italic;
+            transition: opacity 0.5s ease;
+        }
+        #hitokoto_from {
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
         /* 右下角切換按鈕 */
         #theme-toggle-fab {
             position: fixed;
@@ -152,7 +162,7 @@
             transform: rotate(30deg);
         }
 
-        /* 默認深色側邊欄樣式 */
+        /* 側邊欄樣式 */
         .sidenav { background-color: #212121 !important; }
         .sidenav li a { color: #ffffff !important; }
         .sidenav li a i { color: #ffffff !important; }
@@ -163,35 +173,19 @@
             color: #212121 !important;
         }
 
-        /* 導航欄固定深色 */
         body.light-mode nav { background-color: #000000 !important; }
         body.light-mode nav ul a, body.light-mode nav i { color: #ffffff !important; }
         body.light-mode .sidenav-trigger i { color: #ffffff !important; }
        
-        /* 淺色模式下的移動端側邊欄 */
-        body.light-mode .sidenav { 
-            background-color: #ffffff !important; 
-        }
-        /* 僅針對導航連結改為深色文字 */
-        body.light-mode .sidenav li a { 
-            color: #212121 !important; 
-        }
-        body.light-mode .sidenav li a i { 
-            color: #212121 !important; 
-        }
-        /* 保持「蜂巢」用戶區域（user-view）為深色風格，不隨 light-mode 更改 */
-        body.light-mode .sidenav li .user-view .name {
-            color: #ffffff !important;
-        }
-        body.light-mode .sidenav li .user-view .background {
-            background-color: #000000 !important;
-        }
+        body.light-mode .sidenav { background-color: #ffffff !important; }
+        body.light-mode .sidenav li a { color: #212121 !important; }
+        body.light-mode .sidenav li a i { color: #212121 !important; }
+        body.light-mode .sidenav li .user-view .name { color: #ffffff !important; }
+        body.light-mode .sidenav li .user-view .background { background-color: #000000 !important; }
 
-        /* 加深日期與標語顏色 */
         body.light-mode .sub-text { color: #424242 !important; }
         body.light-mode #bj-date { color: #212121 !important; }
 
-        /* 淺色模式下：時鐘改為黑色 */
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
             color: #000000 !important;
@@ -200,7 +194,6 @@
         }
         body.light-mode .flip-clock-dot { background: #000000 !important; }
 
-        /* 頁腳顏色調整 */
         body.light-mode .page-footer { background-color: #eeeeee !important; }
         body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
         body.light-mode .page-footer p, body.light-mode .page-footer h6 a { color: #212121 !important; }
@@ -256,7 +249,10 @@
             <div class="row">
                 <div class="col l8 s12">
                     <h6><a href="https://t.me/ifanr" target="_blank" style="color:#ff5252;">鯉躍龍門</a></h6>
-                    <p class="grey-text text-lighten-1">「人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了」 —— 魯迅</p>
+                    <p class="grey-text text-lighten-1">
+                        「<span id="hitokoto_text">載入名言中...</span>」
+                        <small id="hitokoto_from"></small>
+                    </p>
                 </div>
             </div>
         </div>
@@ -281,6 +277,20 @@
                 $('body').toggleClass('light-mode');
                 localStorage.setItem('theme', $('body').hasClass('light-mode') ? 'light' : 'dark');
             });
+
+            // --- 新增：名人名言加載函數 ---
+            function fetchHitokoto() {
+                fetch('https://v1.hitokoto.cn')
+                    .then(response => response.json())
+                    .then(data => {
+                        $('#hitokoto_text').text(data.hitokoto);
+                        if (data.from) {
+                            $('#hitokoto_from').text('—— ' + data.from);
+                        }
+                    })
+                    .catch(console.error);
+            }
+            fetchHitokoto(); // 初始加載
 
             let timeOffset = 0;
 
@@ -343,7 +353,12 @@
             }
 
             setTimeout(syncWithNTP, 1800);
-            setInterval(() => { updateDate(); syncWithNTP(); }, 3600000);
+            // 每小時同步一次時間，並更新一次名言
+            setInterval(() => { 
+                updateDate(); 
+                syncWithNTP(); 
+                fetchHitokoto(); 
+            }, 3600000);
         });
     </script>
 </body>
