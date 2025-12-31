@@ -35,14 +35,17 @@
             padding: 40px 0;
         }
 
-        /* --- Logo 樣式 --- */
+        /* --- Logo 樣式修正 --- */
         .brand-logo {
             display: flex !important;
             align-items: center;
-            height: 100%;
+            height: 100% !important;
+            position: relative !important;
+            padding: 0 15px !important;
+            z-index: 10;
         }
         .brand-logo img {
-            height: 32px; /* 控制 Logo 大小 */
+            height: 32px;
             width: auto;
             transition: transform 0.3s ease;
         }
@@ -136,9 +139,15 @@
         .nav-wrapper ul li a:hover::after { width: 70%; }
 
         /* --- 移動端適配 --- */
+        @media only screen and (max-width: 992px) {
+            nav .brand-logo.left {
+                left: 0 !important;
+                transform: none !important;
+            }
+            .brand-logo img { height: 28px; }
+        }
         @media only screen and (max-width: 768px) {
             .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
-            .brand-logo img { height: 28px; }
         }
         @media only screen and (max-width: 480px) {
             .clock-wrapper { transform: scale(0.75); margin: 20px 0; }
@@ -220,7 +229,8 @@
                 <img src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo">
             </a>
             
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
+            
             <ul class="right hide-on-med-and-down">
                 <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.sspai.net.cn" target="_blank">AdRules</a></li>
@@ -281,23 +291,14 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('.sidenav').sidenav();
-
             const savedTheme = localStorage.getItem('theme');
-            
             function applyAutoTheme() {
                 const hour = new Date().getHours();
-                if (hour >= 6 && hour < 18) {
-                    $('body').addClass('light-mode');
-                } else {
-                    $('body').removeClass('light-mode');
-                }
+                if (hour >= 6 && hour < 18) { $('body').addClass('light-mode'); } 
+                else { $('body').removeClass('light-mode'); }
             }
-
-            if (!savedTheme) {
-                applyAutoTheme();
-            } else if (savedTheme === 'light') {
-                $('body').addClass('light-mode');
-            }
+            if (!savedTheme) { applyAutoTheme(); } 
+            else if (savedTheme === 'light') { $('body').addClass('light-mode'); }
 
             $('#theme-toggle-fab').on('click', function() {
                 $('body').toggleClass('light-mode');
@@ -316,14 +317,12 @@
             fetchHitokoto();
 
             let timeOffset = 0;
-
             function getBeijingTime() {
                 const now = new Date();
                 const correctedNow = new Date(now.getTime() + timeOffset);
                 const utc = correctedNow.getTime() + (correctedNow.getTimezoneOffset() * 60000);
                 return new Date(utc + (3600000 * 8));
             }
-
             function updateDate() {
                 const bjNow = getBeijingTime();
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -339,10 +338,7 @@
             $('#timer-container').css('opacity', '1');
 
             async function syncWithNTP() {
-                const apis = [
-                    { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
-                ];
-
+                const apis = [{ name: '蘇寧', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }];
                 let success = false;
                 for (let api of apis) {
                     try {
@@ -356,25 +352,14 @@
                         timeOffset = (serverTime + latency) - endTime;
                         if (Math.abs(timeOffset) > 1000) clock.setTime(getBeijingTime());
                         $('#sync-status').fadeOut(500, function() {
-                            $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_done</i> 蜂巢時間已同步 (互聯網校準時間)')
-                                   .css('color', '#4caf50').fadeIn();
+                            $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_done</i> 蜂巢時間已同步').css('color', '#4caf50').fadeIn();
                         });
-                        success = true;
-                        break;
-                    } catch (e) { console.warn(api.name + ' 接口失效...'); }
-                }
-                if (!success) {
-                    $('#sync-status').html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_off</i> 蜂巢時間已同步 (本地系統時間)').css('color', '#ff9800');
+                        success = true; break;
+                    } catch (e) {}
                 }
             }
-
             setTimeout(syncWithNTP, 1800);
-            setInterval(() => { 
-                updateDate(); 
-                syncWithNTP(); 
-                fetchHitokoto();
-                if (!localStorage.getItem('theme')) applyAutoTheme();
-            }, 3600000);
+            setInterval(() => { updateDate(); syncWithNTP(); fetchHitokoto(); }, 3600000);
         });
     </script>
 </body>
