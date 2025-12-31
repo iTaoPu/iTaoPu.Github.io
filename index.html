@@ -50,13 +50,11 @@
             transform: rotate(15deg) scale(1.1);
         }
 
-        /* --- 移動端修改核心 CSS --- */
+        /* --- 移動端修改核心 CSS (Logo 縮小、下移) --- */
         @media only screen and (max-width: 992px) {
-            /* 隱藏原本置中的 Logo 容器 */
             nav .brand-logo {
                 display: none !important;
             }
-            /* 讓觸發器靠左 */
             nav .sidenav-trigger {
                 float: left !important;
                 margin-left: 10px !important;
@@ -64,17 +62,15 @@
                 align-items: center;
                 height: 100%;
             }
-            /* 移動端 Logo 圖片樣式 */
             .mobile-logo-trigger {
-                height: 32px;
+                height: 26px; /* 這裡縮小了尺寸 */
                 width: auto;
+                margin-top: 4px; /* 這裡控制往下移動的距離 */
                 transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
-            /* 點擊時的縮放感 */
             .sidenav-trigger:active .mobile-logo-trigger {
                 transform: scale(0.85);
             }
-            /* 側邊欄開啟後的旋轉動畫狀態 */
             .logo-spin {
                 transform: rotate(360deg) scale(1.1);
             }
@@ -303,7 +299,7 @@
    
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化側邊欄並加入 Logo 動效
+            // 初始化 sidenav 並設置動畫回調
             $('.sidenav').sidenav({
                 onOpenStart: function() { $('.mobile-logo-trigger').addClass('logo-spin'); },
                 onCloseStart: function() { $('.mobile-logo-trigger').removeClass('logo-spin'); }
