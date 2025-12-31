@@ -63,9 +63,9 @@
                 height: 100%;
             }
             .mobile-logo-trigger {
-                height: 26px; /* 這裡縮小了尺寸 */
+                height: 26px; 
                 width: auto;
-                margin-top: 4px; /* 這裡控制往下移動的距離 */
+                margin-top: 4px; 
                 transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
             .sidenav-trigger:active .mobile-logo-trigger {
@@ -299,7 +299,7 @@
    
     <script type="text/javascript">
         $(document).ready(function() {
-            // 初始化 sidenav 並設置動畫回調
+            // 初始化 sidenav
             $('.sidenav').sidenav({
                 onOpenStart: function() { $('.mobile-logo-trigger').addClass('logo-spin'); },
                 onCloseStart: function() { $('.mobile-logo-trigger').removeClass('logo-spin'); }
@@ -327,16 +327,30 @@
                 localStorage.setItem('theme', $('body').hasClass('light-mode') ? 'light' : 'dark');
             });
 
+            // 名句獲取函式
             function fetchHitokoto() {
                 fetch('https://v1.hitokoto.cn')
                     .then(response => response.json())
                     .then(data => {
-                        $('#hitokoto_text').text(data.hitokoto);
-                        if (data.from) { $('#hitokoto_from').text('—— ' + data.from); }
+                        $('#hitokoto_text').fadeOut(300, function() {
+                            $(this).text(data.hitokoto).fadeIn(300);
+                        });
+                        if (data.from) { 
+                            $('#hitokoto_from').fadeOut(300, function() {
+                                $(this).text('—— ' + data.from).fadeIn(300);
+                            });
+                        }
                     })
                     .catch(console.error);
             }
+
+            // 初始加載名句
             fetchHitokoto();
+
+            // --- 新增：名人名言單獨每 60 秒自動更新一次 ---
+            setInterval(function() {
+                fetchHitokoto();
+            }, 60000);
 
             let timeOffset = 0;
 
@@ -392,14 +406,14 @@
             }
 
             setTimeout(syncWithNTP, 1800);
+
+            // 每小時的長週期背景更新（時間校正、主題檢查）
             setInterval(() => { 
                 updateDate(); 
                 syncWithNTP(); 
-                fetchHitokoto();
                 if (!localStorage.getItem('theme')) applyAutoTheme();
             }, 3600000);
         });
     </script>
 </body>
 </html>
-
