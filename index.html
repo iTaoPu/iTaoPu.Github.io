@@ -35,6 +35,21 @@
             padding: 40px 0;
         }
 
+        /* --- Logo 樣式 --- */
+        .brand-logo {
+            display: flex !important;
+            align-items: center;
+            height: 100%;
+        }
+        .brand-logo img {
+            height: 32px; /* 控制 Logo 大小 */
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        .brand-logo:hover img {
+            transform: rotate(15deg) scale(1.1);
+        }
+
         /* --- 文青風格標題 --- */
         .header-title {
             font-family: 'Noto Serif TC', serif !important;
@@ -123,6 +138,7 @@
         /* --- 移動端適配 --- */
         @media only screen and (max-width: 768px) {
             .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
+            .brand-logo img { height: 28px; }
         }
         @media only screen and (max-width: 480px) {
             .clock-wrapper { transform: scale(0.75); margin: 20px 0; }
@@ -200,6 +216,10 @@
 
     <nav class="black">
         <div class="nav-wrapper container">
+            <a href="/" class="brand-logo left">
+                <img src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo">
+            </a>
+            
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
                 <li><a href="/">Home</a></li>
