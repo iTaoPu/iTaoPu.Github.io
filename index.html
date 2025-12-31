@@ -42,12 +42,27 @@
             height: 100%;
         }
         .brand-logo img {
-            height: 32px; /* 控制 Logo 大小 */
+            height: 32px; 
             width: auto;
             transition: transform 0.3s ease;
         }
         .brand-logo:hover img {
             transform: rotate(15deg) scale(1.1);
+        }
+
+        /* --- 移動端 Logo 靠右核心 CSS --- */
+        @media only screen and (max-width: 992px) {
+            nav .brand-logo {
+                right: 0 !important;
+                left: auto !important;
+                transform: none !important;
+                padding: 0 15px; /* 增加一點邊距避免貼邊 */
+            }
+            nav .sidenav-trigger {
+                float: left !important;
+                margin-left: 0 !important;
+                display: block !important;
+            }
         }
 
         /* --- 文青風格標題 --- */
@@ -93,7 +108,6 @@
             display: none !important;
         }
 
-        /* 顏色自定義：深灰底紅字 */
         .flip-clock-wrapper ul li a div div.inn {
             background-color: #333333 !important;
             color: #ff5252 !important;
@@ -103,7 +117,7 @@
         }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 導航欄增強與毛玻璃優化 --- */
+        /* --- 導航欄毛玻璃 --- */
         nav.black {
             background-color: rgba(0, 0, 0, 0.6) !important;
             backdrop-filter: blur(15px) saturate(180%);
@@ -135,7 +149,7 @@
 
         .nav-wrapper ul li a:hover::after { width: 70%; }
 
-        /* --- 移動端適配 --- */
+        /* --- 響應式微調 --- */
         @media only screen and (max-width: 768px) {
             .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
             .brand-logo img { height: 28px; }
@@ -155,23 +169,21 @@
         #hitokoto_text { font-style: italic; transition: opacity 0.5s ease; }
         #hitokoto_from { font-size: 0.8rem; margin-left: 10px; }
 
-        /* 右下角切換按鈕 */
+        /* 切換按鈕 */
         #theme-toggle-fab { position: fixed; right: 20px; bottom: 20px; z-index: 1000; }
         #theme-toggle-fab a { width: 45px; height: 45px; line-height: 45px; }
         #theme-toggle-fab a i { line-height: 45px; font-size: 1.5rem; transition: transform 0.3s ease; }
         #theme-toggle-fab a:hover i { transform: rotate(30deg); }
 
-        /* 側邊欄樣式 */
         .sidenav { background-color: #212121 !important; }
         .sidenav li a { color: #ffffff !important; }
         .sidenav li a i { color: #ffffff !important; }
 
-        /* --- 淺色模式樣式 --- */
+        /* --- 淺色模式 --- */
         body.light-mode {
             background-color: #f5f5f5 !important;
             color: #212121 !important;
         }
-
         body.light-mode nav { 
             background-color: rgba(255, 255, 255, 0.7) !important;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -181,18 +193,12 @@
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
         body.light-mode .sidenav-trigger i { color: #212121 !important; }
-       
         body.light-mode .sidenav { background-color: #ffffff !important; }
         body.light-mode .sidenav li a { color: #212121 !important; }
-        body.light-mode .sidenav li a i { color: #212121 !important; }
-        
-        /* 修復側邊欄「蜂巢」背景與文字 Bug */
         body.light-mode .sidenav li .user-view .background.black { background-color: #eeeeee !important; }
         body.light-mode .sidenav li .user-view .white-text.name { color: #212121 !important; }
-
         body.light-mode .sub-text { color: #424242 !important; }
         body.light-mode #bj-date { color: #212121 !important; }
-
         body.light-mode .flip-clock-wrapper ul li a div div.inn {
             background-color: #ffffff !important;
             color: #000000 !important;
@@ -200,7 +206,6 @@
             border: 1px solid #ddd;
         }
         body.light-mode .flip-clock-dot { background: #000000 !important; }
-
         body.light-mode .page-footer { background-color: #eeeeee !important; }
         body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
         body.light-mode .page-footer p, body.light-mode .page-footer h6 a { color: #212121 !important; }
@@ -216,11 +221,12 @@
 
     <nav class="black">
         <div class="nav-wrapper container">
-            <a href="/" class="brand-logo left">
+            <a href="/" class="brand-logo">
                 <img src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo">
             </a>
             
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            
             <ul class="right hide-on-med-and-down">
                 <li><a href="/">Home</a></li>
                 <li><a href="https://adrules.sspai.net.cn" target="_blank">AdRules</a></li>
