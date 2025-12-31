@@ -159,7 +159,7 @@
         /* --- 淺色模式樣式 --- */
         body.light-mode {
             background-color: #f5f5f5 !important;
-            color: #212121 !important; /* 加深主體字體顏色 */
+            color: #212121 !important; 
         }
 
         /* 導航欄固定深色 */
@@ -167,6 +167,23 @@
         body.light-mode nav ul a, body.light-mode nav i { color: #ffffff !important; }
         body.light-mode .sidenav-trigger i { color: #ffffff !important; }
        
+        /* 淺色模式下的移動端導航欄修復 */
+        body.light-mode .sidenav { 
+            background-color: #ffffff !important; 
+        }
+        body.light-mode .sidenav li a { 
+            color: #212121 !important; 
+        }
+        body.light-mode .sidenav li a i { 
+            color: #212121 !important; 
+        }
+        body.light-mode .sidenav li .user-view .background {
+            background-color: #eeeeee !important;
+        }
+        body.light-mode .sidenav li .user-view .name {
+            color: #212121 !important;
+        }
+
         /* 加深日期與標語顏色 */
         body.light-mode .sub-text { color: #424242 !important; }
         body.light-mode #bj-date { color: #212121 !important; }
@@ -328,6 +345,3 @@
     </script>
 </body>
 </html>
-
-
-
