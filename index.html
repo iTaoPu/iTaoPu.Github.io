@@ -105,7 +105,7 @@
             transition: color 0.3s ease, background-color 0.3s ease;
             position: relative;
             font-weight: 500;
-            /* 增加文字投影確保在高對比背景下清晰 */
+            /* 增加文字投影確保在模糊背景下清晰 */
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
 
@@ -201,8 +201,10 @@
         body.light-mode .sidenav { background-color: #ffffff !important; }
         body.light-mode .sidenav li a { color: #212121 !important; }
         body.light-mode .sidenav li a i { color: #212121 !important; }
-        body.light-mode .sidenav li .user-view .name { color: #ffffff !important; }
-        body.light-mode .sidenav li .user-view .background { background-color: #000000 !important; }
+        
+        /* 側邊欄頂部 蜂巢 區域隨模式切換 */
+        body.light-mode .sidenav li .user-view .name { color: #212121 !important; }
+        body.light-mode .sidenav li .user-view .background { background-color: #eeeeee !important; }
 
         body.light-mode .sub-text { color: #424242 !important; }
         body.light-mode #bj-date { color: #212121 !important; }
