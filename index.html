@@ -50,18 +50,33 @@
             transform: rotate(15deg) scale(1.1);
         }
 
-        /* --- 移動端 Logo 靠右核心 CSS --- */
+        /* --- 移動端修改核心 CSS --- */
         @media only screen and (max-width: 992px) {
+            /* 隱藏原本置中的 Logo 容器 */
             nav .brand-logo {
-                right: 0 !important;
-                left: auto !important;
-                transform: none !important;
-                padding: 0 0px; /* 增加一點邊距避免貼邊 */
+                display: none !important;
             }
+            /* 讓觸發器靠左 */
             nav .sidenav-trigger {
                 float: left !important;
-                margin-left: 0 !important;
-                display: block !important;
+                margin-left: 10px !important;
+                display: flex !important;
+                align-items: center;
+                height: 100%;
+            }
+            /* 移動端 Logo 圖片樣式 */
+            .mobile-logo-trigger {
+                height: 32px;
+                width: auto;
+                transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            /* 點擊時的縮放感 */
+            .sidenav-trigger:active .mobile-logo-trigger {
+                transform: scale(0.85);
+            }
+            /* 側邊欄開啟後的旋轉動畫狀態 */
+            .logo-spin {
+                transform: rotate(360deg) scale(1.1);
             }
         }
 
@@ -225,7 +240,9 @@
                 <img src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo">
             </a>
             
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger">
+                <img src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo" class="mobile-logo-trigger">
+            </a>
             
             <ul class="right hide-on-med-and-down">
                 <li><a href="/">Home</a></li>
@@ -286,7 +303,11 @@
    
     <script type="text/javascript">
         $(document).ready(function() {
-            $('.sidenav').sidenav();
+            // 初始化側邊欄並加入 Logo 動效
+            $('.sidenav').sidenav({
+                onOpenStart: function() { $('.mobile-logo-trigger').addClass('logo-spin'); },
+                onCloseStart: function() { $('.mobile-logo-trigger').removeClass('logo-spin'); }
+            });
 
             const savedTheme = localStorage.getItem('theme');
             
@@ -385,7 +406,3 @@
     </script>
 </body>
 </html>
-
-
-
-
