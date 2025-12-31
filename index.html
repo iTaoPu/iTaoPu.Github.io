@@ -350,7 +350,7 @@
             // --- 新增：名人名言單獨每 60 秒自動更新一次 ---
        setTimeout(function() {
              fetchHitokoto();
-        }, 9000);   // 9 秒後才第一次從網路更新，讓本地名言停留一會
+        }, 6000);   // 6 秒後才第一次從網路更新，讓本地名言停留一會
 
         setInterval(function() {
               fetchHitokoto();
@@ -421,3 +421,4 @@
     </script>
 </body>
 </html>
+
