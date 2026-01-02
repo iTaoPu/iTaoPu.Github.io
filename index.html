@@ -187,20 +187,32 @@
         #theme-toggle-fab a:hover i { transform: rotate(30deg); }
 
         .sidenav { background-color: #212121 !important; }
-        .sidenav li a { color: #ffffff !important; }
-        .sidenav li a i { color: #ffffff !important; }
+        
+        /* --- 修正：側邊欄項目垂直對齊 --- */
+        .sidenav li a { 
+            color: #ffffff !important; 
+            display: flex !important;
+            align-items: center !important;
+        }
+        .sidenav li a i { 
+            color: #ffffff !important; 
+            margin: 0 16px 0 0 !important; /* 圖標右間距 */
+            display: flex;
+            align-items: center;
+        }
 
-        /* --- 側邊欄 User-View 對齊與尺寸調整 --- */
+        /* --- 側邊欄 User-View 對齊 --- */
         .sidenav .user-view {
             display: flex;
             align-items: center;
-            padding: 24px 32px 12px;
+            padding: 24px 32px;
         }
         .sidenav .user-view .hive-icon {
-            font-size: 26px !important; /* 介於 24px 與 32px 之間 */
-            margin-right: 10px;
-            color: #ff5252; /* 深色模式彩色 */
-            transition: color 0.3s ease;
+            font-size: 26px !important;
+            margin-right: 12px;
+            color: #ff5252; 
+            display: flex;
+            align-items: center;
         }
         .sidenav .user-view .name {
             margin: 0 !important;
@@ -221,16 +233,19 @@
             color: #212121 !important; 
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
-        /* 淺色模式：漢堡選單圖標 */
         body.light-mode .sidenav-trigger i { color: #212121 !important; }
-        body.light-mode .mobile-logo-trigger { filter: brightness(0); }
+        
+        /* 修正：淺色模式下 Logo 保持原色，不轉黑 */
+        body.light-mode .mobile-logo-trigger,
+        body.light-mode .brand-logo img { 
+            filter: none !important; 
+        }
 
         body.light-mode .sidenav { background-color: #ffffff !important; }
         body.light-mode .sidenav li a { color: #212121 !important; }
         body.light-mode .sidenav li a i { color: #212121 !important; }
         body.light-mode .sidenav li .user-view .background.black { background-color: #eeeeee !important; }
         
-        /* 淺色模式：側邊欄頭部變黑 */
         body.light-mode .sidenav .user-view .hive-icon,
         body.light-mode .sidenav .user-view .name { 
             color: #212121 !important; 
@@ -287,7 +302,7 @@
             <div class="user-view">
                 <div class="background black"></div>
                 <i class="material-icons hive-icon">hive</i>
-                <span class="white-text name"></span>
+                <span class="white-text name">蜂巢•隱曜</span>
             </div>
         </li>
         <li><a href="/"><i class="material-icons">home</i>Home</a></li>
@@ -364,7 +379,7 @@
                 localStorage.setItem('theme', $('body').hasClass('light-mode') ? 'light' : 'dark');
             });
 
-            // 名句獲取函式
+            // 名句獲取
             function fetchHitokoto() {
                 fetch('https://v1.hitokoto.cn')
                     .then(response => response.json())
@@ -456,4 +471,3 @@
     </script>
 </body>
 </html>
-
