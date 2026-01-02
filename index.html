@@ -145,6 +145,11 @@
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
 
+        /* 優化：導航欄圖標與文字靠近 */
+        .nav-wrapper ul li a i.left {
+            margin-right: 6px !important; /* 縮小原有的 15px 間距 */
+        }
+
         .nav-wrapper ul li a:hover {
             color: #ff5252 !important;
             background-color: rgba(255, 255, 255, 0.05) !important;
@@ -332,7 +337,7 @@
         </div>
         <div class="footer-copyright black">
             <div class="container grey-text text-darken-1">
-                &copy; 2022-2026 蜂巢·隱曜
+                &copy; 2022-<span id="current-year">2026</span> 蜂巢·隱曜
             </div>
         </div>
     </footer>
@@ -343,6 +348,9 @@
    
     <script type="text/javascript">
         $(document).ready(function() {
+            // 自動更新版權年份
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
             // 初始化 sidenav
             $('.sidenav').sidenav({
                 onOpenStart: function() { $('.mobile-logo-trigger').addClass('logo-spin'); },
