@@ -190,22 +190,22 @@
         .sidenav li a { color: #ffffff !important; }
         .sidenav li a i { color: #ffffff !important; }
 
-        /* --- 側邊欄 User-View 對齊設定 --- */
+        /* --- 側邊欄 User-View 對齊與尺寸調整 --- */
         .sidenav .user-view {
             display: flex;
             align-items: center;
-            padding: 32px 32px 16px;
+            padding: 24px 32px 12px;
         }
         .sidenav .user-view .hive-icon {
-            font-size: 32px !important;
-            margin-right: 12px;
+            font-size: 26px !important; /* 介於 24px 與 32px 之間 */
+            margin-right: 10px;
             color: #ff5252; /* 深色模式彩色 */
             transition: color 0.3s ease;
         }
         .sidenav .user-view .name {
             margin: 0 !important;
-            font-size: 1.2rem !important;
-            font-weight: 600;
+            font-size: 1.1rem !important;
+            font-weight: 500;
         }
 
         /* --- 淺色模式 --- */
@@ -221,7 +221,7 @@
             color: #212121 !important; 
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
-        /* 淺色模式：移動端導航欄圖標改為黑色 */
+        /* 淺色模式：漢堡選單圖標 */
         body.light-mode .sidenav-trigger i { color: #212121 !important; }
         body.light-mode .mobile-logo-trigger { filter: brightness(0); }
 
@@ -230,7 +230,7 @@
         body.light-mode .sidenav li a i { color: #212121 !important; }
         body.light-mode .sidenav li .user-view .background.black { background-color: #eeeeee !important; }
         
-        /* 淺色模式：側邊欄圖標與文字變為黑色 */
+        /* 淺色模式：側邊欄頭部變黑 */
         body.light-mode .sidenav .user-view .hive-icon,
         body.light-mode .sidenav .user-view .name { 
             color: #212121 !important; 
