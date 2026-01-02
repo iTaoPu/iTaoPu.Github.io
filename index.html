@@ -12,7 +12,7 @@
     <link rel="icon" href="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png"/>
    
     <style>
-        /* --- 頁面基礎 --- */
+        /* --- 頁面結構優化 --- */
         html, body {
             height: 100%;
             margin: 0;
@@ -20,22 +20,63 @@
             color: #ffffff;
             transition: background-color 0.3s ease;
         }
-        body { display: flex; flex-direction: column; }
-        main { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 0; }
 
-        /* --- Logo 樣式 --- */
-        .brand-logo { display: flex !important; align-items: center; height: 100%; }
-        .brand-logo img { height: 32px; width: auto; transition: transform 0.3s ease; }
-        .brand-logo:hover img { transform: rotate(15deg) scale(1.1); }
-
-        @media only screen and (max-width: 992px) {
-            nav .brand-logo { display: none !important; }
-            nav .sidenav-trigger { float: left !important; margin-left: 10px !important; display: flex !important; align-items: center; height: 100%; }
-            .mobile-logo-trigger { height: 26px; width: auto; margin-top: 4px; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-            .logo-spin { transform: rotate(360deg) scale(1.1); }
+        body {
+            display: flex;
+            flex-direction: column;
         }
 
-        /* --- 標題與時鐘 --- */
+        main {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;   
+            padding: 40px 0;
+        }
+
+        /* --- Logo 樣式 --- */
+        .brand-logo {
+            display: flex !important;
+            align-items: center;
+            height: 100%;
+        }
+        .brand-logo img {
+            height: 32px; 
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        .brand-logo:hover img {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* --- 移動端修改核心 CSS --- */
+        @media only screen and (max-width: 992px) {
+            nav .brand-logo {
+                display: none !important;
+            }
+            nav .sidenav-trigger {
+                float: left !important;
+                margin-left: 10px !important;
+                display: flex !important;
+                align-items: center;
+                height: 100%;
+            }
+            .mobile-logo-trigger {
+                height: 26px; 
+                width: auto;
+                margin-top: 4px; 
+                transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .sidenav-trigger:active .mobile-logo-trigger {
+                transform: scale(0.85);
+            }
+            .logo-spin {
+                transform: rotate(360deg) scale(1.1);
+            }
+        }
+
+        /* --- 文青風格標題 --- */
         .header-title {
             font-family: 'Noto Serif TC', serif !important;
             font-size: 1.6rem !important;
@@ -43,10 +84,19 @@
             margin: 0 !important;
             color: #ff5252;
             letter-spacing: 6px; 
-            text-shadow: 2px 2px 8px rgba(255, 82, 82, 0.2);
+            text-shadow: 2px 2px 8px rgba(255, 82, 82, 0.2), 
+                                 1px 1px 2px rgba(0, 0, 0, 0.3);
             line-height: 1.5;
+            writing-mode: horizontal-tb; 
         }
-        .sub-text { font-size: 0.9rem; color: #757575; margin-bottom: 5px; }
+
+        .sub-text {
+            font-size: 0.9rem;
+            color: #757575;
+            margin-bottom: 5px;
+        }
+
+        /* --- 時鐘巨大化核心 --- */
         .clock-wrapper {
             width: 100%;
             display: flex;
@@ -57,80 +107,158 @@
             transform: scale(clamp(0.65, 8vw, 1.3));
             margin: clamp(40px, 10vh, 100px) 0;
         }
-        .flip-clock-wrapper ul li a div div.inn { background-color: #333333 !important; color: #ff5252 !important; border-radius: 6px; }
+       
+        .flip-clock-wrapper {
+            margin: 0 !important;
+            display: flex !important;
+            justify-content: center;
+            width: auto !important;
+        }
+
+        .flip-clock-divider .flip-clock-label {
+            display: none !important;
+        }
+
+        .flip-clock-wrapper ul li a div div.inn {
+            background-color: #333333 !important;
+            color: #ff5252 !important;
+            text-shadow: 0 1px 2px #000;
+            border-radius: 6px;
+            backface-visibility: hidden;
+        }
         .flip-clock-dot { background: #ff5252 !important; }
 
         /* --- 導航欄毛玻璃 --- */
         nav.black {
             background-color: rgba(0, 0, 0, 0.6) !important;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            transform: translateZ(0);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: none !important;
         }
 
-        /* --- 側邊欄 (Sidenav) 核心修改 --- */
-        .sidenav { background-color: #212121 !important; width: 280px !important; }
-        
-        /* 統一所有項目的容器，確保內邊距一致 */
-        .sidenav li { padding: 0 16px; }
-
-        /* 頂部 User-View 區域 */
-        .sidenav .user-view {
-            padding: 32px 16px !important; /* 左右與下方列表對齊 */
-            margin-bottom: 8px;
-            display: flex !important;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        /* 頂部 Hive 圖標單獨樣式：確保與下方列表圖標寬度位置完全一致 */
-        .sidenav .user-view .hive-icon {
-            margin: 0 !important;
-            width: 24px; /* Material Design 圖標標準寬度 */
-            font-size: 30px !important;
-            color: #ff5252;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* 列表項目樣式 */
-        .sidenav li a {
-            color: #ffffff !important;
-            padding: 0 !important; /* 依靠父級 li 的 padding */
-            display: flex !important;
-            align-items: center;
-            height: 48px;
+        .nav-wrapper ul li a {
+            transition: color 0.3s ease, background-color 0.3s ease;
+            position: relative;
             font-weight: 500;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
 
-        /* 列表圖標樣式：固定寬度以保證垂直對齊線 */
-        .sidenav li a i.material-icons {
-            color: #ffffff !important;
-            margin: 0 16px 0 0 !important;
-            width: 24px; /* 固定寬度，與 Hive 圖標對齊 */
+        .nav-wrapper ul li a:hover {
+            color: #ff5252 !important;
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .nav-wrapper ul li a::after {
+            content: '';
+            position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
+            background-color: #ff5252;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-wrapper ul li a:hover::after { width: 70%; }
+
+        /* --- 響應式微調 --- */
+        @media only screen and (max-width: 768px) {
+            .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
+            .brand-logo img { height: 28px; }
+        }
+        @media only screen and (max-width: 480px) {
+            .clock-wrapper { transform: scale(0.75); margin: 20px 0; }
+            .header-title { font-size: 1.6rem !important; }
+        }
+
+        /* 頁腳 */
+        .page-footer {
+            padding-top: 20px;
+            background-color: #121212 !important;
+            transition: background-color 0.3s ease;
+        }
+
+        #hitokoto_text { font-style: italic; transition: opacity 0.5s ease; }
+        #hitokoto_from { font-size: 0.8rem; margin-left: 10px; }
+
+        /* 切換按鈕 */
+        #theme-toggle-fab { position: fixed; right: 20px; bottom: 20px; z-index: 1000; }
+        #theme-toggle-fab a { width: 45px; height: 45px; line-height: 45px; }
+        #theme-toggle-fab a i { line-height: 45px; font-size: 1.5rem; transition: transform 0.3s ease; }
+        #theme-toggle-fab a:hover i { transform: rotate(30deg); }
+
+        .sidenav { background-color: #212121 !important; }
+        .sidenav li a { 
+            color: #ffffff !important; 
+            display: flex !important;
+            align-items: center !important;
+        }
+        .sidenav li a i { 
+            color: #ffffff !important; 
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 24px !important; /* 固定寬度確保對齊 */
+            margin: 0 32px 0 0 !important; /* 與 Materialize 默認一致 */
+        }
+
+        /* --- 側邊欄 User-View 優化 (Hive 圖標對齊) --- */
+        .sidenav .user-view {
             display: flex;
-            justify-content: center;
-            font-size: 24px;
+            align-items: center;
+            padding: 32px 32px 16px; /* 這裡的 32px 左間距對應下方的圖標位置 */
+        }
+        .sidenav .user-view .hive-icon {
+            font-size: 28px !important; 
+            margin: 0 !important;
+            width: 24px !important; /* 強制與下方圖標寬度一致 */
+            display: flex !important;
+            justify-content: center !important;
+            color: #ff5252;
+            transition: color 0.3s ease;
         }
 
         /* --- 淺色模式 --- */
-        body.light-mode { background-color: #f5f5f5 !important; color: #212121 !important; }
-        body.light-mode nav { background-color: rgba(255, 255, 255, 0.7) !important; }
-        body.light-mode nav ul a, body.light-mode nav i, body.light-mode .sidenav-trigger i { color: #212121 !important; }
+        body.light-mode {
+            background-color: #f5f5f5 !important;
+            color: #212121 !important;
+        }
+        body.light-mode nav { 
+            background-color: rgba(255, 255, 255, 0.7) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        body.light-mode nav ul a, body.light-mode nav i { 
+            color: #212121 !important; 
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        body.light-mode .sidenav-trigger i { color: #212121 !important; }
         
-        /* 淺色模式下 Logo 保持原色 */
-        body.light-mode .mobile-logo-trigger, body.light-mode .brand-logo img { filter: none !important; }
+        /* 淺色模式：Logo 保持原色 */
+        body.light-mode .mobile-logo-trigger { filter: none !important; }
 
         body.light-mode .sidenav { background-color: #ffffff !important; }
-        body.light-mode .sidenav li a, body.light-mode .sidenav li a i { color: #212121 !important; }
-        body.light-mode .sidenav .user-view .background.black { background-color: #f0f0f0 !important; }
+        body.light-mode .sidenav li a { color: #212121 !important; }
+        body.light-mode .sidenav li a i { color: #212121 !important; }
+        body.light-mode .sidenav li .user-view .background.black { background-color: #eeeeee !important; }
+        
+        body.light-mode .sidenav .user-view .hive-icon { 
+            color: #212121 !important; 
+        }
 
-        /* 頁腳 */
-        .page-footer { background-color: #121212 !important; padding-top: 20px; }
-        .footer-copyright.black { background-color: #000000 !important; }
-        #sync-status { cursor: pointer; user-select: none; color: #ff5252; font-size: 0.85rem; }
-        #theme-toggle-fab { position: fixed; right: 20px; bottom: 20px; z-index: 1000; }
+        body.light-mode .sub-text { color: #424242 !important; }
+        body.light-mode #bj-date { color: #212121 !important; }
+        body.light-mode .flip-clock-wrapper ul li a div div.inn {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            text-shadow: none !important;
+            border: 1px solid #ddd;
+        }
+        body.light-mode .flip-clock-dot { background: #000000 !important; }
+        body.light-mode .page-footer { background-color: #eeeeee !important; }
+        body.light-mode .footer-copyright { background-color: #e0e0e0 !important; }
+        body.light-mode .page-footer p, body.light-mode .page-footer h6 a { color: #212121 !important; }
+        
+        #sync-status { cursor: pointer; user-select: none; }
+        #sync-status:hover { filter: brightness(1.2); }
     </style>
 </head>
 
@@ -146,9 +274,11 @@
             <a href="/" class="brand-logo">
                 <img src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo">
             </a>
+            
             <a href="#" data-target="nav-mobile" class="sidenav-trigger">
                 <img src="https://fastly.jsdelivr.net/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo" class="mobile-logo-trigger">
             </a>
+            
             <ul class="right hide-on-med-and-down">
                 <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
                 <li><a href="https://adrules.sspai.net.cn" target="_blank"><i class="material-icons left">security</i>AdRules</a></li>
@@ -180,7 +310,8 @@
             <h1 class="header-title">“閒”是生活的標點</h1>
             <p class="sub-text">“LEISUER” IS THE HALLMARK OF LIFE</p>
             <div id="bj-date" class="grey-text text-lighten-1" style="font-size: 0.9rem; margin-bottom: 20px; font-weight: 300;"></div>
-            <div id="sync-status" title="點擊手動校準時間">互聯網校準授時中...</div>
+            <div id="sync-status" title="點擊手動校準時間" style="font-size: 0.85rem; transition: all 0.5s ease; color: #ff5252;">互聯網校準授時中...</div>
+           
             <div class="clock-wrapper" id="timer-container">
                 <div class="clock"></div>
             </div>
@@ -193,8 +324,8 @@
                 <div class="col l8 s12">
                     <h6><a href="https://t.me/ifanr" target="_blank" style="color:#ff5252;">鯉躍龍門</a></h6>
                     <p class="grey-text text-lighten-1">
-                        「<span id="hitokoto_text">正在加載名言...</span>」
-                        <small id="hitokoto_from"></small>
+                        「<span id="hitokoto_text">人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了</span>」
+                        <small id="hitokoto_from">—— 魯迅</small>
                     </p>
                 </div>
             </div>
@@ -212,65 +343,122 @@
    
     <script type="text/javascript">
         $(document).ready(function() {
+            // 初始化 sidenav
             $('.sidenav').sidenav({
                 onOpenStart: function() { $('.mobile-logo-trigger').addClass('logo-spin'); },
                 onCloseStart: function() { $('.mobile-logo-trigger').removeClass('logo-spin'); }
             });
 
             const savedTheme = localStorage.getItem('theme');
+            
             function applyAutoTheme() {
                 const hour = new Date().getHours();
-                if (hour >= 6 && hour < 18) $('body').addClass('light-mode');
-                else $('body').removeClass('light-mode');
+                if (hour >= 6 && hour < 18) {
+                    $('body').addClass('light-mode');
+                } else {
+                    $('body').removeClass('light-mode');
+                }
             }
-            if (!savedTheme) applyAutoTheme();
-            else if (savedTheme === 'light') $('body').addClass('light-mode');
+
+            if (!savedTheme) {
+                applyAutoTheme();
+            } else if (savedTheme === 'light') {
+                $('body').addClass('light-mode');
+            }
 
             $('#theme-toggle-fab').on('click', function() {
                 $('body').toggleClass('light-mode');
                 localStorage.setItem('theme', $('body').hasClass('light-mode') ? 'light' : 'dark');
             });
 
+            // 名句獲取函式
             function fetchHitokoto() {
-                fetch('https://v1.hitokoto.cn').then(r => r.json()).then(data => {
-                    @@MATH_BLOCK_0@@(this).text(data.hitokoto).fadeIn(300); });
-                    @@MATH_BLOCK_1@@(this).text('—— ' + data.from).fadeIn(300); });
-                });
+                fetch('https://v1.hitokoto.cn')
+                    .then(response => response.json())
+                    .then(data => {
+                        $('#hitokoto_text').fadeOut(300, function() {
+                            $(this).text(data.hitokoto).fadeIn(300);
+                        });
+                        if (data.from) { 
+                            $('#hitokoto_from').fadeOut(300, function() {
+                                $(this).text('—— ' + data.from).fadeIn(300);
+                            });
+                        }
+                    })
+                    .catch(console.error);
             }
+
             fetchHitokoto();
-            setInterval(fetchHitokoto, 60000);
+            setTimeout(function() { fetchHitokoto(); }, 6000);   
+            setInterval(function() { fetchHitokoto(); }, 60000);  
 
             let timeOffset = 0;
+
             function getBeijingTime() {
                 const now = new Date();
                 const correctedNow = new Date(now.getTime() + timeOffset);
                 const utc = correctedNow.getTime() + (correctedNow.getTimezoneOffset() * 60000);
-                return new Date(utc + 28800000);
+                return new Date(utc + (3600000 * 8));
             }
 
             function updateDate() {
                 const bjNow = getBeijingTime();
-                $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
             }
 
-            const clock = $('.clock').FlipClock(getBeijingTime(), { clockFace: 'TwentyFourHourClock', showSeconds: true });
+            const clock = $('.clock').FlipClock(getBeijingTime(), {
+                clockFace: 'TwentyFourHourClock',
+                showSeconds: true
+            });
+
             updateDate();
             $('#timer-container').css('opacity', '1');
 
             async function syncWithNTP() {
-                try {
-                    const startTime = Date.now();
-                    const response = await fetch('https://quan.suning.com/getSysTime.do');
-                    const data = await response.json();
-                    const serverTime = new Date(data.datetime).getTime();
-                    timeOffset = (serverTime + (Date.now() - startTime)/2) - Date.now();
-                    if (Math.abs(timeOffset) > 1000) clock.setTime(getBeijingTime());
-                    $('#sync-status').html('<i class="material-icons" style="font-size:14px;vertical-align:middle;">cloud_done</i> 蜂巢時間同步成功').css('color', '#4caf50');
-                } catch (e) {
-                    $('#sync-status').html('<i class="material-icons" style="font-size:14px;vertical-align:middle;">cloud_off</i> 蜂巢時間同步失敗').css('color', '#ff9800');
+                const apis = [
+                    { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
+                ];
+
+                let success = false;
+                for (let api of apis) {
+                    try {
+                        const startTime = Date.now();
+                        const response = await fetch(api.url, { cache: 'no-store' });
+                        if (!response.ok) continue;
+                        const data = await response.json();
+                        const serverTime = api.parser(data);
+                        const endTime = Date.now();
+                        const latency = (endTime - startTime) / 2;
+                        timeOffset = (serverTime + latency) - endTime;
+                        if (Math.abs(timeOffset) > 1000) clock.setTime(getBeijingTime());
+                        $('#sync-status').fadeOut(500, function() {
+                            $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_done</i> 蜂巢時間同步成功 (互聯網校準時間)')
+                                   .css('color', '#4caf50').fadeIn();
+                        });
+                        success = true;
+                        break;
+                    } catch (e) { console.warn(api.name + ' 接口失效...'); }
+                }
+                if (!success) {
+                    $('#sync-status').html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_off</i> 蜂巢時間同步失敗 (本地系統時間)').css('color', '#ff9800');
                 }
             }
-            setTimeout(syncWithNTP, 1500);
+
+            $('#sync-status').on('click', function() {
+                $(this).fadeOut(200, function() {
+                    $(this).text('正在重新校準時間...').css('color', '#ff5252').fadeIn(200);
+                    syncWithNTP(); 
+                });
+            });
+
+            setTimeout(syncWithNTP, 1800);
+
+            setInterval(() => { 
+                updateDate(); 
+                syncWithNTP(); 
+                if (!localStorage.getItem('theme')) applyAutoTheme();
+            }, 3600000);
         });
     </script>
 </body>
