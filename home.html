@@ -41,47 +41,43 @@
             padding: 40px 0;
         }
 
-        /* --- Logo 樣式 --- */
-        .brand-logo {
-            display: flex !important;
-            align-items: center;
-            height: 100%;
-            cursor: default; /* 移除手型光标 */
+        /* --- Logo 在原位置（左上角）展示 --- */
+        .fixed-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
         }
-        .brand-logo img {
-            height: 32px;
+
+        .logo-icon {
+            height: 36px;
             width: auto;
-            transition: transform 0.3s ease;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
         }
-        .brand-logo:hover img {
+
+        .logo-icon:hover {
             transform: rotate(15deg) scale(1.1);
         }
 
-        /* --- 移動端修改核心 CSS --- */
-        @media only screen and (max-width: 992px) {
-            nav .brand-logo {
-                display: none !important;
+        /* --- 移動端 Logo --- */
+        @media only screen and (max-width: 768px) {
+            .fixed-logo {
+                top: 15px;
+                left: 15px;
             }
-            nav .sidenav-trigger {
-                float: left !important;
-                margin-left: 10px !important;
-                display: flex !important;
-                align-items: center;
-                height: 100%;
-                cursor: pointer; /* 保持菜单按钮的指针样式 */
+            .logo-icon {
+                height: 32px;
             }
-            .mobile-logo-trigger {
-                height: 26px;
-                width: auto;
-                margin-top: 4px;
-                transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                cursor: default; /* 移动端logo图标移除手型光标 */
+        }
+
+        @media only screen and (max-width: 480px) {
+            .fixed-logo {
+                top: 12px;
+                left: 12px;
             }
-            .sidenav-trigger:active .mobile-logo-trigger {
-                transform: scale(0.85);
-            }
-            .logo-spin {
-                transform: rotate(360deg) scale(1.1);
+            .logo-icon {
+                height: 28px;
             }
         }
 
@@ -102,7 +98,7 @@
         .sub-text {
             font-size: 0.9rem;
             color: #757575;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
         }
 
         /* --- 時鐘巨大化核心 --- */
@@ -114,7 +110,7 @@
             opacity: 0;
             transition: opacity 1.5s ease-in;
             transform: scale(clamp(0.65, 8vw, 1.3));
-            margin: clamp(40px, 10vh, 100px) 0;
+            margin: clamp(20px, 8vh, 60px) 0;
         }
       
         .flip-clock-wrapper {
@@ -137,51 +133,13 @@
         }
         .flip-clock-dot { background: #ff5252 !important; }
 
-        /* --- 導航欄毛玻璃 --- */
-        nav.black {
-            background-color: rgba(0, 0, 0, 0.6) !important;
-            backdrop-filter: blur(15px) saturate(180%);
-            -webkit-backdrop-filter: blur(15px) saturate(180%);
-            transform: translateZ(0);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: none !important;
-        }
-
-        .nav-wrapper ul li a {
-            transition: color 0.3s ease, background-color 0.3s ease;
-            position: relative;
-            font-weight: 500;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-        }
-
-        /* 優化：桌面端導航欄圖標與文字靠近 */
-        .nav-wrapper ul li a i.left {
-            margin-right: 6px !important;
-        }
-
-        .nav-wrapper ul li a:hover {
-            color: #ff5252 !important;
-            background-color: rgba(255, 255, 255, 0.05) !important;
-        }
-
-        .nav-wrapper ul li a::after {
-            content: '';
-            position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
-            background-color: #ff5252;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-wrapper ul li a:hover::after { width: 70%; }
-
         /* --- 響應式微調 --- */
         @media only screen and (max-width: 768px) {
-            .clock-wrapper { transform: scale(0.85); margin: 40px 0; }
-            .brand-logo img { height: 28px; }
+            .clock-wrapper { transform: scale(0.85); margin: 30px 0; }
         }
         @media only screen and (max-width: 480px) {
             .clock-wrapper { transform: scale(0.75); margin: 20px 0; }
-            .header-title { font-size: 1.6rem !important; }
+            .header-title { font-size: 1.4rem !important; }
         }
 
         /* 頁腳 */
@@ -200,62 +158,9 @@
         #theme-toggle-fab a i { line-height: 45px; font-size: 1.5rem; transition: transform 0.3s ease; }
         #theme-toggle-fab a:hover i { transform: rotate(30deg); }
 
-        .sidenav { background-color: #212121 !important; }
-        .sidenav li a {
-            color: #ffffff !important;
-            display: flex !important;
-            align-items: center !important;
-        }
-       
-        /* 優化：移動端側邊欄圖標與文字靠近 */
-        .sidenav li a i {
-            color: #ffffff !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 24px !important;
-            margin: 0 12px 0 0 !important; /* 原本是 32px，改為 12px 使文字靠近 */
-        }
-
-        /* --- 側邊欄 User-View 優化 (Hive 圖標對齊) --- */
-        .sidenav .user-view {
-            display: flex;
-            align-items: center;
-            padding: 32px 32px 16px;
-        }
-        .sidenav .user-view .hive-icon {
-            font-size: 28px !important;
-            margin: 0 !important;
-            width: 24px !important;
-            display: flex !important;
-            justify-content: center !important;
-            color: #ff5252;
-            transition: color 0.3s ease;
-        }
-
-        /* --- 淺色模式 --- */
+        /* 簡化淺色模式 */
         body.light-mode {
             background-color: #f5f5f5 !important;
-            color: #212121 !important;
-        }
-        body.light-mode nav {
-            background-color: rgba(255, 255, 255, 0.7) !important;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        body.light-mode nav ul a, body.light-mode nav i {
-            color: #212121 !important;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-        }
-        body.light-mode .sidenav-trigger i { color: #212121 !important; }
-       
-        body.light-mode .mobile-logo-trigger { filter: none !important; }
-
-        body.light-mode .sidenav { background-color: #ffffff !important; }
-        body.light-mode .sidenav li a { color: #212121 !important; }
-        body.light-mode .sidenav li a i { color: #212121 !important; }
-        body.light-mode .sidenav li .user-view .background.black { background-color: #eeeeee !important; }
-       
-        body.light-mode .sidenav .user-view .hive-icon {
             color: #212121 !important;
         }
 
@@ -278,53 +183,21 @@
 </head>
 
 <body>
+    <!-- Logo 固定在左上角 -->
+    <div class="fixed-logo">
+        <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo" class="logo-icon">
+    </div>
+
+    <!-- 主题切换按钮 -->
     <div id="theme-toggle-fab">
         <a class="btn-floating waves-effect waves-light red">
             <i class="material-icons">brightness_medium</i>
         </a>
     </div>
-
-    <nav class="black">
-        <div class="nav-wrapper container">
-            <!-- 桌面端logo - 只显示 -->
-            <div class="brand-logo">
-                <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo">
-            </div>
-           
-            <!-- 移动端菜单按钮 - 只显示logo，不作为链接 -->
-            <div class="sidenav-trigger" style="cursor: pointer;">
-                <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo" class="mobile-logo-trigger">
-            </div>
-           
-            <ul class="right hide-on-med-and-down">
-                <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-                <li><a href="https://adrules.sspai.net.cn" target="_blank"><i class="material-icons left">security</i>AdRules</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank"><i class="material-icons left">rss_feed</i>Blogspot</a></li>
-                <li><a href="https://status.sspai.net.cn" target="_blank"><i class="material-icons left">dns</i>服務監控</a></li>
-                <li><a href="https://vlink.sspai.net.cn" target="_blank"><i class="material-icons left">dashboard</i>蜂巢•隱曜</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank"><i class="material-icons left">flash_on</i>愛發電•電羊</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <ul class="sidenav" id="nav-mobile">
-        <li>
-            <div class="user-view">
-                <div class="background black"></div>
-                <i class="material-icons hive-icon">hive</i>
-                </div>
-        </li>
-        <li><a href="/"><i class="material-icons">home</i>Home</a></li>
-        <li><a href="https://adrules.sspai.net.cn" target="_blank"><i class="material-icons">security</i>AdRules</a></li>
-        <li><a href="https://5iclub.blogspot.com" target="_blank"><i class="material-icons">rss_feed</i>Blogspot</a></li>
-        <li><a href="https://status.sspai.net.cn" target="_blank"><i class="material-icons">dns</i>服務監控</a></li>
-        <li><a href="https://vlink.sspai.net.cn" target="_blank"><i class="material-icons">dashboard</i>蜂巢•隱曜</a></li>
-        <li><a href="https://ifdian.net/a/CNiao" target="_blank"><i class="material-icons">flash_on</i>愛發電•電羊</a></li>
-    </ul>
   
     <main>
         <div class="container center-align">
-            <h1 class="header-title">“閒”是生活的標點</h1>
+            <h1 class="header-title">"閒"是生活的標點</h1>
             <p class="sub-text">"LEISUER" IS THE HALLMARK OF LIFE</p>
             <div id="bj-date" class="grey-text text-lighten-1" style="font-size: 0.9rem; margin-bottom: 20px; font-weight: 300;"></div>
             <div id="sync-status" title="點擊手動校準時間" style="font-size: 0.85rem; transition: all 0.5s ease; color: #ff5252;">互聯網校準授時中...</div>
@@ -339,7 +212,6 @@
         <div class="container">
             <div class="row">
                 <div class="col l8 s12">
-                    <!-- 修改：移除链接，只保留文字 -->
                     <h6 style="color:#ff5252;">鯉躍龍門</h6>
                     <p class="grey-text text-lighten-1">
                         「<span id="hitokoto_text">人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了</span>」
@@ -363,12 +235,6 @@
         $(document).ready(function() {
             // 自動更新版權年份
             document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // 初始化 sidenav
-            $('.sidenav').sidenav({
-                onOpenStart: function() { $('.mobile-logo-trigger').addClass('logo-spin'); },
-                onCloseStart: function() { $('.mobile-logo-trigger').removeClass('logo-spin'); }
-            });
 
             const savedTheme = localStorage.getItem('theme');
            
