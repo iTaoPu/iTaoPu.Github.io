@@ -304,7 +304,7 @@
 
             async function syncWithNTP() {
                 const apis = [
-                    { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
+                    { name: 'NTP.org', url: 'https://worldtimeapi.org/api/timezone/Etc/UTC', parser: (d) => new Date(d.datetime).getTime() }
                 ];
 
                 let success = false;
