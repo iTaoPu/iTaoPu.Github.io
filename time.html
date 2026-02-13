@@ -302,10 +302,19 @@
             updateDate();
             $('#timer-container').css('opacity', '1');
 
-            async function syncWithNTP() {
-                const apis = [
-                    { name: '中国科学院国家授时中心', url: 'https://api.time.org.cn', parser: (d) => new Date(d.datetime).getTime() }
-                ];
+            async function getChinaTime() {
+    // 淘寶網
+    try {
+        const res = await fetch('https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp');
+        const data = await res.json();
+        return parseInt(data.data?.t || Date.now());
+    } catch {
+        // 蘇寧易購
+        const res = await fetch('https://quan.suning.com/getSysTime.do');
+        const data = await res.json();
+        return new Date(data.datetime).getTime();
+    }
+}
 
                 let success = false;
                 for (let api of apis) {
