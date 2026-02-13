@@ -304,11 +304,7 @@
 
             async function syncWithNTP() {
                 const apis = [
-                    { 
-                        name: '騰訊雲', 
-                        url: 'https://cgi.im.qq.com/cgi-bin/cgi_svrtime', 
-                        parser: (d) => new Date(d.datetime).getTime()
-                    }
+                    { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
                 ];
 
                 let success = false;
