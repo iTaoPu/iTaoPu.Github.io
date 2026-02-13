@@ -303,24 +303,15 @@
             $('#timer-container').css('opacity', '1');
 
            async function syncWithNTP() {
-    const apis = [
-         // 淘宝时间API（最稳定之一，淘宝自身使用）
-        { name: '淘寶網', url: 'https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp', parser: (d) => parseInt(d.data?.t || Date.now()) },
-        
-        // 京东时间API（电商平台，高稳定性）
+    const apis = [  
+        // 京东时间API
         { name: '京東', url: 'https://a.jd.com/time', parser: (text) => {
             const match = text.match(/\d{13}/);
             return match ? parseInt(match[0]) : Date.now();
         }},
         
-        // 苏宁易购（电商平台，稳定）
-        { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() },
-        
-        // 国家授时中心NTP（权威）
-        { name: '国家授时中心', url: 'http://ntp.time.edu.cn', method: 'HEAD', parser: (response) => {
-            const dateHeader = response.headers.get('date');
-            return dateHeader ? new Date(dateHeader).getTime() : Date.now();
-        }}
+        // 苏宁易购
+        { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
     ];
     
     for (const api of apis) {
