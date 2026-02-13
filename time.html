@@ -302,34 +302,10 @@
             updateDate();
             $('#timer-container').css('opacity', '1');
 
-           async function syncWithNTP() {
-    const apis = [  
-        // 淘宝API
-        { name: '淘寶網', url: 'https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp', parser: (d) => parseInt(d.data?.t || Date.now()) },
-        
-        // 苏宁易购
-        { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
-    ];
-    
-    for (const api of apis) {
-        try {
-            let serverTime;
-            if (api.method === 'HEAD') {
-                const response = await fetch(api.url, { method: 'HEAD', cache: 'no-store' });
-                serverTime = api.parser(response);
-            } else {
-                const response = await fetch(api.url, { cache: 'no-store' });
-                const data = await response.json();
-                serverTime = api.parser(data);
-            }
-            return serverTime;
-        } catch (error) {
-            console.log(`${api.name} 失败，尝试下一个`);
-            continue;
-        }
-    }
-    return Date.now();
-}
+            async function syncWithNTP() {
+                const apis = [
+                    { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
+                ];
 
                 let success = false;
                 for (let api of apis) {
