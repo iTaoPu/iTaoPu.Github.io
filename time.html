@@ -308,11 +308,6 @@
                         name: '騰訊雲', 
                         url: 'https://cgi.im.qq.com/cgi-bin/cgi_svrtime', 
                         parser: (d) => new Date(d * 1000).getTime() 
-                    },
-                    { 
-                        name: '蘇寧易購', 
-                        url: 'https://quan.suning.com/getSysTime.do', 
-                        parser: (d) => new Date(d.datetime).getTime() 
                     }
                 ];
 
@@ -320,55 +315,27 @@
                 for (let api of apis) {
                     try {
                         const startTime = Date.now();
-                        const response = await fetch(api.url, { 
-                            cache: 'no-store',
-                            mode: 'cors',
-                            headers: {
-                                'Accept': '*/*',
-                                'Content-Type': 'application/json'
-                            }
-                        });
+                        const response = await fetch(api.url, { cache: 'no-store' });
                         if (!response.ok) continue;
-                        
-                        // 处理不同接口的返回格式
-                        let data;
-                        if (api.name === '騰訊雲') {
-                            // 腾讯云返回纯数字字符串，需要特殊处理
-                            const text = await response.text();
-                            data = parseInt(text.trim());
-                        } else {
-                            data = await response.json();
-                        }
-                        
+                        const data = await response.json();
                         const serverTime = api.parser(data);
-                        // 验证服务器时间是否有效
-                        if (!serverTime || isNaN(serverTime) || serverTime < 1000000000000) continue;
-                        
                         const endTime = Date.now();
                         const latency = (endTime - startTime) / 2;
                         timeOffset = (serverTime + latency) - endTime;
-                        
-                        // 只有时间偏差超过1秒才更新时钟
-                        if (Math.abs(timeOffset) > 1000) {
-                            clock.setTime(getBeijingTime());
-                        }
-                        
+                        if (Math.abs(timeOffset) > 1000) clock.setTime(getBeijingTime());
                         $('#sync-status').fadeOut(500, function() {
-                            $(this).html(`<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_done</i> 蜂巢時間同步成功 (${api.name}校準時間)`)
+                            $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_done</i> 蜂巢時間同步成功 (互聯網校準時間)')
                                    .css('color', '#4caf50').fadeIn();
                         });
                         success = true;
                         break;
-                    } catch (e) { 
-                        console.warn(api.name + ' 接口失效:', e); 
-                    }
+                    } catch (e) { console.warn(api.name + ' 接口失效...'); }
                 }
-                
                 if (!success) {
                     $('#sync-status').html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_off</i> 蜂巢時間同步失敗 (本地系統時間)').css('color', '#ff9800');
                 }
             }
-            
+
             $('#sync-status').on('click', function() {
                 $(this).fadeOut(200, function() {
                     $(this).text('正在重新校準時間...').css('color', '#ff5252').fadeIn(200);
