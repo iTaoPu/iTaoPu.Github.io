@@ -302,10 +302,46 @@
             updateDate();
             $('#timer-container').css('opacity', '1');
 
-            async function syncWithNTP() {
-                const apis = [
-                    { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
-                ];
+           async function syncWithNTP() {
+    const apis = [
+        // 苏宁易购（原有，稳定）
+        { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() },
+        
+        // 淘宝时间API（最稳定之一，淘宝自身使用）
+        { name: '淘宝时间', url: 'https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp', parser: (d) => parseInt(d.data?.t || Date.now()) },
+        
+        // 京东时间API（电商平台，高稳定性）
+        { name: '京东时间', url: 'https://a.jd.com/time', parser: (text) => {
+            const match = text.match(/\d{13}/);
+            return match ? parseInt(match[0]) : Date.now();
+        }},
+        
+        // 国家授时中心NTP（权威）
+        { name: '授时中心', url: 'http://ntp.time.edu.cn', method: 'HEAD', parser: (response) => {
+            const dateHeader = response.headers.get('date');
+            return dateHeader ? new Date(dateHeader).getTime() : Date.now();
+        }}
+    ];
+    
+    for (const api of apis) {
+        try {
+            let serverTime;
+            if (api.method === 'HEAD') {
+                const response = await fetch(api.url, { method: 'HEAD', cache: 'no-store' });
+                serverTime = api.parser(response);
+            } else {
+                const response = await fetch(api.url, { cache: 'no-store' });
+                const data = await response.json();
+                serverTime = api.parser(data);
+            }
+            return serverTime;
+        } catch (error) {
+            console.log(`${api.name} 失败，尝试下一个`);
+            continue;
+        }
+    }
+    return Date.now();
+}
 
                 let success = false;
                 for (let api of apis) {
