@@ -304,7 +304,7 @@
 
             async function syncWithNTP() {
                 const apis = [
-                    { name: 'NTP.org', url: 'https://worldtimeapi.org/api/timezone/Etc/UTC', parser: (d) => new Date(d.datetime).getTime() }
+                    { name: '中国科学院国家授时中心', url: 'https://api.time.org.cn', parser: (d) => new Date(d.datetime).getTime() }
                 ];
 
                 let success = false;
