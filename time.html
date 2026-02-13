@@ -304,11 +304,8 @@
 
            async function syncWithNTP() {
     const apis = [  
-        // 京东时间API
-        { name: '京東', url: 'https://a.jd.com/time', parser: (text) => {
-            const match = text.match(/\d{13}/);
-            return match ? parseInt(match[0]) : Date.now();
-        }},
+        // 淘宝API
+        { name: '淘寶網', url: 'https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp', parser: (d) => parseInt(d.data?.t || Date.now()) },
         
         // 苏宁易购
         { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
