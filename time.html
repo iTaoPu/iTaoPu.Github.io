@@ -307,7 +307,7 @@
                     { 
                         name: '騰訊雲', 
                         url: 'https://cgi.im.qq.com/cgi-bin/cgi_svrtime', 
-                        parser: (d) => new Date(d * 1000).getTime() 
+                        parser: (d) => new Date(d.datetime).getTime()
                     }
                 ];
 
