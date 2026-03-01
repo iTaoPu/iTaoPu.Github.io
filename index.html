@@ -271,6 +271,13 @@
         
         #sync-status { cursor: pointer; user-select: none; }
         #sync-status:hover { filter: brightness(1.2); }
+
+        /* 移动端侧边栏宽度调整 - 添加部分 */
+        @media only screen and (max-width: 992px) {
+            .sidenav {
+                width: 260px !important;  /* 适当缩小宽度，原默认300px */
+            }
+        }
     </style>
 </head>
 
