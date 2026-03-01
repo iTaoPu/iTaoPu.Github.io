@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>“閒”是生活的標點 - 中國時間</title>
 
-    <style>
-        @font-face {
-            font-family: 'Noto Serif TC';
-            font-display: swap;
-        }
-    </style>
+    <!-- 移除空的 @font-face 定義，改用外部 CSS 載入字體 (原路徑保留) -->
     <link rel="stylesheet" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/css/NotoSerifTC.css">
     <link rel="stylesheet" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/css/flipclock.css">
@@ -214,18 +209,16 @@
             margin: 0 12px 0 0 !important; /* 原本是 32px，改為 12px 使文字靠近 */
         }
 
-        /* --- 側邊欄 User-View 優化 (Hive 圖標對齊) --- */
+        /* --- 側邊欄 User-View 優化 (移除背景，保留蜂巢圖標) --- */
         .sidenav .user-view {
             display: flex;
             align-items: center;
+            justify-content: center;
             padding: 32px 32px 16px;
         }
         .sidenav .user-view .hive-icon {
-            font-size: 28px !important; 
+            font-size: 48px !important;  /* 放大蜂巢圖標 */
             margin: 0 !important;
-            width: 24px !important; 
-            display: flex !important;
-            justify-content: center !important;
             color: #ff5252;
             transition: color 0.3s ease;
         }
@@ -250,11 +243,7 @@
         body.light-mode .sidenav { background-color: #ffffff !important; }
         body.light-mode .sidenav li a { color: #212121 !important; }
         body.light-mode .sidenav li a i { color: #212121 !important; }
-        body.light-mode .sidenav li .user-view .background.black { background-color: #eeeeee !important; }
-        
-        body.light-mode .sidenav .user-view .hive-icon { 
-            color: #212121 !important; 
-        }
+        body.light-mode .sidenav .user-view .hive-icon { color: #212121 !important; }
 
         body.light-mode .sub-text { color: #424242 !important; }
         body.light-mode #bj-date { color: #212121 !important; }
@@ -287,34 +276,36 @@
                 <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo">
             </a>
             
+            <!-- 增加 alt 屬性以提升無障礙訪問 -->
             <a href="#" data-target="nav-mobile" class="sidenav-trigger">
-                <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="Logo" class="mobile-logo-trigger">
+                <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/LinkCat.png" alt="選單" class="mobile-logo-trigger">
             </a>
             
             <ul class="right hide-on-med-and-down">
+                <!-- 為所有 target="_blank" 增加 rel="noopener noreferrer" 提升安全性 -->
                 <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-                <li><a href="https://adrules.sspai.net.cn" target="_blank"><i class="material-icons left">security</i>AdRules</a></li>
-                <li><a href="https://5iclub.blogspot.com" target="_blank"><i class="material-icons left">rss_feed</i>Blogspot</a></li>
-                <li><a href="https://status.sspai.net.cn" target="_blank"><i class="material-icons left">dns</i>服務監控</a></li>
-                <li><a href="https://vlink.sspai.net.cn" target="_blank"><i class="material-icons left">dashboard</i>蜂巢•隱曜</a></li>
-                <li><a href="https://ifdian.net/a/CNiao" target="_blank"><i class="material-icons left">flash_on</i>愛發電•電羊</a></li>
+                <li><a href="https://adrules.sspai.net.cn" target="_blank" rel="noopener noreferrer"><i class="material-icons left">security</i>AdRules</a></li>
+                <li><a href="https://5iclub.blogspot.com" target="_blank" rel="noopener noreferrer"><i class="material-icons left">rss_feed</i>Blogspot</a></li>
+                <li><a href="https://status.sspai.net.cn" target="_blank" rel="noopener noreferrer"><i class="material-icons left">dns</i>服務監控</a></li>
+                <li><a href="https://vlink.sspai.net.cn" target="_blank" rel="noopener noreferrer"><i class="material-icons left">dashboard</i>蜂巢•隱曜</a></li>
+                <li><a href="https://ifdian.net/a/CNiao" target="_blank" rel="noopener noreferrer"><i class="material-icons left">flash_on</i>愛發電•電羊</a></li>
             </ul>
         </div>
     </nav>
 
     <ul class="sidenav" id="nav-mobile">
+        <!-- 修復 user-view：移除 background 黑塊，只保留蜂巢圖標，並加大尺寸以符合視覺 -->
         <li>
             <div class="user-view">
-                <div class="background black"></div>
                 <i class="material-icons hive-icon">hive</i>
-                </div>
+            </div>
         </li>
         <li><a href="/"><i class="material-icons">home</i>Home</a></li>
-        <li><a href="https://adrules.sspai.net.cn" target="_blank"><i class="material-icons">security</i>AdRules</a></li>
-        <li><a href="https://5iclub.blogspot.com" target="_blank"><i class="material-icons">rss_feed</i>Blogspot</a></li>
-        <li><a href="https://status.sspai.net.cn" target="_blank"><i class="material-icons">dns</i>服務監控</a></li>
-        <li><a href="https://vlink.sspai.net.cn" target="_blank"><i class="material-icons">dashboard</i>蜂巢•隱曜</a></li>
-        <li><a href="https://ifdian.net/a/CNiao" target="_blank"><i class="material-icons">flash_on</i>愛發電•電羊</a></li>
+        <li><a href="https://adrules.sspai.net.cn" target="_blank" rel="noopener noreferrer"><i class="material-icons">security</i>AdRules</a></li>
+        <li><a href="https://5iclub.blogspot.com" target="_blank" rel="noopener noreferrer"><i class="material-icons">rss_feed</i>Blogspot</a></li>
+        <li><a href="https://status.sspai.net.cn" target="_blank" rel="noopener noreferrer"><i class="material-icons">dns</i>服務監控</a></li>
+        <li><a href="https://vlink.sspai.net.cn" target="_blank" rel="noopener noreferrer"><i class="material-icons">dashboard</i>蜂巢•隱曜</a></li>
+        <li><a href="https://ifdian.net/a/CNiao" target="_blank" rel="noopener noreferrer"><i class="material-icons">flash_on</i>愛發電•電羊</a></li>
     </ul>
    
     <main>
@@ -334,7 +325,7 @@
         <div class="container">
             <div class="row">
                 <div class="col l8 s12">
-                    <h6><a href="https://t.me/ifanr" target="_blank" style="color:#ff5252;">鯉躍龍門</a></h6>
+                    <h6><a href="https://t.me/ifanr" target="_blank" rel="noopener noreferrer" style="color:#ff5252;">鯉躍龍門</a></h6>
                     <p class="grey-text text-lighten-1">
                         「<span id="hitokoto_text">人的白嫖，就如同高山滾石一般，一旦開始，就再也停不下了</span>」
                         <small id="hitokoto_from">—— 魯迅</small>
@@ -408,6 +399,7 @@
             setInterval(function() { fetchHitokoto(); }, 60000);  
 
             let timeOffset = 0;
+            let isSyncing = false;  // 用於防止重複點擊同步
 
             function getBeijingTime() {
                 const now = new Date();
@@ -422,7 +414,9 @@
                 $('#bj-date').text(bjNow.toLocaleDateString('zh-Hant-TW', options));
             }
 
-            const clock = $('.clock').FlipClock(getBeijingTime(), {
+            // 修正：FlipClock 初始化需傳入秒數（整數），而非 Date 物件
+            const initialSeconds = Math.floor(getBeijingTime().getTime() / 1000);
+            const clock = $('.clock').FlipClock(initialSeconds, {
                 clockFace: 'TwentyFourHourClock',
                 showSeconds: true
             });
@@ -430,9 +424,24 @@
             updateDate();
             $('#timer-container').css('opacity', '1');
 
+            // 改良的同步函數：使用正則解析蘇寧時間，避免 Safari 解析失敗
             async function syncWithNTP() {
+                if (isSyncing) return;  // 正在同步中，忽略新點擊
+                isSyncing = true;
+
                 const apis = [
-                    { name: '蘇寧易購', url: 'https://quan.suning.com/getSysTime.do', parser: (d) => new Date(d.datetime).getTime() }
+                    { 
+                        name: '蘇寧易購', 
+                        url: 'https://quan.suning.com/getSysTime.do', 
+                        parser: (d) => {
+                            // 手動解析 "2025-03-02 12:34:56" 格式，轉為 UTC 時間戳（視為 UTC+8）
+                            const match = d.datetime.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/);
+                            if (!match) return NaN;
+                            const [_, year, month, day, hour, minute, second] = match.map(Number);
+                            // 構造 UTC 時間戳，將北京時間 (UTC+8) 轉為 UTC 0 區時間
+                            return Date.UTC(year, month - 1, day, hour - 8, minute, second);
+                        }
+                    }
                 ];
 
                 let success = false;
@@ -443,32 +452,45 @@
                         if (!response.ok) continue;
                         const data = await response.json();
                         const serverTime = api.parser(data);
+                        if (isNaN(serverTime)) continue;
                         const endTime = Date.now();
                         const latency = (endTime - startTime) / 2;
                         timeOffset = (serverTime + latency) - endTime;
-                        if (Math.abs(timeOffset) > 1000) clock.setTime(getBeijingTime());
+
+                        // 若偏移超過 1 秒，立即校正時鐘顯示
+                        if (Math.abs(timeOffset) > 1000) {
+                            const newSeconds = Math.floor(getBeijingTime().getTime() / 1000);
+                            clock.setTime(newSeconds);
+                        }
+                        
                         $('#sync-status').fadeOut(500, function() {
                             $(this).html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_done</i> 蜂巢時間同步成功 (互聯網校準時間)')
                                    .css('color', '#4caf50').fadeIn();
                         });
                         success = true;
                         break;
-                    } catch (e) { console.warn(api.name + ' 接口失效...'); }
+                    } catch (e) { 
+                        console.warn(api.name + ' 接口失效...'); 
+                    }
                 }
                 if (!success) {
                     $('#sync-status').html('<i class="material-icons" style="font-size:14px; vertical-align:middle;">cloud_off</i> 蜂巢時間同步失敗 (本地系統時間)').css('color', '#ff9800');
                 }
+                isSyncing = false;  // 同步結束，解鎖
             }
 
             $('#sync-status').on('click', function() {
+                if (isSyncing) return;  // 防止連續點擊
                 $(this).fadeOut(200, function() {
                     $(this).text('正在重新校準時間...').css('color', '#ff5252').fadeIn(200);
                     syncWithNTP(); 
                 });
             });
 
+            // 延遲 1.8 秒後首次同步
             setTimeout(syncWithNTP, 1800);
 
+            // 每小時同步一次時間，並更新日期與主題
             setInterval(() => { 
                 updateDate(); 
                 syncWithNTP(); 
