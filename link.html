@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文件直链托管 • 稳定版</title>
+
+<!-- 浏览器ICO图标配置 -->
+    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Gbastos.png" sizes="32x32">
+    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Gbastos.png" type="image/png" sizes="16x16">
+    <link rel="apple-touch-icon" href="hhttps://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Gbastos.png"> <!-- 苹果设备图标 -->
+    <link rel="shortcut icon" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Gbastos.png" type="image/png"> <!-- 兼容旧浏览器 -->
+    
     <style>
         /* 基础变量 - 浅色模式默认 */
         :root {
@@ -20,6 +27,7 @@
             --border-color: rgba(226, 232, 240, 0.8);
             --success: #10b981;
             --warning: #f59e0b;
+            --danger: #ef4444;
             --upload-bg: rgba(248, 250, 252, 0.8);
             --upload-hover: rgba(255, 255, 255, 0.9);
             --dragover-bg: rgba(99, 102, 241, 0.05);
@@ -40,6 +48,7 @@
             --border-color: rgba(71, 85, 105, 0.8);
             --success: #34d399;
             --warning: #fbbf24;
+            --danger: #f87171;
             --upload-bg: rgba(30, 41, 59, 0.8);
             --upload-hover: rgba(30, 41, 59, 0.9);
             --dragover-bg: rgba(99, 102, 241, 0.1);
@@ -60,9 +69,17 @@
             justify-content: center;
             align-items: center;
             background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
             color: var(--text-primary);
             padding: 20px;
             overflow-x: hidden;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* 主题切换按钮 */
@@ -87,6 +104,37 @@
 
         .theme-toggle:hover {
             transform: scale(1.05);
+        }
+
+        /* Toast提示框 */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            color: var(--text-primary);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(-50%) translateY(20px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
         }
 
         /* 主容器样式 */
@@ -154,6 +202,26 @@
             box-shadow: 0 15px 45px rgba(99, 102, 241, 0.15);
         }
 
+        /* 文件信息显示 */
+        .file-info {
+            margin-bottom: 16px;
+            text-align: center;
+            display: none;
+            padding: 12px;
+            background: var(--upload-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .file-info p {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .file-info small {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
         /* 上传区域 */
         .upload-area {
             border: 2px dashed var(--border-color);
@@ -210,6 +278,27 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+            opacity: 0;
         }
 
         .btn:hover {
@@ -231,9 +320,24 @@
         }
 
         /* 进度区域 */
-        .progress-section, .result-section {
+        .progress-section, .result-section, .history-section {
             display: none;
             margin-top: 24px;
+        }
+
+        /* 加载动画 */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .progress-title {
@@ -245,11 +349,10 @@
 
         .progress-bar {
             height: 8px;
-            background: #f1f5f9;
+            background: var(--input-bg);
             border-radius: 4px;
             overflow: hidden;
             margin-bottom: 12px;
-            background: var(--input-bg);
         }
 
         .progress-fill {
@@ -321,26 +424,104 @@
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .copy-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .copy-btn:active::after {
+            width: 200px;
+            height: 200px;
+            opacity: 0;
         }
 
         .copy-btn:hover {
             background: var(--primary-dark);
         }
 
+        /* 上传历史区域 */
+        .history-section {
+            margin-top: 32px;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .history-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .clear-history {
+            font-size: 12px;
+            color: var(--primary);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px 8px;
+        }
+        .clear-history:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        .history-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 8px;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .history-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .history-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .history-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .history-btn {
+            font-size: 12px;
+            padding: 4px 8px;
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .history-btn:hover {
+            background: var(--primary);
+        }
+
         /* 隐藏的文件输入 */
         #fileInput {
             display: none;
-        }
-
-        /* 动画效果 */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
         }
 
         /* 响应式适配 */
@@ -367,6 +548,23 @@
                 font-size: 18px;
             }
         }
+
+        @media (max-width: 375px) {
+            .card {
+                padding: 20px 12px;
+            }
+            .upload-area {
+                padding: 32px 12px;
+            }
+            .title {
+                font-size: 24px;
+            }
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+        }
     </style>
     <!-- 百度统计代码 -->
     <script>
@@ -382,30 +580,40 @@
 <body>
     <!-- 主题切换按钮 -->
     <div class="theme-toggle" id="themeToggle">🌞</div>
+    
+    <!-- Toast提示框 -->
+    <div class="toast" id="toast"></div>
 
     <div class="container">
         <!-- 头部区域 -->
         <div class="header">
             <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Gbastos.png" alt="头像" class="avatar">
             <h1 class="title">文件直链托管 • 稳定版</h1>
-            <p class="subtitle">稳定可靠的文件直链生成服务 • 永久保存</p>
+            <p class="subtitle">稳定可靠的文件直链生成服务 • 永久保存 • 最大支持200MB</p>
         </div>
 
         <!-- 主卡片 -->
         <div class="card">
+            <!-- 文件信息显示 -->
+            <div class="file-info" id="fileInfo">
+                <p>📄 待上传：<span id="fileName"></span></p>
+                <small>大小：<span id="fileSize"></span> | 格式：<span id="fileType"></span></small>
+            </div>
+
             <!-- 上传表单 -->
             <div id="uploadForm">
                 <div class="upload-area" id="dropZone">
                     <div class="upload-icon">🔗</div>
                     <p class="upload-text">点击或拖拽文件至此处上传</p>
-                    <p class="upload-hint">支持任意格式文件 • 无大小限制 • 永久保存</p>
-                    <input type="file" id="fileInput" hidden>
+                    <p class="upload-hint">支持任意格式文件 • 最大200MB • 永久保存</p>
+                    <input type="file" id="fileInput" hidden multiple>
                 </div>
                 <button class="btn" onclick="document.getElementById('fileInput').click()">开始上传文件</button>
             </div>
 
             <!-- 进度区域 -->
             <div class="progress-section" id="progressSection">
+                <div class="loading-spinner" id="loadingSpinner"></div>
                 <p class="progress-title">正在上传到云端服务器...</p>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressBar"></div>
@@ -432,17 +640,33 @@
                 </div>
                 <button class="btn btn-outline" onclick="location.reload()">重新上传</button>
             </div>
+
+            <!-- 上传历史区域 -->
+            <div class="history-section" id="historySection">
+                <div class="history-header">
+                    <h3 class="history-title">上传历史</h3>
+                    <button class="clear-history" onclick="clearHistory()">清空记录</button>
+                </div>
+                <div class="history-list" id="historyList"></div>
+            </div>
         </div>
     </div>
 
     <script>
+        // ===== 全局配置 =====
+        const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
+        const FORBIDDEN_TYPES = ['exe', 'bat', 'sh', 'php', 'js', 'py', 'asp', 'aspx', 'jsp']; // 禁止的文件类型
+
         // ===== 主题切换核心逻辑 =====
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
 
         // 从本地存储读取主题偏好
         const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
+        // 自动跟随系统主题
+        const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
             body.classList.add('dark-mode');
             themeToggle.textContent = '🌙';
         } else {
@@ -464,6 +688,101 @@
             }
         });
 
+        // ===== Toast提示框功能 =====
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== 上传历史功能 =====
+        // 保存上传记录
+        function saveUploadHistory(fileName, rawLink, proxyLink) {
+            const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
+            history.unshift({
+                id: Date.now(),
+                name: fileName,
+                raw: rawLink,
+                proxy: proxyLink,
+                time: new Date().toLocaleString()
+            });
+            // 只保留最近10条
+            if (history.length > 10) history.pop();
+            localStorage.setItem('uploadHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        // 渲染历史记录
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
+            const historyList = document.getElementById('historyList');
+            const historySection = document.getElementById('historySection');
+            
+            if (history.length === 0) {
+                historySection.style.display = 'none';
+                return;
+            }
+            
+            historySection.style.display = 'block';
+            historyList.innerHTML = history.map(item => `
+                <div class="history-item">
+                    <p class="history-name">${item.name}</p>
+                    <p class="history-time">${item.time}</p>
+                    <div class="history-buttons">
+                        <button class="history-btn" onclick="copyHistoryLink('${item.raw}')">复制原始链接</button>
+                        <button class="history-btn" onclick="copyHistoryLink('${item.proxy}')">复制加速链接</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 复制历史链接
+        function copyHistoryLink(link) {
+            navigator.clipboard.writeText(link).then(() => {
+                showToast('链接复制成功！', 'success');
+            }).catch(() => {
+                const tempInput = document.createElement('input');
+                tempInput.value = link;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showToast('链接复制成功！', 'success');
+            });
+        }
+
+        // 清空历史记录
+        function clearHistory() {
+            if (confirm('确定要清空所有上传记录吗？')) {
+                localStorage.removeItem('uploadHistory');
+                renderHistory();
+                showToast('上传记录已清空', 'info');
+            }
+        }
+
+        // ===== 文件校验功能 =====
+        function validateFile(file) {
+            // 1. 检查文件大小
+            if (file.size > MAX_FILE_SIZE) {
+                showToast(`文件大小超过限制！最大支持200MB，当前文件大小：${(file.size/1024/1024).toFixed(2)}MB`, 'error');
+                return false;
+            }
+            
+            // 2. 检查文件类型
+            const fileExt = file.name.split('.').pop()?.toLowerCase() || '';
+            if (FORBIDDEN_TYPES.includes(fileExt)) {
+                showToast('禁止上传可执行文件或脚本文件！', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
         // ===== 核心上传功能 =====
         // 获取DOM元素
         const fileInput = document.getElementById('fileInput');
@@ -471,6 +790,15 @@
         const progressSection = document.getElementById('progressSection');
         const resultSection = document.getElementById('resultSection');
         const uploadForm = document.getElementById('uploadForm');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileNameEl = document.getElementById('fileName');
+        const fileSizeEl = document.getElementById('fileSize');
+        const fileTypeEl = document.getElementById('fileType');
+
+        // 页面加载时渲染历史记录
+        window.addEventListener('load', () => {
+            renderHistory();
+        });
 
         // 拖拽功能实现
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -496,8 +824,24 @@
             const dt = e.dataTransfer;
             const files = dt.files;
             if (files.length) {
-                handleUpload(files[0]);
+                // 取第一个文件（如需多文件可循环）
+                const file = files[0];
+                if (validateFile(file)) {
+                    showFileInfo(file);
+                    handleUpload(file);
+                }
             }
+        }
+
+        // 显示文件信息
+        function showFileInfo(file) {
+            const fileExt = file.name.split('.').pop()?.toLowerCase() || '未知';
+            const fileSize = (file.size/1024/1024).toFixed(2) + 'MB';
+            
+            fileNameEl.textContent = file.name;
+            fileSizeEl.textContent = fileSize;
+            fileTypeEl.textContent = fileExt;
+            fileInfo.style.display = 'block';
         }
 
         // 点击上传区域触发文件选择
@@ -505,8 +849,12 @@
         
         // 文件选择后触发上传
         fileInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) {
-                handleUpload(e.target.files[0]);
+            if (e.target.files.length) {
+                const file = e.target.files[0];
+                if (validateFile(file)) {
+                    showFileInfo(file);
+                    handleUpload(file);
+                }
             }
         });
 
@@ -561,9 +909,13 @@
                             document.getElementById('rawLink').value = raw;
                             document.getElementById('proxyLink').value = DOMAIN + noProtocol;
                             
+                            // 保存上传历史
+                            saveUploadHistory(file.name, raw, DOMAIN + noProtocol);
+                            
                             // 切换到结果显示
                             progressSection.style.display = 'none';
                             resultSection.style.display = 'block';
+                            showToast('文件上传成功！', 'success');
                             return;
                         }
                     }
@@ -587,7 +939,7 @@
                     console.warn(`切换到第 ${currentProxyIndex + 1} 个代理`);
                     startUpload();
                 } else {
-                    alert('上传失败：所有备用线路均不可用，请稍后再试。');
+                    showToast('上传失败：所有备用线路均不可用，请稍后再试。', 'error');
                     // 恢复上传表单
                     progressSection.style.display = 'none';
                     uploadForm.style.display = 'block';
@@ -614,6 +966,7 @@
                         btn.textContent = originalText;
                         btn.style.background = '';
                     }, 2000);
+                    showToast('链接复制成功！', 'success');
                 }).catch(() => {
                     // 降级方案
                     fallbackCopy(input, btn);
@@ -633,6 +986,7 @@
                 btn.textContent = originalText;
                 btn.style.background = '';
             }, 2000);
+            showToast('链接复制成功！', 'success');
         }
     </script>
 </body>
