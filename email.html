@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>临时邮箱 · 隐私保护 · 阅后即焚</title>
+
+    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" sizes="32x32">
+    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" type="image/png" sizes="16x16">
+    <link rel="apple-touch-icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png">
+    <link rel="shortcut icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" type="image/png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #f5f7fb;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #5b6e8c;
+            --border-color: #e9eef3;
+            --accent-color: #1e3c72;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --result-bg: rgba(30, 60, 114, 0.05);
+            --tag-bg: #eef2ff;
+            --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.03);
+            --domain-active: #1e3c72;
+            --domain-inactive: #94a3b8;
+        }
+
+        body.dark {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #60a5fa;
+            --glass-bg: rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --result-bg: rgba(96, 165, 250, 0.1);
+            --tag-bg: #334155;
+            --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.2);
+            --domain-active: #60a5fa;
+            --domain-inactive: #475569;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background 0.25s ease, color 0.2s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px 50px;
+        }
+
+        /* 邮箱卡片头部 */
+        .search-header {
+            background: var(--card-bg);
+            border-radius: 36px;
+            padding: 32px 32px 36px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            backdrop-filter: blur(2px);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .avatar {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            margin: 10px auto 12px;
+            border: 3px solid rgba(96, 165, 250, 0.3);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            background: #eef2ff;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #4a6cf7, #f97316, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .subhead {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* 域名切换器 - 新增 wemails.top 支持 */
+        .domain-switch {
+            background: var(--result-bg);
+            border-radius: 60px;
+            display: inline-flex;
+            gap: 8px;
+            padding: 6px;
+            margin: 16px auto 10px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(4px);
+        }
+
+        .domain-option {
+            padding: 6px 22px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            font-family: inherit;
+        }
+
+        .domain-option.active {
+            background: var(--domain-active);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .domain-option:not(.active):hover {
+            background: var(--tag-bg);
+            color: var(--text-primary);
+        }
+
+        .mail-display {
+            background: var(--result-bg);
+            padding: 14px 20px;
+            border-radius: 80px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 22px 0 20px;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            word-break: break-all;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-width: 128px;
+            padding: 11px 24px;
+            border-radius: 60px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-p {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-s {
+            background: var(--tag-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-p:hover, .btn-s:hover {
+            filter: brightness(0.96);
+            transform: translateY(-1px);
+        }
+
+        /* 收件箱区域 */
+        .results-container {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 28px 24px;
+            border: 1px solid var(--border-color);
+            min-height: 340px;
+            box-shadow: var(--shadow-sm);
+            transition: background 0.2s;
+        }
+
+        .results-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 22px;
+            padding-left: 12px;
+            border-left: 4px solid var(--accent-color);
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mail-count {
+            background: var(--tag-bg);
+            padding: 2px 10px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+
+        .msg-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .msg-item {
+            background: var(--result-bg);
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .msg-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .msg-meta {
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .msg-subject {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+
+        .msg-preview {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            line-height: 1.4;
+            opacity: 0.85;
+        }
+
+        .empty-inbox {
+            text-align: center;
+            padding: 56px 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            background: var(--result-bg);
+            border-radius: 36px;
+            margin-top: 8px;
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 101;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            font-size: 1.4rem;
+            transition: 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.03);
+        }
+
+        /* 响应式 */
+        @media (max-width: 640px) {
+            .container {
+                padding: 70px 16px 40px;
+            }
+            .search-header {
+                padding: 24px 20px;
+                border-radius: 28px;
+            }
+            .results-container {
+                padding: 20px 18px;
+                border-radius: 28px;
+            }
+            .btn {
+                min-width: 110px;
+                padding: 9px 16px;
+            }
+            h1 {
+                font-size: 1.7rem;
+            }
+            .avatar {
+                width: 68px;
+                height: 68px;
+            }
+            .theme-toggle {
+                top: 16px;
+                right: 16px;
+                width: 42px;
+                height: 42px;
+            }
+            .domain-option {
+                padding: 4px 16px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        .loading-skeleton {
+            animation: pulse 1.2s infinite;
+        }
+        
+        .error-badge {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" id="themeToggle" aria-label="切换深色模式">🌙</div>
+
+    <div class="container">
+        <div class="search-header">
+            <h1>📬 临时邮箱</h1>
+            <img src="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/Gbastos.png" class="avatar" alt="temp mail icon" loading="lazy">
+            <div class="subhead">
+                <span>⚡ 阅后即焚</span>
+                <span>🔒 完全匿名</span>
+                <span>♾️ 永久免费</span>
+            </div>
+            
+            <!-- 新增域名切换: 支持 vmail.dev 和 wemails.top -->
+            <div class="domain-switch" id="domainSwitch">
+                <button data-domain="vmail" class="domain-option active">📧 vmail.dev</button>
+                <button data-domain="wemails" class="domain-option">✨ wemails.top</button>
+            </div>
+            
+            <div id="addr" class="mail-display">🔄 正在生成安全邮箱...</div>
+            <div class="btn-group">
+                <button onclick="copyMail()" class="btn btn-s">📋 复制地址</button>
+                <button id="refreshBtn" onclick="resetMailbox()" class="btn btn-p">🔄 更换地址</button>
+            </div>
+        </div>
+
+        <div class="results-container">
+            <div class="results-title">
+                <span>📥 实时收件箱</span>
+                <span class="mail-count" id="mailCount">0 封</span>
+            </div>
+            <div id="list">
+                <div class="empty-inbox">✨ 邮箱就绪，等待新邮件自动推送...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---------- 配置 ----------
+        const API_KEY = 'vmail_at6AmSu4dEkuJG4bafc8qhSqBctCMW9q';
+        const PROXY = 'https://proxy.api.030101.xyz/https://vmail.dev/api/v1';
+        
+        // 全局状态
+        let currentMailboxId = null;      // 当前邮箱ID
+        let isInitializing = false;        // 防止重复初始化
+        let refreshInterval = null;        // 定时器句柄
+        let currentDomainType = 'vmail';   // 'vmail' 或 'wemails' , wemails对应wemails.top域名
+        
+        // DOM 元素
+        const addrElement = document.getElementById('addr');
+        const listContainer = document.getElementById('list');
+        const mailCountSpan = document.getElementById('mailCount');
+        const domainBtns = document.querySelectorAll('.domain-option');
+        
+        // ---------- 辅助函数 ----------
+        function setLoadingState(isLoading, customMsg = null) {
+            if (isLoading) {
+                if (customMsg) addrElement.innerText = customMsg;
+                else addrElement.innerText = "⚡ 正在刷新邮箱地址...";
+            }
+        }
+        
+        // 渲染邮件列表
+        function renderMessages(messages) {
+            if (!messages || messages.length === 0) {
+                listContainer.innerHTML = `<div class="empty-inbox">📭 暂无邮件 · 新邮件抵达时会自动显示在这里</div>`;
+                mailCountSpan.innerText = `0 封`;
+                return;
+            }
+            
+            const sorted = [...messages].sort((a, b) => new Date(b.receivedAt) - new Date(a.receivedAt));
+            mailCountSpan.innerText = `${sorted.length} 封`;
+            
+            const html = sorted.map(msg => {
+                const fromName = msg.from?.name || msg.from?.address || '未知发件人';
+                const fromAddr = msg.from?.address || '';
+                const senderShow = fromName === fromAddr ? fromAddr : `${fromName} <${fromAddr}>`;
+                const time = new Date(msg.receivedAt).toLocaleString('zh-CN', { hour12: false });
+                const subject = msg.subject?.trim() || '（无主题）';
+                const preview = msg.preview || (msg.bodyText?.substring(0, 80) || '无正文内容');
+                return `
+                    <div class="msg-item" onclick="viewMessageDetail('${msg.id}', \`${escapeHtml(subject)}\`, \`${escapeHtml(preview)}\`, \`${escapeHtml(senderShow)}\`)">
+                        <div class="msg-meta">
+                            <span>📧 ${escapeHtml(senderShow)}</span>
+                            <span>🕒 ${time}</span>
+                        </div>
+                        <div class="msg-subject">📌 ${escapeHtml(subject)}</div>
+                        <div class="msg-preview">${escapeHtml(preview.length > 100 ? preview.slice(0, 100) + '…' : preview)}</div>
+                    </div>
+                `;
+            }).join('');
+            listContainer.innerHTML = html;
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // 查看邮件详情弹窗
+        window.viewMessageDetail = function(msgId, subject, preview, sender) {
+            alert(`📩 邮件详情\n\n✉️ 主题：${subject}\n👤 发件人：${sender}\n\n📄 正文预览：\n${preview}\n\n🔐 提示：完整内容请在控制台查看，临时邮箱仅保留预览。`);
+        };
+        
+        function restartRefreshTimer() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+            refreshInterval = setInterval(() => {
+                if (currentMailboxId && !isInitializing) {
+                    fetchMessages();
+                }
+            }, 5000);
+        }
+        
+        async function fetchMessages() {
+            if (!currentMailboxId) return;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                const response = await fetch(`${PROXY}/mailboxes/${currentMailboxId}/messages`, {
+                    headers: { 'X-API-Key': API_KEY },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const result = await response.json();
+                const messages = result.data || [];
+                renderMessages(messages);
+            } catch (err) {
+                console.warn("fetch messages error:", err);
+            }
+        }
+        
+        /**
+         * 创建邮箱 (支持域名: vmail.dev 为默认不传domain, wemails.top 则传 domain:"wemails.top")
+         * @param {string} domainType 'vmail' 或 'wemails'
+         */
+        async function createNewMailbox(domainType, retries = 2) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
+                
+                let requestBody = {};
+                // 根据选择的域名类型决定是否添加 domain 字段
+                // wemails.top 需要明确指定 domain: "wemails.top"
+                if (domainType === 'wemails') {
+                    requestBody = { domain: "wemails.top" };
+                } else {
+                    // vmail.dev: 不传domain字段，API自动分配vmail.dev相关后缀 (可能是默认@vmail.dev)
+                    requestBody = {};
+                }
+                
+                const response = await fetch(`${PROXY}/mailboxes`, {
+                    method: 'POST',
+                    headers: {
+                        'X-API-Key': API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`API error ${response.status}: ${errorText}`);
+                    throw new Error(`API error ${response.status}: ${errorText.substring(0, 80)}`);
+                }
+                
+                const result = await response.json();
+                const mailbox = result.data;
+                if (!mailbox || !mailbox.id || !mailbox.address) {
+                    throw new Error('Invalid mailbox response');
+                }
+                // 验证生成的邮箱地址是否与期望域名一致 (仅wemails.top做校验)
+                if (domainType === 'wemails' && !mailbox.address.endsWith('@wemails.top')) {
+                    console.warn(`期望 wemails.top 后缀, 实际得到 ${mailbox.address}, 但仍继续使用`);
+                }
+                if (domainType === 'vmail' && mailbox.address.includes('@wemails.top')) {
+                    // 极小概率兜底: 如果vmail模式却拿到wemails.top, 则报错重试
+                    throw new Error('域名不匹配, 请重试');
+                }
+                return { id: mailbox.id, address: mailbox.address };
+            } catch (err) {
+                if (retries > 0) {
+                    await new Promise(r => setTimeout(r, 800));
+                    return createNewMailbox(domainType, retries - 1);
+                }
+                throw err;
+            }
+        }
+        
+        // 更新域名UI激活状态
+        function updateDomainUI() {
+            domainBtns.forEach(btn => {
+                const domainVal = btn.getAttribute('data-domain');
+                if (domainVal === currentDomainType) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // 初始化邮箱 (根据 currentDomainType)
+        async function initMailbox() {
+            if (isInitializing) {
+                console.log("已有初始化流程进行中，跳过");
+                return false;
+            }
+            isInitializing = true;
+            const domainLabel = currentDomainType === 'wemails' ? 'wemails.top' : 'vmail.dev';
+            setLoadingState(true, `🌀 正在申请 ${domainLabel} 邮箱...`);
+            
+            listContainer.innerHTML = `<div class="empty-inbox loading-skeleton">⏳ 正在建立安全信道，请稍后...</div>`;
+            
+            try {
+                const mailbox = await createNewMailbox(currentDomainType, 2);
+                currentMailboxId = mailbox.id;
+                addrElement.innerText = mailbox.address;
+                renderMessages([]);
+                await fetchMessages();
+                restartRefreshTimer();
+                isInitializing = false;
+                return true;
+            } catch (error) {
+                console.error("初始化失败:", error);
+                let errorMsg = `⚠️ 生成 ${domainLabel} 邮箱失败: ${error.message || '网络波动'}`;
+                if (currentDomainType === 'wemails' && error.message.includes('API error')) {
+                    errorMsg = `✨ wemails.top 域名暂时不可用？可尝试切换至 vmail.dev 或点击「更换地址」重试。\n详细: ${error.message.substring(0, 100)}`;
+                }
+                addrElement.innerText = errorMsg;
+                listContainer.innerHTML = `<div class="empty-inbox">❌ 临时邮箱生成失败<br>${errorMsg}<br>您可以尝试切换域名或点击下方按钮重试</div>`;
+                isInitializing = false;
+                return false;
+            }
+        }
+        
+        // 手动重置邮箱 (更换地址)
+        async function resetMailbox() {
+            if (isInitializing) {
+                alert("正在生成新地址，请稍后再试~");
+                return;
+            }
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+            currentMailboxId = null;
+            await initMailbox();
+        }
+        
+        // 复制邮箱地址
+        window.copyMail = function() {
+            const mailAddr = addrElement.innerText;
+            if (!mailAddr || !mailAddr.includes('@') || mailAddr.includes('⚠️') || mailAddr.includes('失败') || mailAddr.includes('繁忙')) {
+                alert('邮箱地址尚未就绪，请稍后或点击「更换地址」重新生成');
+                return;
+            }
+            navigator.clipboard.writeText(mailAddr).then(() => {
+                alert('✅ 复制成功！\n\n注意：此地址仅当前页面有效，刷新页面后将永久失效。');
+            }).catch(() => {
+                alert('手动复制吧：' + mailAddr);
+            });
+        };
+        
+        // 切换域名 (新增 wemails.top 核心功能)
+        async function switchDomain(domainType) {
+            if (domainType === currentDomainType) return;
+            if (isInitializing) {
+                alert("正在处理中，稍后再切换域名");
+                return;
+            }
+            currentDomainType = domainType;
+            updateDomainUI();
+            // 清除旧邮箱状态，重新生成对应域名的邮箱
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+            currentMailboxId = null;
+            await initMailbox();
+        }
+        
+        // ---------- 主题切换 ----------
+        const themeBtn = document.getElementById('themeToggle');
+        const storedTheme = localStorage.getItem('kulaoTheme');
+        if (storedTheme === 'dark') {
+            document.body.classList.add('dark');
+            themeBtn.textContent = '☀️';
+        } else if (storedTheme === 'light') {
+            document.body.classList.remove('dark');
+            themeBtn.textContent = '🌙';
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                document.body.classList.add('dark');
+                themeBtn.textContent = '☀️';
+            } else {
+                document.body.classList.remove('dark');
+                themeBtn.textContent = '🌙';
+            }
+        }
+        
+        themeBtn.onclick = () => {
+            const isDark = document.body.classList.toggle('dark');
+            if (isDark) {
+                themeBtn.textContent = '☀️';
+                localStorage.setItem('kulaoTheme', 'dark');
+            } else {
+                themeBtn.textContent = '🌙';
+                localStorage.setItem('kulaoTheme', 'light');
+            }
+        };
+        
+        // 绑定域名切换事件
+        domainBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const domainVal = btn.getAttribute('data-domain');
+                if (domainVal === 'vmail') {
+                    switchDomain('vmail');
+                } else if (domainVal === 'wemails') {
+                    switchDomain('wemails');
+                }
+            });
+        });
+        
+        // ---------- 页面启动 ----------
+        window.addEventListener('DOMContentLoaded', async () => {
+            // 默认域名 vmail，启动邮箱
+            currentDomainType = 'vmail';
+            updateDomainUI();
+            await initMailbox();
+            
+            window.addEventListener('online', () => {
+                if (!currentMailboxId) {
+                    resetMailbox();
+                } else {
+                    fetchMessages().catch(e => console.warn);
+                }
+            });
+        });
+        
+        window.resetMailbox = resetMailbox;
+        
+        window.addEventListener('beforeunload', () => {
+            if (refreshInterval) clearInterval(refreshInterval);
+        });
+    </script>
+</body>
+</html>
