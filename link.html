@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文件直鏈托管 · 穩定版</title>
 
-    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Glama.png" sizes="32x32">
-    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Glama.png" type="image/png" sizes="16x16">
-    <link rel="apple-touch-icon" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Glama.png">
-    <link rel="shortcut icon" href="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Glama.png" type="image/png">
+    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/Gbastos.png" sizes="32x32">
+    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/Gbastos.png" type="image/png" sizes="16x16">
+    <link rel="apple-touch-icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/Gbastos.png">
+    <link rel="shortcut icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/Gbastos.png" type="image/png">
     
     <style>
-        /* 完全保留您原始代碼中的所有樣式 */
         :root {
             --primary: #6366f1;
             --primary-light: #818cf8;
@@ -92,6 +91,7 @@
             color: var(--primary);
             font-size: 20px;
         }
+        .theme-toggle:hover { transform: scale(1.05); }
         .toast {
             position: fixed;
             bottom: 30px;
@@ -114,6 +114,7 @@
         }
         .toast.success { border-left: 4px solid var(--success); }
         .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
         .container {
             width: 100%;
             max-width: 500px;
@@ -162,6 +163,28 @@
             backdrop-filter: blur(10px);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 45px rgba(99, 102, 241, 0.15);
+        }
+        .file-info {
+            margin-bottom: 16px;
+            text-align: center;
+            display: none;
+            padding: 12px;
+            background: var(--upload-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .file-info p {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .file-info small {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
         .upload-area {
             border: 2px dashed var(--border-color);
             border-radius: 16px;
@@ -172,9 +195,36 @@
             margin-bottom: 24px;
             background: var(--upload-bg);
         }
+        .upload-area:hover {
+            border-color: var(--primary-light);
+            background: var(--upload-hover);
+        }
         .upload-area.dragover {
             border-color: var(--primary);
             background: var(--dragover-bg);
+            transform: scale(1.02);
+        }
+        .upload-info {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+        .upload-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .upload-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
         }
         .btn {
             display: inline-block;
@@ -189,8 +239,42 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
         }
-        .progress-section, .result-section {
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+            opacity: 0;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #4338ca);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+        .btn-outline:hover {
+            background: rgba(99, 102, 241, 0.05);
+            color: var(--primary-dark);
+        }
+        .progress-section, .result-section, .history-section {
             display: none;
             margin-top: 24px;
         }
@@ -203,7 +287,46 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 16px;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-title {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .progress-bar {
+            height: 8px;
+            background: var(--input-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-percent {
+            text-align: center;
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .result-item {
+            margin-bottom: 20px;
+        }
+        .result-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
         .result-input-group {
             display: flex;
             align-items: center;
@@ -220,6 +343,9 @@
             font-size: 14px;
             color: var(--text-primary);
             outline: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .copy-btn {
             padding: 8px 16px;
@@ -230,6 +356,98 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+        .copy-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        .copy-btn:active::after {
+            width: 200px;
+            height: 200px;
+            opacity: 0;
+        }
+        .copy-btn:hover { background: var(--primary-dark); }
+        .history-section { margin-top: 32px; }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .history-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .clear-history {
+            font-size: 12px;
+            color: var(--primary);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px 8px;
+        }
+        .clear-history:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        .history-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 8px;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .history-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .history-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .history-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .history-btn {
+            font-size: 12px;
+            padding: 4px 8px;
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .history-btn:hover { background: var(--primary); }
+        #fileInput { display: none; }
+        @media (max-width: 480px) {
+            .container { padding: 10px; }
+            .card { padding: 24px 16px; }
+            .upload-area { padding: 32px 16px; }
+            .title { font-size: 28px; }
+            .theme-toggle { width: 40px; height: 40px; font-size: 18px; }
         }
     </style>
 </head>
@@ -240,16 +458,25 @@
 
     <div class="container">
         <div class="header">
-            <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Glama.png" alt="头像" class="avatar">
-            <h1 class="title">文件直鏈托管 · Telegraph</h1>
-            <p class="subtitle">穩定可靠的文件直鏈生成服務 · 國內直連</p>
+            <img src="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/Gbastos.png" alt="头像" class="avatar">
+            <h1 class="title">文件直鏈托管 · 穩定版</h1>
+            <p class="subtitle">穩定可靠的文件直鏈生成服務 · 永久保存 · 最大支持200MB</p>
         </div>
 
         <div class="card">
+            <div class="file-info" id="fileInfo">
+                <p>📄 待上傳：<span id="fileName"></span></p>
+                <small>大小：<span id="fileSize"></span> | 格式：<span id="fileType"></span></small>
+            </div>
+
             <div id="uploadForm">
                 <div class="upload-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
-                    <div style="font-size: 40px;">📁</div>
+                    <div style="font-size: 40px;">📂</div>
                     <p style="font-size: 14px; font-weight: 600; margin-top: 8px;">點擊或拖拽上傳</p>
+                    <div class="upload-info">
+                        ✅ 不限格式 · 📦 200MB內<br>
+                        ☁️ 永久儲存 · ⚡ 原始直連
+                    </div>
                     <input type="file" id="fileInput" hidden>
                 </div>
                 <button class="btn" onclick="document.getElementById('fileInput').click()">立即上傳文件</button>
@@ -257,90 +484,350 @@
 
             <div class="progress-section" id="progressSection">
                 <div class="loading-spinner"></div>
-                <p style="text-align:center;">正在上傳到 Telegraph...</p>
+                <p class="progress-title" id="progressStatus">正在上傳到伺服器...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                <p class="progress-percent" id="percentText">0%</p>
             </div>
 
             <div class="result-section" id="resultSection">
-                <div style="margin-bottom:15px">
-                    <label style="font-size:12px; color:var(--text-secondary)">🔗 文件直鏈地址</label>
+                <div class="result-item">
+                    <label class="result-label">🔗 原始官方直鏈</label>
                     <div class="result-input-group">
-                        <input type="text" id="fileLink" class="result-input" readonly>
-                        <button class="copy-btn" onclick="copyLink()">複製</button>
+                        <input type="text" id="rawLink" class="result-input" readonly>
+                        <button class="copy-btn" onclick="copyValue('rawLink', this)">複製</button>
                     </div>
                 </div>
-                <button class="btn" style="background:transparent; border:1px solid var(--primary); color:var(--primary); box-shadow:none;" onclick="location.reload()">重新上傳</button>
+                <button class="btn btn-outline" onclick="location.reload()">重新上傳</button>
+            </div>
+
+            <div class="history-section" id="historySection">
+                <div class="history-header">
+                    <h3 class="history-title">上傳歷史</h3>
+                    <button class="clear-history" onclick="clearHistory()">清空紀錄</button>
+                </div>
+                <div class="history-list" id="historyList"></div>
             </div>
         </div>
     </div>
 
     <script>
         (function() {
+            const MAX_FILE_SIZE = 200 * 1024 * 1024;
+            const FORBIDDEN_TYPES = ['exe', 'bat', 'sh', 'php', 'js', 'py', 'asp', 'aspx', 'jsp'];
+            // 直接使用官方 API
+            const API = 'https://catbox.moe/user/api.php';
+
+            // 主題切換邏輯
             const themeToggle = document.getElementById('themeToggle');
             const body = document.body;
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             
+            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '🌙';
+            } else {
+                themeToggle.textContent = '🌞';
+            }
+
             themeToggle.addEventListener('click', () => {
-                body.classList.toggle('dark-mode');
-                themeToggle.textContent = body.classList.contains('dark-mode') ? '🌙' : '🌞';
+                if (body.classList.contains('dark-mode')) {
+                    body.classList.remove('dark-mode');
+                    themeToggle.textContent = '🌞';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.classList.add('dark-mode');
+                    themeToggle.textContent = '🌙';
+                    localStorage.setItem('theme', 'dark');
+                }
             });
+
+            document.addEventListener('dragover', (e) => e.preventDefault());
+            document.addEventListener('drop', (e) => e.preventDefault());
+
+            function showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.className = `toast ${type}`;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            function saveUploadHistory(fileName, rawLink) {
+                const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
+                history.unshift({
+                    id: Date.now(),
+                    name: fileName,
+                    raw: rawLink,
+                    time: new Date().toLocaleString()
+                });
+                if (history.length > 10) history.pop();
+                localStorage.setItem('uploadHistory', JSON.stringify(history));
+                renderHistory();
+            }
+
+            function renderHistory() {
+                const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
+                const historyList = document.getElementById('historyList');
+                const historySection = document.getElementById('historySection');
+                
+                if (history.length === 0) {
+                    historySection.style.display = 'none';
+                    return;
+                }
+                
+                historySection.style.display = 'block';
+                historyList.innerHTML = history.map(item => `
+                    <div class="history-item">
+                        <p class="history-name">${escapeHtml(item.name)}</p>
+                        <p class="history-time">${escapeHtml(item.time)}</p>
+                        <div class="history-buttons">
+                            <button class="history-btn" onclick="copyHistoryLink('${item.raw.replace(/'/g, "\\'")}')">複製鏈接</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function escapeHtml(unsafe) {
+                return unsafe.replace(/[&<>"']/g, function(m) {
+                    if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;';
+                    if(m === '"') return '&quot;'; if(m === "'") return '&#039;';
+                    return m;
+                });
+            }
+
+            window.copyHistoryLink = function(link) {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(link).then(() => {
+                        showToast('鏈接複製成功！', 'success');
+                    }).catch(() => fallbackCopyText(link));
+                } else {
+                    fallbackCopyText(link);
+                }
+            };
+            
+            function fallbackCopyText(text) {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = text;
+                tempInput.style.position = 'fixed';
+                tempInput.style.opacity = 0;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('鏈接複製成功！', 'success');
+                } catch (err) {
+                    showToast('複製失敗，請手動複製', 'error');
+                }
+                document.body.removeChild(tempInput);
+            }
+
+            window.clearHistory = function() {
+                if (confirm('確定要清空所有上傳紀錄嗎？')) {
+                    localStorage.removeItem('uploadHistory');
+                    renderHistory();
+                    showToast('紀錄已清空', 'info');
+                }
+            };
 
             const fileInput = document.getElementById('fileInput');
             const dropZone = document.getElementById('dropZone');
+            const progressSection = document.getElementById('progressSection');
+            const resultSection = document.getElementById('resultSection');
+            const uploadForm = document.getElementById('uploadForm');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileNameEl = document.getElementById('fileName');
+            const fileSizeEl = document.getElementById('fileSize');
+            const fileTypeEl = document.getElementById('fileType');
+            const progressBar = document.getElementById('progressBar');
+            const percentText = document.getElementById('percentText');
+            const progressStatus = document.getElementById('progressStatus');
 
-            dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
-            dropZone.ondragleave = () => dropZone.classList.remove('dragover');
-            dropZone.ondrop = (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('dragover');
-                if (e.dataTransfer.files.length) handleUpload(e.dataTransfer.files[0]);
-            };
-            fileInput.onchange = (e) => {
-                if (e.target.files.length) handleUpload(e.target.files[0]);
-            };
+            function hideFileInfo() {
+                fileInfo.style.display = 'none';
+                fileNameEl.textContent = '';
+                fileSizeEl.textContent = '';
+                fileTypeEl.textContent = '';
+            }
 
-            async function handleUpload(file) {
-                document.getElementById('uploadForm').style.display = 'none';
-                document.getElementById('progressSection').style.display = 'block';
+            hideFileInfo();
 
-                const formData = new FormData();
-                formData.append('file', file);
+            window.addEventListener('load', () => renderHistory());
+
+            function validateFile(file) {
+                if (file.size > MAX_FILE_SIZE) {
+                    showToast(`文件太大了！最大200MB，當前：${(file.size/1024/1024).toFixed(2)}MB`, 'error');
+                    return false;
+                }
+                const fileExt = file.name.split('.').pop()?.toLowerCase() || '';
+                if (FORBIDDEN_TYPES.includes(fileExt)) {
+                    showToast('禁止上傳脚本或執行文件！', 'error');
+                    return false;
+                }
+                return true;
+            }
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+            });
+
+            dropZone.addEventListener('drop', e => {
+                const files = e.dataTransfer.files;
+                if (files.length) {
+                    const file = files[0];
+                    if (validateFile(file)) {
+                        showFileInfo(file);
+                        handleUpload(file);
+                    } else {
+                        hideFileInfo();
+                    }
+                }
+            }, false);
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    const file = e.target.files[0];
+                    if (validateFile(file)) {
+                        showFileInfo(file);
+                        handleUpload(file);
+                    } else {
+                        hideFileInfo();
+                    }
+                }
+            });
+
+            function showFileInfo(file) {
+                const fileExt = file.name.split('.').pop()?.toLowerCase() || '未知';
+                const fileSize = (file.size/1024/1024).toFixed(2) + 'MB';
+                fileNameEl.textContent = file.name;
+                fileSizeEl.textContent = fileSize;
+                fileTypeEl.textContent = fileExt;
+                fileInfo.style.display = 'block';
+            }
+
+            let currentXHR = null;
+
+            function handleUpload(file) {
+                uploadForm.style.display = 'none';
+                progressSection.style.display = 'block';
+                resultSection.style.display = 'none';
+                progressBar.style.width = '0%';
+                percentText.innerText = '0%';
+                progressStatus.innerText = '正在上傳到伺服器...';
+
+                const xhr = new XMLHttpRequest();
+                currentXHR = xhr;
+
+                xhr.open('POST', API);
+                // 增加超時時間到 3 分鐘，因爲直連海外可能會慢
+                xhr.timeout = 180000;
+
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        progressBar.style.width = percent + '%';
+                        percentText.innerText = percent + '%';
+                    }
+                };
+
+                xhr.onload = () => {
+                    currentXHR = null;
+                    const response = xhr.responseText.trim();
+                    // Catbox 成功返回 200 並包含鏈接
+                    if (xhr.status === 200 && response.includes('http')) {
+                        const urlMatch = response.match(/https?:\/\/[^\s]+/);
+                        if (urlMatch) {
+                            const rawUrl = urlMatch[0];
+                            document.getElementById('rawLink').value = rawUrl;
+                            saveUploadHistory(file.name, rawUrl);
+                            progressSection.style.display = 'none';
+                            resultSection.style.display = 'block';
+                            showToast('上傳成功！', 'success');
+                        } else {
+                            handleError('響應格式錯誤');
+                        }
+                    } else {
+                        handleError(`上傳失敗: HTTP ${xhr.status}`);
+                    }
+                };
+
+                xhr.onerror = () => handleError('網絡連線錯誤（請檢查網路或是否需要代理）');
+                xhr.ontimeout = () => handleError('上傳超時');
+
+                const fd = new FormData();
+                fd.append('reqtype', 'fileupload');
+                fd.append('fileToUpload', file);
 
                 try {
-                    // 更換為 Telegraph (Graph.org) 接口
-                    const response = await fetch('https://graph.org/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const result = await response.json();
-                    
-                    if (result[0] && result[0].src) {
-                        const finalUrl = 'https://graph.org' + result[0].src;
-                        document.getElementById('fileLink').value = finalUrl;
-                        document.getElementById('progressSection').style.display = 'none';
-                        document.getElementById('resultSection').style.display = 'block';
-                        showToast('上傳成功！', 'success');
-                    } else {
-                        throw new Error('Upload failed');
-                    }
-                } catch (error) {
-                    showToast('上傳失敗，請重試', 'error');
-                    location.reload();
+                    xhr.send(fd);
+                } catch (err) {
+                    handleError(err.message);
                 }
             }
 
-            window.copyLink = () => {
-                const el = document.getElementById('fileLink');
-                el.select();
-                document.execCommand('copy');
-                showToast('已複製到剪貼板', 'success');
+            function handleError(msg) {
+                currentXHR = null;
+                showToast(msg, 'error');
+                setTimeout(() => location.reload(), 2000);
+            }
+
+            window.copyValue = function(id, btn) {
+                const input = document.getElementById(id);
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(input.value).then(() => {
+                        const originalText = btn.textContent;
+                        btn.textContent = '已複製 ✓';
+                        btn.style.background = 'var(--success)';
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                            btn.style.background = '';
+                        }, 2000);
+                        showToast('複製成功！', 'success');
+                    }).catch(() => fallbackCopyBtn(input.value, btn));
+                }
             };
 
-            function showToast(msg, type) {
-                const t = document.getElementById('toast');
-                t.textContent = msg;
-                t.className = `toast ${type} show`;
-                setTimeout(() => t.classList.remove('show'), 3000);
+            function fallbackCopyBtn(value, btn) {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = value;
+                tempInput.style.position = 'fixed';
+                tempInput.style.opacity = 0;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                    const originalText = btn.textContent;
+                    btn.textContent = '已複製 ✓';
+                    btn.style.background = 'var(--success)';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                    showToast('複製成功！', 'success');
+                } catch (err) {
+                    showToast('複製失敗', 'error');
+                }
+                document.body.removeChild(tempInput);
             }
+
+            window.addEventListener('beforeunload', () => {
+                if (currentXHR) currentXHR.abort();
+            });
         })();
     </script>
 </body>
