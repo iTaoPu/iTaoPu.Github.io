@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>临时邮箱 · 隐私保护 · 阅后即焚</title>
 
-    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" sizes="32x32">
-    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" type="image/png" sizes="16x16">
-    <link rel="apple-touch-icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png">
-    <link rel="shortcut icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" type="image/png">
+    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" sizes="32x32" />
+    <link rel="icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" />
+    <link rel="shortcut icon" href="https://cdn.jsdmirror.com/gh/iTCoffe/iTCoffe.Github.io@List/email.png" type="image/png" />
 
     <style>
+        /* ===== 全局重置 & 变量 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -31,6 +32,9 @@
             --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.03);
             --domain-active: #1e3c72;
             --domain-inactive: #94a3b8;
+            --radius-card: 32px;
+            --radius-item: 24px;
+            --transition-speed: 0.25s;
         }
 
         body.dark {
@@ -54,7 +58,7 @@
             background: var(--bg-color);
             color: var(--text-primary);
             min-height: 100vh;
-            transition: background 0.25s ease, color 0.2s ease;
+            transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
         }
 
         .container {
@@ -63,16 +67,17 @@
             padding: 80px 20px 50px;
         }
 
+        /* ===== 头部卡片 ===== */
         .search-header {
             background: var(--card-bg);
-            border-radius: 36px;
+            border-radius: var(--radius-card);
             padding: 32px 32px 36px;
             margin-bottom: 28px;
             border: 1px solid var(--border-color);
             text-align: center;
             backdrop-filter: blur(2px);
             box-shadow: var(--shadow-sm);
-            transition: transform 0.2s, background 0.2s;
+            transition: background var(--transition-speed) ease, transform 0.2s;
         }
 
         .avatar {
@@ -84,6 +89,7 @@
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
             object-fit: cover;
             background: #eef2ff;
+            display: block;
         }
 
         h1 {
@@ -105,6 +111,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .mail-display {
@@ -120,6 +127,10 @@
             word-break: break-all;
             transition: all 0.2s;
             letter-spacing: 0.3px;
+            min-height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-group {
@@ -143,11 +154,12 @@
             justify-content: center;
             gap: 8px;
             backdrop-filter: blur(4px);
+            user-select: none;
         }
 
         .btn-p {
             background: var(--accent-color);
-            color: white;
+            color: #fff;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -160,20 +172,27 @@
         .btn:active {
             transform: scale(0.96);
         }
-
-        .btn-p:hover, .btn-s:hover {
+        .btn-p:hover,
+        .btn-s:hover {
             filter: brightness(0.96);
             transform: translateY(-1px);
         }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            filter: none !important;
+        }
 
+        /* ===== 收件箱卡片 ===== */
         .results-container {
             background: var(--card-bg);
-            border-radius: 32px;
+            border-radius: var(--radius-card);
             padding: 28px 24px;
             border: 1px solid var(--border-color);
             min-height: 340px;
             box-shadow: var(--shadow-sm);
-            transition: background 0.2s;
+            transition: background var(--transition-speed) ease;
         }
 
         .results-title {
@@ -195,6 +214,7 @@
             border-radius: 40px;
             font-size: 0.7rem;
             font-weight: normal;
+            color: var(--text-secondary);
         }
 
         .msg-list {
@@ -205,7 +225,7 @@
 
         .msg-item {
             background: var(--result-bg);
-            border-radius: 24px;
+            border-radius: var(--radius-item);
             padding: 18px 20px;
             border: 1px solid var(--border-color);
             transition: all 0.2s ease;
@@ -242,6 +262,7 @@
             margin-top: 8px;
             line-height: 1.4;
             opacity: 0.85;
+            word-break: break-word;
         }
 
         .empty-inbox {
@@ -252,8 +273,16 @@
             background: var(--result-bg);
             border-radius: 36px;
             margin-top: 8px;
+            line-height: 1.6;
         }
 
+        .empty-inbox .err-detail {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        /* ===== 主题切换按钮 ===== */
         .theme-toggle {
             position: fixed;
             top: 24px;
@@ -272,12 +301,100 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             font-size: 1.4rem;
             transition: 0.2s;
+            user-select: none;
         }
 
         .theme-toggle:hover {
             transform: scale(1.03);
         }
 
+        /* ===== 邮件详情弹窗 ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 650px;
+            height: 85vh;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            gap: 12px;
+        }
+
+        .modal-header #modalSubject {
+            font-weight: 700;
+            font-size: 1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .modal-body pre {
+            white-space: pre-wrap;
+            font-family: inherit;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .modal-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .close-btn {
+            background: var(--tag-bg);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover {
+            background: var(--border-color);
+        }
+
+        /* ===== 响应式 ===== */
         @media (max-width: 640px) {
             .container {
                 padding: 70px 16px 40px;
@@ -293,6 +410,7 @@
             .btn {
                 min-width: 110px;
                 padding: 9px 16px;
+                font-size: 0.85rem;
             }
             h1 {
                 font-size: 1.7rem;
@@ -306,383 +424,512 @@
                 right: 16px;
                 width: 42px;
                 height: 42px;
+                font-size: 1.2rem;
+            }
+            .mail-display {
+                font-size: 0.85rem;
+                padding: 12px 16px;
+                min-height: 50px;
+            }
+            .modal-content {
+                height: 90vh;
+                border-radius: 24px;
+            }
+            .modal-header {
+                padding: 16px 20px;
+            }
+            .modal-body {
+                padding: 16px 20px;
             }
         }
 
+        /* ===== 动画 ===== */
         @keyframes pulse {
-            0% { opacity: 0.6; }
-            100% { opacity: 1; }
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
         }
         .loading-skeleton {
-            animation: pulse 1.2s infinite;
+            animation: pulse 1.4s infinite;
         }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+
+        /* 滚动条美化 */
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
         }
-        .modal-content {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 650px;
-            height: 85vh;
-            border-radius: 28px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
+        .modal-body::-webkit-scrollbar-track {
+            background: transparent;
         }
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
         }
-        .modal-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: var(--card-bg);
-            color: var(--text-primary);
-        }
-        .close-btn {
-            background: var(--tag-bg);
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== 主题切换 ===== -->
     <div class="theme-toggle" id="themeToggle" aria-label="切换深色模式">🌙</div>
 
+    <!-- ===== 主容器 ===== -->
     <div class="container">
+
+        <!-- 头部 -->
         <div class="search-header">
             <h1>📬 临时邮箱 · 稳定版</h1>
-            <img src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Glama.png" class="avatar" alt="temp mail icon" loading="lazy">
+            <img
+            src="https://cdn.jsdmirror.com/gh/iTaoPu/iTaoPu.Github.io@List/Glama.png"
+            class="avatar"
+            alt="temp mail icon"
+            loading="lazy"
+            />
             <div class="subhead">
                 <span>⚡ 阅后即焚</span>
                 <span>🔒 完全匿名</span>
                 <span>♾️ 永久免费</span>
             </div>
-            
-            <div id="addr" class="mail-display">🔄 正在生成安全邮箱...</div>
+
+            <div id="addr" class="mail-display">🔄 正在生成安全邮箱…</div>
+
             <div class="btn-group">
-                <button onclick="copyMail()" class="btn btn-s">📋 复制地址</button>
+                <button onclick="copyMail()" class="btn btn-s" id="copyBtn">📋 复制地址</button>
                 <button id="refreshBtn" onclick="resetMailbox()" class="btn btn-p">🔄 更换地址</button>
             </div>
         </div>
 
+        <!-- 收件箱 -->
         <div class="results-container">
             <div class="results-title">
                 <span>📥 实时收件箱</span>
                 <span class="mail-count" id="mailCount">0 封</span>
             </div>
             <div id="list">
-                <div class="empty-inbox">✨ 邮箱就绪，等待新邮件自动推送...</div>
+                <div class="empty-inbox">✨ 邮箱就绪，等待新邮件自动推送…</div>
             </div>
         </div>
     </div>
 
-    <!-- 邮件详情弹窗 -->
+    <!-- ===== 邮件详情弹窗 ===== -->
     <div id="mailModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span id="modalSubject" style="font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">邮件详情</span>
-                <button class="close-btn" onclick="closeMail()">关闭</button>
+                <span id="modalSubject">邮件详情</span>
+                <button class="close-btn" onclick="closeMail()">✕ 关闭</button>
             </div>
             <div id="modalBody" class="modal-body"></div>
         </div>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- ===== JavaScript ===== -->
     <script>
-        // ---------- 使用 mail.tm API (完全清理原有vmail逻辑) ----------
-        const MAILTM_API = "https://api.mail.tm";
-        
-        // 全局状态
-        let currentAccount = { address: "", password: "", token: "" };
-        let isInitializing = false;
-        let refreshInterval = null;
-        
-        // DOM 元素
-        const addrElement = document.getElementById('addr');
-        const listContainer = document.getElementById('list');
-        const mailCountSpan = document.getElementById('mailCount');
-        
-        // ---------- 辅助函数 ----------
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-        
-        // 渲染邮件列表 (适配 mail.tm 返回结构)
-        function renderMessages(messages) {
-            if (!messages || messages.length === 0) {
-                listContainer.innerHTML = `<div class="empty-inbox">📭 暂无邮件 · 新邮件抵达时会自动显示在这里</div>`;
-                mailCountSpan.innerText = `0 封`;
-                return;
+        /* --------------------------------------------------------------
+           修复：使用 mail.tm API + 备用域名列表
+           解决 "无法获取域名列表" 错误
+           -------------------------------------------------------------- */
+
+        (function() {
+            'use strict';
+
+            // ---------- 常量 ----------
+            const MAILTM_API = 'https://api.mail.tm';
+
+            // 备用域名列表（当 /domains 接口失败时使用）
+            // 包含 mail.tm 官方域名及其他常用临时邮箱域名
+            const FALLBACK_DOMAINS = [
+                'mail.tm',
+                'cliptik.net',
+                'emltmp.com',
+                'tempmail.plus'
+            ];
+
+            // ---------- 全局状态 ----------
+            let currentAccount = { address: '', password: '', token: '' };
+            let isInitializing = false;
+            let refreshInterval = null;
+
+            // ---------- DOM 引用 ----------
+            const addrElement = document.getElementById('addr');
+            const listContainer = document.getElementById('list');
+            const mailCountSpan = document.getElementById('mailCount');
+            const copyBtn = document.getElementById('copyBtn');
+            const refreshBtn = document.getElementById('refreshBtn');
+
+            // ---------- 辅助函数 ----------
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/[&<>]/g, function(m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    return m;
+                });
             }
-            
-            const sorted = [...messages].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            mailCountSpan.innerText = `${sorted.length} 封`;
-            
-            const html = sorted.map(msg => {
-                const fromAddr = msg.from?.address || '未知发件人';
-                const time = new Date(msg.createdAt).toLocaleString('zh-CN', { hour12: false });
-                const subject = msg.subject?.trim() || '（无主题）';
-                const preview = msg.intro || (msg.text ? msg.text.substring(0, 80) : '无正文内容');
-                return `
-                    <div class="msg-item" onclick="viewMessageDetail('${msg.id}')">
-                        <div class="msg-meta">
-                            <span>📧 ${escapeHtml(fromAddr)}</span>
-                            <span>🕒 ${time}</span>
+
+            // 延时工具
+            function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+            // 设置按钮状态
+            function setButtonsEnabled(enabled) {
+                copyBtn.disabled = !enabled;
+                refreshBtn.disabled = !enabled;
+                copyBtn.style.opacity = enabled ? '1' : '0.5';
+                refreshBtn.style.opacity = enabled ? '1' : '0.5';
+            }
+
+            // ---------- 渲染邮件列表 ----------
+            function renderMessages(messages) {
+                if (!messages || messages.length === 0) {
+                    listContainer.innerHTML =
+                        `<div class="empty-inbox">📭 暂无邮件 · 新邮件抵达时会自动显示在这里</div>`;
+                    mailCountSpan.innerText = '0 封';
+                    return;
+                }
+
+                const sorted = [...messages].sort((a, b) =>
+                    new Date(b.createdAt) - new Date(a.createdAt)
+                );
+                mailCountSpan.innerText = `${sorted.length} 封`;
+
+                const html = sorted.map(msg => {
+                    const fromAddr = msg.from?.address || '未知发件人';
+                    const time = new Date(msg.createdAt).toLocaleString('zh-CN', { hour12: false });
+                    const subject = msg.subject?.trim() || '（无主题）';
+                    const preview = msg.intro || (msg.text ? msg.text.substring(0, 80) : '无正文内容');
+                    return `
+                        <div class="msg-item" onclick="viewMessageDetail('${msg.id}')">
+                            <div class="msg-meta">
+                                <span>📧 ${escapeHtml(fromAddr)}</span>
+                                <span>🕒 ${time}</span>
+                            </div>
+                            <div class="msg-subject">📌 ${escapeHtml(subject)}</div>
+                            <div class="msg-preview">${escapeHtml(preview.length > 100 ? preview.slice(0, 100) + '…' : preview)}</div>
                         </div>
-                        <div class="msg-subject">📌 ${escapeHtml(subject)}</div>
-                        <div class="msg-preview">${escapeHtml(preview.length > 100 ? preview.slice(0, 100) + '…' : preview)}</div>
-                    </div>
-                `;
-            }).join('');
-            listContainer.innerHTML = html;
-        }
-        
-        // 查看完整邮件内容 (调用 mail.tm 接口)
-        window.viewMessageDetail = async function(msgId) {
-            if (!currentAccount.token) return;
-            const modal = document.getElementById('mailModal');
-            const modalSubject = document.getElementById('modalSubject');
-            const modalBody = document.getElementById('modalBody');
-            modalSubject.innerText = "加载中...";
-            modalBody.innerHTML = '<div class="empty-inbox">正在获取邮件内容…</div>';
-            modal.style.display = 'flex';
-            
-            try {
-                const res = await fetch(`${MAILTM_API}/messages/${msgId}`, {
-                    headers: { 'Authorization': `Bearer ${currentAccount.token}` }
-                });
-                if (!res.ok) throw new Error('获取失败');
-                const data = await res.json();
-                modalSubject.innerText = data.subject || '(无标题)';
-                // 优先显示 HTML 内容，否则显示纯文本
-                if (data.html && data.html.length) {
-                    modalBody.innerHTML = data.html[0];
-                } else {
-                    modalBody.innerHTML = `<pre style="white-space: pre-wrap; font-family: inherit;">${escapeHtml(data.text || '（无正文内容）')}</pre>`;
+                    `;
+                }).join('');
+                listContainer.innerHTML = html;
+            }
+
+            // ---------- 查看邮件详情 ----------
+            window.viewMessageDetail = async function(msgId) {
+                if (!currentAccount.token) {
+                    alert('邮箱未就绪，请稍后重试');
+                    return;
                 }
-            } catch (err) {
-                modalBody.innerHTML = `<div class="empty-inbox">❌ 内容加载失败: ${err.message}</div>`;
-            }
-        };
-        
-        window.closeMail = function() {
-            document.getElementById('mailModal').style.display = 'none';
-        };
-        
-        // 停止轮询
-        function stopRefreshTimer() {
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
-                refreshInterval = null;
-            }
-        }
-        
-        // 启动轮询 (每5秒)
-        function startRefreshTimer() {
-            stopRefreshTimer();
-            refreshInterval = setInterval(() => {
-                if (currentAccount.token && !isInitializing) {
-                    fetchMessages();
+                const modal = document.getElementById('mailModal');
+                const modalSubject = document.getElementById('modalSubject');
+                const modalBody = document.getElementById('modalBody');
+
+                modalSubject.innerText = '加载中…';
+                modalBody.innerHTML = '<div class="empty-inbox">⏳ 正在获取邮件内容…</div>';
+                modal.style.display = 'flex';
+
+                try {
+                    const res = await fetch(`${MAILTM_API}/messages/${msgId}`, {
+                        headers: { 'Authorization': `Bearer ${currentAccount.token}` }
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const data = await res.json();
+
+                    modalSubject.innerText = data.subject || '(无标题)';
+
+                    if (data.html && data.html.length) {
+                        modalBody.innerHTML = data.html[0];
+                    } else {
+                        modalBody.innerHTML =
+                            `<pre style="white-space:pre-wrap;font-family:inherit;margin:0;">${escapeHtml(data.text || '（无正文内容）')}</pre>`;
+                    }
+                } catch (err) {
+                    modalBody.innerHTML =
+                        `<div class="empty-inbox">❌ 内容加载失败<br><span class="err-detail">${escapeHtml(err.message)}</span></div>`;
                 }
-            }, 5000);
-        }
-        
-        // 获取邮件列表 (mail.tm)
-        async function fetchMessages() {
-            if (!currentAccount.token) return;
-            try {
-                const res = await fetch(`${MAILTM_API}/messages`, {
-                    headers: { 'Authorization': `Bearer ${currentAccount.token}` }
-                });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                const messages = data['hydra:member'] || [];
-                renderMessages(messages);
-            } catch (err) {
-                console.warn("fetch messages error:", err);
-            }
-        }
-        
-        /**
-         * 创建临时邮箱 (使用 mail.tm)
-         * 自动获取可用域名，生成随机账户
-         */
-        async function createMailTmAccount(retries = 2) {
-            try {
-                // 1. 获取可用域名
-                const domainRes = await fetch(`${MAILTM_API}/domains`);
-                if (!domainRes.ok) throw new Error('无法获取域名列表');
-                const domainData = await domainRes.json();
-                const domains = domainData['hydra:member'] || [];
-                if (domains.length === 0) throw new Error('无可用的临时邮箱域名');
-                const domain = domains[0].domain;
-                
-                // 2. 生成随机用户名和密码
-                const username = Math.random().toString(36).substring(2, 15);
-                const password = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 5);
-                const address = `${username}@${domain}`;
-                
-                // 3. 创建账户
-                const createRes = await fetch(`${MAILTM_API}/accounts`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address, password })
-                });
-                if (!createRes.ok) {
-                    const errText = await createRes.text();
-                    throw new Error(`创建账户失败: ${createRes.status} ${errText}`);
-                }
-                
-                // 4. 获取 token
-                const tokenRes = await fetch(`${MAILTM_API}/token`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address, password })
-                });
-                if (!tokenRes.ok) throw new Error('获取 token 失败');
-                const tokenData = await tokenRes.json();
-                
-                return { address, password, token: tokenData.token };
-            } catch (err) {
-                if (retries > 0) {
-                    await new Promise(r => setTimeout(r, 600));
-                    return createMailTmAccount(retries - 1);
-                }
-                throw err;
-            }
-        }
-        
-        // 初始化或重置邮箱 (基于 mail.tm)
-        async function initMailbox() {
-            if (isInitializing) {
-                console.log("已有初始化流程，请稍后");
-                return false;
-            }
-            isInitializing = true;
-            addrElement.innerText = `🌀 正在申请临时邮箱...`;
-            listContainer.innerHTML = `<div class="empty-inbox loading-skeleton">⏳ 正在建立安全信道，请稍后...</div>`;
-            
-            try {
-                const account = await createMailTmAccount(2);
-                currentAccount = account;
-                addrElement.innerText = currentAccount.address;
-                renderMessages([]);
-                await fetchMessages();      // 初次拉取
-                startRefreshTimer();
-                isInitializing = false;
-                return true;
-            } catch (error) {
-                console.error("初始化失败:", error);
-                let errorMsg = `⚠️ 生成邮箱失败: ${error.message || '网络异常'}`;
-                addrElement.innerText = errorMsg;
-                listContainer.innerHTML = `<div class="empty-inbox">❌ 临时邮箱生成失败<br>${escapeHtml(errorMsg)}<br>您可以点击下方按钮重试</div>`;
-                isInitializing = false;
-                return false;
-            }
-        }
-        
-        // 手动重置邮箱 (更换地址)
-        async function resetMailbox() {
-            if (isInitializing) {
-                alert("正在生成新地址，请稍后再试~");
-                return;
-            }
-            stopRefreshTimer();
-            currentAccount = { address: "", password: "", token: "" };
-            await initMailbox();
-        }
-        
-        // 复制邮箱地址
-        window.copyMail = function() {
-            const mailAddr = currentAccount.address;
-            if (!mailAddr || !mailAddr.includes('@')) {
-                alert('邮箱地址尚未就绪，请稍后或点击「更换地址」重新生成');
-                return;
-            }
-            navigator.clipboard.writeText(mailAddr).then(() => {
-                alert('✅ 复制成功！\n\n注意：此地址仅当前页面有效，刷新页面后将永久失效。');
-            }).catch(() => {
-                alert('手动复制吧：' + mailAddr);
+            };
+
+            window.closeMail = function() {
+                document.getElementById('mailModal').style.display = 'none';
+            };
+
+            // 点击模态背景关闭
+            document.getElementById('mailModal').addEventListener('click', function(e) {
+                if (e.target === this) closeMail();
             });
-        };
-        
-        // 全局挂载 reset 供按钮调用
-        window.resetMailbox = resetMailbox;
-        
-        // ---------- 主题切换 ----------
-        const themeBtn = document.getElementById('themeToggle');
-        const storedTheme = localStorage.getItem('tempMailTheme');
-        if (storedTheme === 'dark') {
-            document.body.classList.add('dark');
-            themeBtn.textContent = '☀️';
-        } else if (storedTheme === 'light') {
-            document.body.classList.remove('dark');
-            themeBtn.textContent = '🌙';
-        } else {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (prefersDark) {
+
+            // ---------- 轮询控制 ----------
+            function stopRefreshTimer() {
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                    refreshInterval = null;
+                }
+            }
+
+            function startRefreshTimer() {
+                stopRefreshTimer();
+                refreshInterval = setInterval(() => {
+                    if (currentAccount.token && !isInitializing) {
+                        fetchMessages().catch(() => {});
+                    }
+                }, 5000);
+            }
+
+            // ---------- 获取邮件列表 ----------
+            async function fetchMessages() {
+                if (!currentAccount.token) return;
+                try {
+                    const res = await fetch(`${MAILTM_API}/messages`, {
+                        headers: { 'Authorization': `Bearer ${currentAccount.token}` }
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const data = await res.json();
+                    const messages = data['hydra:member'] || [];
+                    renderMessages(messages);
+                } catch (err) {
+                    // 静默失败，不影响用户体验
+                    console.warn('fetchMessages error:', err.message);
+                }
+            }
+
+            // ---------- 核心：创建 mail.tm 账户（带备用域名） ----------
+            async function createMailTmAccount() {
+                // 1. 获取域名列表（优先 API，失败则用备用）
+                let domainCandidates = [];
+
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+                    const domainRes = await fetch(`${MAILTM_API}/domains`, {
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+
+                    if (domainRes.ok) {
+                        const data = await domainRes.json();
+                        const list = data['hydra:member'] || [];
+                        if (list.length > 0) {
+                            domainCandidates = list.map(item => item.domain).filter(Boolean);
+                        }
+                    }
+                } catch (err) {
+                    console.warn('⚠️ 获取域名列表失败，使用备用域名列表:', err.message);
+                }
+
+                // 如果 API 没返回有效域名，使用备用列表
+                if (domainCandidates.length === 0) {
+                    domainCandidates = [...FALLBACK_DOMAINS];
+                    console.log('📋 使用备用域名列表:', domainCandidates);
+                }
+
+                // 去重
+                domainCandidates = [...new Set(domainCandidates)];
+
+                // 打乱顺序，分散负载
+                for (let i = domainCandidates.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [domainCandidates[i], domainCandidates[j]] = [domainCandidates[j], domainCandidates[i]];
+                }
+
+                // 2. 依次尝试每个域名创建账户
+                let lastError = null;
+
+                for (const domain of domainCandidates) {
+                    try {
+                        const username = Math.random().toString(36).substring(2, 15) +
+                            Math.random().toString(36).substring(2, 6);
+                        const password = Math.random().toString(36).substring(2, 15) +
+                            Math.random().toString(36).substring(2, 5);
+                        const address = `${username}@${domain}`;
+
+                        // 创建账户
+                        const createRes = await fetch(`${MAILTM_API}/accounts`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ address, password })
+                        });
+
+                        if (!createRes.ok) {
+                            const errText = await createRes.text();
+                            console.warn(`域名 ${domain} 创建失败 (${createRes.status}):`, errText);
+                            lastError = new Error(`域名 ${domain} 不可用`);
+                            continue;
+                        }
+
+                        // 获取 token
+                        const tokenRes = await fetch(`${MAILTM_API}/token`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ address, password })
+                        });
+
+                        if (!tokenRes.ok) {
+                            const errText = await tokenRes.text();
+                            console.warn(`域名 ${domain} 获取 token 失败:`, errText);
+                            lastError = new Error(`域名 ${domain} token 获取失败`);
+                            continue;
+                        }
+
+                        const tokenData = await tokenRes.json();
+
+                        // 成功！
+                        console.log(`✅ 邮箱创建成功: ${address} (使用域名 ${domain})`);
+                        return {
+                            address,
+                            password,
+                            token: tokenData.token,
+                            domain
+                        };
+
+                    } catch (err) {
+                        console.warn(`域名 ${domain} 尝试异常:`, err.message);
+                        lastError = err;
+                        // 短暂等待后继续尝试下一个域名
+                        await sleep(300);
+                    }
+                }
+
+                // 所有域名都失败
+                throw new Error(lastError ? lastError.message : '所有域名均无法创建邮箱，请稍后重试');
+            }
+
+            // ---------- 初始化 / 重置邮箱 ----------
+            async function initMailbox() {
+                if (isInitializing) {
+                    console.log('已有初始化流程，请稍后');
+                    return false;
+                }
+
+                isInitializing = true;
+                setButtonsEnabled(false);
+                addrElement.innerText = '🌀 正在申请临时邮箱…';
+                listContainer.innerHTML =
+                    `<div class="empty-inbox loading-skeleton">⏳ 正在建立安全信道，请稍后…</div>`;
+
+                try {
+                    const account = await createMailTmAccount();
+                    currentAccount = account;
+                    addrElement.innerText = currentAccount.address;
+                    renderMessages([]);
+                    await fetchMessages();
+                    startRefreshTimer();
+                    setButtonsEnabled(true);
+                    isInitializing = false;
+                    return true;
+                } catch (error) {
+                    console.error('❌ 初始化失败:', error);
+                    const errMsg = error.message || '网络异常，请检查连接后重试';
+                    addrElement.innerText = '⚠️ 生成失败，点击下方按钮重试';
+                    listContainer.innerHTML = `
+                        <div class="empty-inbox">
+                            ❌ 临时邮箱生成失败<br>
+                            <span class="err-detail">${escapeHtml(errMsg)}</span><br>
+                            <span style="display:inline-block;margin-top:14px;font-size:0.8rem;opacity:0.7;">
+                                💡 请点击「更换地址」按钮重新尝试
+                            </span>
+                        </div>
+                    `;
+                    setButtonsEnabled(true);
+                    isInitializing = false;
+                    return false;
+                }
+            }
+
+            // ---------- 手动重置 ----------
+            window.resetMailbox = async function() {
+                if (isInitializing) {
+                    alert('⏳ 正在生成新地址，请稍后再试~');
+                    return;
+                }
+                stopRefreshTimer();
+                currentAccount = { address: '', password: '', token: '' };
+                await initMailbox();
+            };
+
+            // ---------- 复制地址 ----------
+            window.copyMail = function() {
+                const mailAddr = currentAccount.address;
+                if (!mailAddr || !mailAddr.includes('@')) {
+                    alert('📭 邮箱地址尚未就绪，请稍后或点击「更换地址」重新生成');
+                    return;
+                }
+                navigator.clipboard.writeText(mailAddr).then(() => {
+                    alert('✅ 复制成功！\n\n注意：此地址仅当前页面有效，刷新页面后将永久失效。');
+                }).catch(() => {
+                    // 降级方案
+                    const textArea = document.createElement('textarea');
+                    textArea.value = mailAddr;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        alert('✅ 复制成功！\n\n注意：此地址仅当前页面有效，刷新页面后将永久失效。');
+                    } catch (_) {
+                        alert('📋 手动复制吧：' + mailAddr);
+                    }
+                    document.body.removeChild(textArea);
+                });
+            };
+
+            // ---------- 主题切换 ----------
+            const themeBtn = document.getElementById('themeToggle');
+            const storedTheme = localStorage.getItem('tempMailTheme');
+
+            if (storedTheme === 'dark') {
                 document.body.classList.add('dark');
                 themeBtn.textContent = '☀️';
-            } else {
+            } else if (storedTheme === 'light') {
                 document.body.classList.remove('dark');
                 themeBtn.textContent = '🌙';
-            }
-        }
-        
-        themeBtn.onclick = () => {
-            const isDark = document.body.classList.toggle('dark');
-            if (isDark) {
-                themeBtn.textContent = '☀️';
-                localStorage.setItem('tempMailTheme', 'dark');
             } else {
-                themeBtn.textContent = '🌙';
-                localStorage.setItem('tempMailTheme', 'light');
-            }
-        };
-        
-        // 页面启动
-        window.addEventListener('DOMContentLoaded', async () => {
-            await initMailbox();
-            
-            window.addEventListener('online', () => {
-                if (!currentAccount.token) {
-                    resetMailbox();
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                    document.body.classList.add('dark');
+                    themeBtn.textContent = '☀️';
                 } else {
-                    fetchMessages().catch(e => console.warn);
+                    document.body.classList.remove('dark');
+                    themeBtn.textContent = '🌙';
                 }
+            }
+
+            themeBtn.onclick = () => {
+                const isDark = document.body.classList.toggle('dark');
+                if (isDark) {
+                    themeBtn.textContent = '☀️';
+                    localStorage.setItem('tempMailTheme', 'dark');
+                } else {
+                    themeBtn.textContent = '🌙';
+                    localStorage.setItem('tempMailTheme', 'light');
+                }
+            };
+
+            // ---------- 启动 ----------
+            window.addEventListener('DOMContentLoaded', async () => {
+                await initMailbox();
+
+                // 网络恢复时自动刷新
+                window.addEventListener('online', () => {
+                    if (!currentAccount.token) {
+                        resetMailbox();
+                    } else {
+                        fetchMessages().catch(() => {});
+                    }
+                });
             });
-        });
-        
-        // 清理定时器
-        window.addEventListener('beforeunload', () => {
-            stopRefreshTimer();
-        });
+
+            // 页面关闭前清理定时器
+            window.addEventListener('beforeunload', () => {
+                stopRefreshTimer();
+            });
+
+            // 暴露 reset 给全局（备用）
+            window.resetMailbox = resetMailbox;
+
+        })();
     </script>
 </body>
 </html>
